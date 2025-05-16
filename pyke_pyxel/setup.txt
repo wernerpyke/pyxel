@@ -1,0 +1,13 @@
+Instead of using pipx environments directly, do this:
+
+1.	Create a project-level venv:
+
+python3 -m venv .venv
+source .venv/bin/activate
+
+2.	Install needed packages:
+
+pip install -r requirements.txt
+
+
+

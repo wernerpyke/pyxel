@@ -1,0 +1,9 @@
+{
+    "python.pythonPath": ".venv/bin/python",
+    "files.exclude": {
+        "**/__pycache__": true
+    },
+    "search.exclude": {
+        "**/__pycache__": true
+    }
+}
