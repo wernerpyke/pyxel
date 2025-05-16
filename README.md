@@ -25,6 +25,7 @@ A simple top-down 2D pixel art game built in Python — created as a hands-on wa
 
 ## 🔧 Technologies Used
 
+- **ChatGPT Python by Nicholas Barker** - to teach me Python and it's tooling in VSCode
 - **Python 3.x**
 - **[Pyxel](https://github.com/kitao/pyxel)** — retro game engine for Python
 - VSCode for development
