@@ -35,24 +35,25 @@ class Coord:
         cloned._y = new_y
         return cloned
     
-    def collides_with(self, coord: "Coord", direction: str):
+    def collides_with(self, coord: "Coord"):
         # AABB detection
         #    if self.pos_x < obj.pos_x+obj.width and self.pos_x+self.width > obj.pos_x:
         #        if self.pos_y < obj.pos_y+obj.height and self.pos_y+self.height > obj.pos_y:
 
-        a_x = coord._x
-        a_y = coord._y
-        b_x = self._x
-        b_y = self._y
+        collide_x = coord._x
+        collide_y = coord._y
+        sprite_x = self._x
+        sprite_y = self._y
         
         w = constants.SIZE.TILE
         h = constants.SIZE.TILE
+        tolerance = 1
         
         return (
-            a_x < b_x + w and
-            a_x + w > b_x and
-            a_y < b_y + h and
-            a_y + h > b_y
+            collide_x < (sprite_x + w - tolerance) and
+            collide_x + w > (sprite_x + tolerance) and
+            collide_y < (sprite_y + h - tolerance) and
+            collide_y + h > (sprite_y + tolerance)
         )
 
     @property

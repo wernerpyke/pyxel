@@ -1,7 +1,8 @@
+from typing import Callable, Optional
 import pyxel
 import constants
 from . import draw
-from .objects.sprite import Sprite, Animation
+from .objects.sprite import Sprite, OpenableSprite, Animation
 from .objects.map import Map, Coord
 
 class Player:
@@ -9,10 +10,12 @@ class Player:
         self._sprite = sprite
         self._movementSpeed = movementSpeed
 
+        self._canOpenSprite: Optional[OpenableSprite] = None
+
     def set_position(self, col: int, row: int):
         self._sprite.position = Coord(col, row)
 
-    def move(self, direction, walls: list[Sprite]):
+    def move(self, direction, doors: list[OpenableSprite], walls: list[Sprite]):
         sprite = self._sprite
         byX = 0
         byY = 0
@@ -31,9 +34,16 @@ class Player:
                 byX = self._movementSpeed
         
         moveTo = sprite.position.clone_by(byX, byY)
+
+        for door in doors:
+            if door.is_closed and moveTo.collides_with(door.position):
+                print(f"PLAYER.move() COLLIDES WITH CLOSED DOOR col:{door.position._col} row:{door.position._row}")
+                self._canOpenSprite = door
+                return
+
         #print(f"PLAYER.move() TO col:{moveTo._col} row:{moveTo._row} walls:{len(walls)}")
         for wall in walls:
-            if moveTo.collides_with(wall.position, direction):
+            if moveTo.collides_with(wall.position):
                 #print(f"PLAYER.move() COLLIDES WITH WALL col:{wall.position._col} row:{wall.position._row}")
                 return
             
@@ -43,6 +53,12 @@ class Player:
     def stop(self):
         self._sprite.deactivate_animations()
 
+    def interact(self):
+        if self._canOpenSprite:
+            print(f"Player.interact() Opening {self._canOpenSprite.position._col} {self._canOpenSprite.position._row}")
+            self._canOpenSprite.open()
+            self._canOpenSprite = None
+
 class Game:
     def __init__(self, title: str, spriteSheet: str):
         self._player: Player
@@ -51,6 +67,7 @@ class Game:
         self.spriteTick = 0
 
         self.walls: list[Sprite] = []
+        self.doors: list[OpenableSprite] = []
 
         pyxel.init(constants.SIZE.WINDOW, constants.SIZE.WINDOW, fps=constants.FPS.GAME, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(f"../{spriteSheet}")
@@ -59,11 +76,19 @@ class Game:
     def start(self):
         pyxel.run(self.update, self.draw)
 
-    def add_wall(self, sprite: Sprite, col: int, row: int):
+    def add_wall_sprite(self, wallType: Callable[[], Sprite], col: int, row: int):
+        sprite = wallType()
         self.add_sprite(sprite, col, row)
         self.walls.append(sprite)
 
-    def add_player(self, 
+    def add_door_sprite(self, doorType: Callable[[], OpenableSprite], col: int, row: int, closed: bool = True):
+        sprite = doorType()
+        self.add_sprite(sprite, col, row)
+        sprite.close() if closed else sprite.open()
+
+        self.doors.append(sprite)
+
+    def add_player_sprite(self, 
                    idleFrame: Coord,
                    downAnimation: Animation,
                    upAnimation: Animation,
@@ -93,14 +118,16 @@ class Game:
         # Keyboard
         walls = Map.find_nearby(self.walls, self.player._sprite)
 
+        if pyxel.btnp(pyxel.KEY_SPACE):
+            self.player.interact()
         if pyxel.btn(pyxel.KEY_UP):
-            self.player.move("up", walls)
+            self.player.move("up", self.doors, walls)
         elif pyxel.btn(pyxel.KEY_DOWN):
-            self.player.move("down", walls)
+            self.player.move("down", self.doors, walls)
         elif pyxel.btn(pyxel.KEY_LEFT):
-            self.player.move("left", walls)
+            self.player.move("left", self.doors, walls)
         elif pyxel.btn(pyxel.KEY_RIGHT):
-            self.player.move("right", walls)
+            self.player.move("right", self.doors, walls)
         else:
             self.player.stop()
 
