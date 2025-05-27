@@ -1,4 +1,6 @@
 from typing import Optional
+
+from .signals import Signals
 from .sprite import Sprite, OpenableSprite
 from .map import Map, Coord
 
@@ -35,7 +37,11 @@ class Player:
             sprite.set_position(moveTo)
         else:
             if map.is_openable(moveTo):
-                self._canOpenSprite = map.openable_sprite(moveTo)
+                self._canOpenSprite = map.openable_sprite_at(moveTo)
+
+            sprite = map.sprite_at(moveTo)
+            if sprite:
+                Signals.send(Signals.PLAYER.BLOCKED, sprite)
 
     def stop(self):
         self._sprite.deactivate_animations()

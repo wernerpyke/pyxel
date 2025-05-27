@@ -18,7 +18,8 @@ class Sprite:
     Args:
         sheetCoordinate (Coordinate): The x/y-coordinate of the sprite on the resource sheet.
     """
-    def __init__(self, idleFrame: Coord):
+    def __init__(self, name: str, idleFrame: Coord):
+        self.name = name
         self.idleFrame = idleFrame
 
         self.animations: dict[str, Animation] = { }
@@ -81,8 +82,8 @@ CLOSING: int = 2
 OPENING: int = 3
 
 class OpenableSprite(Sprite):
-    def __init__(self, openFrame: Coord, closedFrame: Coord, openingAnimation: Animation):
-        super().__init__(openFrame)
+    def __init__(self, name: str, openFrame: Coord, closedFrame: Coord, openingAnimation: Animation):
+        super().__init__(name, openFrame)
         self._openFrame = openFrame
         self._closedFrame = closedFrame
         self._openingAnimation = openingAnimation

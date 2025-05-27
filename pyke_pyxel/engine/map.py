@@ -41,8 +41,10 @@ class Map:
         status = self.location_at(coord).status
         return status == LOCATION_STATUS.FREE or status == LOCATION_STATUS.OPEN
 
-    def mark_blocked(self, coord: Coord):
-        self.location_at(coord).status = LOCATION_STATUS.BLOCKED
+    def mark_blocked(self, coord: Coord, sprite: Sprite):
+        location = self.location_at(coord)
+        location.status = LOCATION_STATUS.BLOCKED
+        location.sprite = sprite
 
     def mark_openable(self, coord: Coord, sprite: OpenableSprite, closed: bool):
         status = LOCATION_STATUS.CLOSED if closed else LOCATION_STATUS.OPEN
@@ -85,12 +87,15 @@ class Map:
                 return below.sprite # type: ignore
 
 
-    def openable_sprite(self, coord: Coord) -> Optional[OpenableSprite]:
+    def openable_sprite_at(self, coord: Coord) -> Optional[OpenableSprite]:
         location = self.location_at(coord)
         if location.status == LOCATION_STATUS.CLOSED or location.status == LOCATION_STATUS.OPEN:
             return location.sprite # type: ignore
         
         return None
+    
+    def sprite_at(self, coord: Coord) -> Optional[Sprite]:
+        return self.location_at(coord).sprite
 
     def location_at(self, coord: Coord) -> MapLocation:
         if coord._col < 1 or coord._col > self._cols or coord._row < 1 or coord._row > self._rows:

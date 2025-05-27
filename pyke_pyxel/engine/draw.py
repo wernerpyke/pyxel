@@ -1,6 +1,6 @@
 import pyxel
 import constants
-from .objects.sprite import Sprite
+from .sprite import Sprite
 
 def background():
     pyxel.cls(constants.COLOURS.BLACK)
