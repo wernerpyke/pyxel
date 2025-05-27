@@ -1,5 +1,5 @@
 from typing import Optional
-from .map import Coord
+from .coord import Coord
 
 class Animation:
     def __init__(self, startFrame: Coord, frames: int, flip: Optional[bool] = False):
@@ -22,7 +22,7 @@ class Sprite:
         self.idleFrame = idleFrame
 
         self.animations: dict[str, Animation] = { }
-        self.position: Coord
+        self._position: Coord # = Coord(0, 0)
         self.active_frame = self.idleFrame
         self.is_flipped: bool = False
 
@@ -34,9 +34,6 @@ class Sprite:
         self.animations[name] = animation
         
     def activate_animation(self, name, loop: bool = True):
-        # if self._animation and self._animation._name == name:
-        #    return
-        
         self._animation = self.animations[name]
         self.is_flipped = self._animation.flip
         self._loop_animation = loop
@@ -45,8 +42,19 @@ class Sprite:
         self._animation = None
         self.is_flipped = False
 
-    def move(self, x: int, y: int):
-        self.position.move(x, y)
+    def set_position(self, position: Coord):
+        # if self._position and self._position.is_different_grid_location(position):
+        #     self._previousPosition = self._position
+        self._position = position
+
+    # def return_to_previous_position(self):
+    #     if self._previousPosition:
+    #         self._position = self._previousPosition
+    #         self._previousPosition = None
+
+    @property
+    def position(self) -> Coord:
+        return self._position
 
     def update_frame(self):
         anim = self._animation

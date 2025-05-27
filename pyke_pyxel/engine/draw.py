@@ -7,7 +7,7 @@ def background():
 
 def sprite(sprite: Sprite):
     frame = sprite.active_frame
-    position = sprite.position
+    position = sprite._position
 
     # width = constants.SIZE.TILE
     # if (sprite.is_flipped):
