@@ -8,9 +8,10 @@ class Signals:
     @dataclass
     class PLAYER:
         BLOCKED = "player_blocked"
+        INTERACT_OPENABLE = "player_interact_openable"
 
     @staticmethod
-    def register(name: str, listener: Callable):
+    def connect(name: str, listener: Callable):
         signal(name).connect(listener)
 
     @staticmethod

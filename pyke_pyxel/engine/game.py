@@ -7,9 +7,10 @@ from .signals import Signals
 from .map import Map, Coord
 from .sprite import Sprite, OpenableSprite, Animation
 from .player import Player
+from .room import Room
 
 class Game:
-    def __init__(self, title: str, spriteSheet: str): # , events: type[Events]):
+    def __init__(self, title: str, spriteSheet: str):
         self._player: Player
 
         self._sprites: list[Sprite] = []
@@ -17,7 +18,8 @@ class Game:
 
         self._map = Map(constants.SIZE.WINDOW, constants.SIZE.WINDOW)
 
-        # self._events = events
+
+        self.room = Room(self._map, self._sprites)
 
         pyxel.init(constants.SIZE.WINDOW, constants.SIZE.WINDOW, fps=constants.FPS.GAME, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(f"../{spriteSheet}")
@@ -25,28 +27,6 @@ class Game:
     
     def start(self):
         pyxel.run(self.update, self.draw)
-
-    def add_wall(self, wallType: Callable[[], Sprite], col: int, row: int):
-        position = Coord(col, row)
-        sprite = wallType()
-        sprite.set_position(position)
-        
-        self._sprites.append(sprite)
-        self._map.mark_blocked(position, sprite)
-
-    def add_door(self, doorType: Callable[[], OpenableSprite], col: int, row: int, closed: bool = True):
-        position = Coord(col, row)
-        sprite = doorType()
-        sprite.set_position(position)
-        
-        if closed:
-            sprite.close()
-        else:
-            sprite.open()
-
-        self._sprites.append(sprite)
-
-        self._map.mark_openable(position, sprite, closed)
 
     def add_player(self, sprite: Sprite, movementSpeed: int) -> Player:
         self.player = Player(sprite, movementSpeed)
@@ -71,7 +51,6 @@ class Game:
             self.player.move("right", self._map)
         else:
             self.player.stop()
-
 
         # Animation
         if self.spriteTick < (constants.FPS.GAME / constants.FPS.ANIMATION):

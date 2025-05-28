@@ -50,15 +50,13 @@ class Player:
         openable = self._canOpenSprite if self._canOpenSprite else map.adjacent_openable(self._sprite.position)
 
         if openable:
+            Signals.send(Signals.PLAYER.INTERACT_OPENABLE, openable)
             if openable.is_closed:
-                openable.open()
-                map.mark_open(openable.position)
-            else:
-                openable.close()
                 map.mark_closed(openable.position)
+            else:
+                map.mark_open(openable.position)
                 
         # There is an interesting side effect here whereby, because once you open a door we set self._canOpenSprite = None
         # and map.adjacent_openable() only finds doors around you, you cannot close a door while standing on top of it.
         # Closing a door while standing on top of it would cause a bug, trapping the player
-
         self._canOpenSprite = None
