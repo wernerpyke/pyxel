@@ -19,6 +19,7 @@ class Sprite:
         sheetCoordinate (Coordinate): The x/y-coordinate of the sprite on the resource sheet.
     """
     def __init__(self, name: str, idleFrame: Coord):
+        self._id: int = 0
         self.name = name
         self.idleFrame = idleFrame
 
@@ -29,6 +30,9 @@ class Sprite:
 
         self._animation: Optional[Animation] = None
         self._loop_animation: bool = True
+
+    def __eq__(self, other):
+        return isinstance(other, Sprite) and self._id == other._id
 
     def add_animation(self, name: str, animation: Animation):
         animation._name = name

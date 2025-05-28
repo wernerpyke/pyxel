@@ -20,15 +20,14 @@ def build_room(room: Room):
 
         make_horizontal_wall(room, WALLS.BOULDER, 7, 10, 10)
 
-        room.add_wall(PROTECTILE.FIREBALL, 2, 12)
-
 def set_player(player: Player):
     player.set_position(1, 10)
 
+def game_started(player: Player):
+     print("GAME STARTED")
 
 def player_blocked_by(sprite: Sprite):
     print(f"PLAYER BLOCKED BY {sprite.name} at {sprite.position}")
-
 
 def player_interacts_with_openable(sprite: OpenableSprite):
     if sprite.is_open: 
@@ -37,3 +36,6 @@ def player_interacts_with_openable(sprite: OpenableSprite):
     else:
         print(f"PLAYER OPENS {sprite.name}")
         sprite.open()
+
+def player_attacks(player: Player):
+     player.launch_projectile(PROTECTILE.FIREBALL(), 2, player.currentDirection)

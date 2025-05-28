@@ -1,14 +1,15 @@
 from typing import Optional
 
-from .signals import Signals
+from .actor import Actor
+from .signals import Signals, DIRECTION
 from .sprite import Sprite, OpenableSprite
 from .map import Map, Coord
 
-class Player:
+class Player(Actor):
     def __init__(self, sprite: Sprite, movementSpeed: int):
-        self._sprite = sprite
+        super().__init__(sprite)
         self._movementSpeed = movementSpeed
-
+        self.currentDirection = DIRECTION.DOWN
         self._canOpenSprite: Optional[OpenableSprite] = None
 
     def set_position(self, col: int, row: int):
@@ -19,18 +20,22 @@ class Player:
         byX = 0
         byY = 0
         match direction:
-            case "up":
+            case DIRECTION.UP:
                 sprite.activate_animation(direction)
                 byY = self._movementSpeed * -1
-            case "down":
+                self.currentDirection = direction
+            case DIRECTION.DOWN:
                 sprite.activate_animation(direction)
                 byY = self._movementSpeed
-            case "left":
+                self.currentDirection = direction
+            case DIRECTION.LEFT:
                 sprite.activate_animation(direction)
                 byX = self._movementSpeed * -1
-            case "right":
+                self.currentDirection = direction
+            case DIRECTION.RIGHT:
                 sprite.activate_animation(direction)
                 byX = self._movementSpeed
+                self.currentDirection = direction
         
         moveTo = sprite.position.clone_by(byX, byY, direction)
         if map.sprite_can_move_to(moveTo):
