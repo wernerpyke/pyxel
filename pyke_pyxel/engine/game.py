@@ -5,15 +5,17 @@ import constants
 from . import draw
 from .signals import Signals, DIRECTION
 from .map import Map, Coord
-from .sprite import Sprite, OpenableSprite, Animation
+from .sprite import Sprite, MovableSprite
 from .actor import Actor
 from .player import Player
+from .enemy import Enemy
 from .projectile import Projectile
 from .room import Room
 
 class Game:
     def __init__(self, title: str, spriteSheet: str):
         self._sprites: list[Sprite] = []
+        self.movementTick = False
         self.spriteTick = 0
 
         self._map = Map(constants.SIZE.WINDOW, constants.SIZE.WINDOW)
@@ -24,6 +26,8 @@ class Game:
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
+        Signals.connect("enemy_added", self._enemy_added)
+        Signals.connect("enemy_removed", self._enemy_removed)
 
         pyxel.init(constants.SIZE.WINDOW, constants.SIZE.WINDOW, fps=constants.FPS.GAME, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(f"../{spriteSheet}")
@@ -32,10 +36,14 @@ class Game:
     def start(self):
         pyxel.run(self.update, self.draw)
 
-    def add_player(self, sprite: Sprite, movementSpeed: int) -> Player:
-        self.player = Player(sprite, movementSpeed)
-        self._sprites.append(sprite)
+    def add_player(self, sprite: Callable[[], MovableSprite]) -> Player:
+        _sprite = sprite()
 
+        self.player = Player(_sprite)
+
+        self._sprites.append(_sprite)
+
+        self.player._id = self._actors.__len__()
         self._actors.append(self.player)
 
         return self.player
@@ -48,31 +56,41 @@ class Game:
     def _sprite_removed(self, sprite: Sprite):
         if sprite in self._sprites:
             self._sprites.remove(sprite)
-            print(f"GAME.sprite_removed() ${sprite._id}")
+            print(f"GAME.sprite_removed() {sprite._id}")
+
+    def _enemy_added(self, enemy: Enemy):
+        self._actors.append(enemy)
+
+    def _enemy_removed(self, enemy: Enemy):
+        if enemy in self._actors:
+            self._actors.remove(enemy)
+            print(f"GAME._enemy_removed() {enemy._id}")
 
 # ===== PYXEL =====
 
     def update(self):
         # Keyboard
-        if pyxel.btnp(pyxel.KEY_SPACE):
+        if pyxel.btnp(pyxel.KEY_X):
             self.player.interact(self._map)
-        elif pyxel.btnp(pyxel.KEY_X):
+        elif pyxel.btnp(pyxel.KEY_Z):
             Signals.send(Signals.PLAYER.ATTACK, self.player)
 
-        # Movement    
-        if pyxel.btn(pyxel.KEY_UP):
-            self.player.move(DIRECTION.UP, self._map)
-        elif pyxel.btn(pyxel.KEY_DOWN):
-            self.player.move(DIRECTION.DOWN, self._map)
-        elif pyxel.btn(pyxel.KEY_LEFT):
-            self.player.move(DIRECTION.LEFT, self._map)
-        elif pyxel.btn(pyxel.KEY_RIGHT):
-            self.player.move(DIRECTION.RIGHT, self._map)
-        else:
-            self.player.stop()
+        # Player Movement
+        self.movementTick = not self.movementTick
+        if self.movementTick:
+            if pyxel.btn(pyxel.KEY_UP):
+                self.player.move(DIRECTION.UP, self._map)
+            elif pyxel.btn(pyxel.KEY_DOWN):
+                self.player.move(DIRECTION.DOWN, self._map)
+            elif pyxel.btn(pyxel.KEY_LEFT):
+                self.player.move(DIRECTION.LEFT, self._map)
+            elif pyxel.btn(pyxel.KEY_RIGHT):
+                self.player.move(DIRECTION.RIGHT, self._map)
+            else:
+                self.player.stop_moving()
 
         for actor in self._actors:
-            actor.update(self._map)
+            actor.update(self._map, self.movementTick)
 
     def draw(self):
         # Sprite Animations

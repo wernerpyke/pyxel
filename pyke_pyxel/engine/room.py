@@ -1,8 +1,9 @@
 from typing import Callable
 from .coord import Coord
 from .map import Map
-from .sprite import Sprite, OpenableSprite
+from .sprite import Sprite, OpenableSprite, MovableSprite
 from .signals import Signals
+from .enemy import Enemy
 
 class Room:
 
@@ -29,3 +30,13 @@ class Room:
 
         Signals._sprite_added(sprite)
         self._map.mark_openable(position, sprite, closed)
+
+    def add_enemy(self, enemyType: Callable[[], MovableSprite], col: int, row: int) -> Enemy:
+        sprite = enemyType()
+        enemy = Enemy(sprite)
+        enemy.set_position(col, row)
+
+        Signals._sprite_added(sprite)
+        Signals._enemy_added(enemy)
+
+        return enemy

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from engine.game import Game, Player
 from engine.map import Coord
-from engine.sprite import Sprite, Animation, OpenableSprite
+from engine.sprite import Sprite, Animation, OpenableSprite, MovableSprite
 
 @dataclass
 class OBJECTS:
@@ -39,20 +39,29 @@ class PROTECTILE:
 
     @staticmethod
     def FIREBALL():
-        return Sprite(OBJECTS.FIREBALL, Coord(5,5))
+        sprite = Sprite(OBJECTS.FIREBALL, Coord(6,5))
+        sprite.add_animation("go", Animation(Coord(6, 5), 2))
+        sprite.activate_animation("go")
+        return sprite
 
 class PLAYER:
     @staticmethod
     def SPRITE():
-        sprite = Sprite("player", idleFrame=Coord(1, 1))
-        sprite.add_animation("down", Animation(Coord(2, 1), 2))
-        sprite.add_animation("up", Animation(Coord(4, 1), 2))
-        sprite.add_animation("left", Animation(Coord(6, 1), 2, True))
-        sprite.add_animation("right", Animation(Coord(6, 1), 2, False))
+        sprite = MovableSprite("player", Coord(1, 1), 2)
+        sprite.set_up_animation(Coord(4, 1), 2)
+        sprite.set_down_animation(Coord(2, 1), 2)
+        sprite.set_left_animation(Coord(6, 1), 2, True)
+        sprite.set_right_animation(Coord(6, 1), 2, False)
 
         return sprite
     
+class ENEMY:
     @staticmethod
-    def MOVEMENT_SPEED():
-        return 1
-    
+    def DEMON():
+        sprite = MovableSprite("enemy", Coord(1, 3), 1)
+        sprite.set_up_animation(Coord(3, 3), 2)
+        sprite.set_down_animation(Coord(1, 3), 2)
+        sprite.set_left_animation(Coord(5, 3), 2, True)
+        sprite.set_right_animation(Coord(5, 3), 2, False)
+
+        return sprite
