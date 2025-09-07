@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Callable
 
 from .signals import Signals, DIRECTION
 from .projectile import Projectile
@@ -17,7 +17,8 @@ class Actor:
     def __eq__(self, other):
         return isinstance(other, Actor) and self._id == other._id
 
-    def launch_projectile(self, sprite: Sprite, movementSpeed: int, direction: str):
+    def launch_projectile(self, spriteType: Callable[[], Sprite], movementSpeed: int, direction: str):
+        sprite = spriteType()
         
         match direction:
             case DIRECTION.UP:
@@ -39,6 +40,14 @@ class Actor:
             if projectile.update(map) == False:
                 print(f"Actor.update() removing projectile")
                 self._projectiles.remove(projectile)
+
+    @property 
+    def name(self):
+        return self._sprite.name
+    
+    @property
+    def position(self):
+        return self._sprite.position
 
 class MovableActor(Actor):
 

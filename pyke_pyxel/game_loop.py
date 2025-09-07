@@ -1,14 +1,15 @@
 import random
-
 from engine.sprite import Sprite, OpenableSprite
 from engine.room import Room
 from engine.player import Player
 from engine.enemy import Enemy
 from engine.signals import DIRECTION
-
 from config import WALLS, DOOR, PROTECTILE, ENEMY
 
-def make_horizontal_wall(room: Room, wallType, fromColumn: int, toColumn: int, row: int):
+
+# -- ======  Helper Functions ======= --
+
+def build_horizontal_wall(room: Room, wallType, fromColumn: int, toColumn: int, row: int):
     column = fromColumn
     while column <= toColumn:
         room.add_wall(wallType, column, row)
@@ -16,6 +17,8 @@ def make_horizontal_wall(room: Room, wallType, fromColumn: int, toColumn: int, r
 
 def choose_random_direction():
      return random.choice( [DIRECTION.UP, DIRECTION.DOWN, DIRECTION.LEFT, DIRECTION.RIGHT] )
+
+# -- ======  Game Loop ======= --
 
 def build_room(room: Room):
 
@@ -27,8 +30,8 @@ def build_room(room: Room):
 
         room.add_door(DOOR.BROWN, 6, 10, True)
 
-        make_horizontal_wall(room, WALLS.BROWN, 7, 15, 10)
-        make_horizontal_wall(room, WALLS.BROWN, 6, 15, 15)
+        build_horizontal_wall(room, WALLS.BROWN, 7, 15, 10)
+        build_horizontal_wall(room, WALLS.BROWN, 6, 15, 15)
 
         room.add_wall(WALLS.GREY, 15, 11)
         room.add_wall(WALLS.GREY, 15, 12)
@@ -45,7 +48,7 @@ def game_started(room: Room, player: Player):
      enemy.start_moving(choose_random_direction())
 
 def player_blocked_by(sprite: Sprite):
-    print(f"PLAYER BLOCKED BY {sprite.name} at {sprite.position}")
+    print(f"PLAYER BLOCKED BY {sprite.name} AT {sprite.position}")
 
 def player_interacts_with_openable(sprite: OpenableSprite):
     if sprite.is_open: 
@@ -56,9 +59,8 @@ def player_interacts_with_openable(sprite: OpenableSprite):
         sprite.open()
 
 def player_attacks(player: Player):
-     player.launch_projectile(PROTECTILE.FIREBALL(), 2, player.currentDirection)
+     player.launch_projectile(PROTECTILE.FIREBALL, 2, player.currentDirection)
 
-def enemy_blocked_by(enemy: Enemy, other):
-     print(f"ENEMY BLOCKED")
-     enemy.stop_moving()
+def enemy_blocked_by(enemy: Enemy, other: Sprite):
+     print(f"ENEMY {enemy.name} BLOCKED BY {other.name} AT {other.position}")
      enemy.start_moving(choose_random_direction())

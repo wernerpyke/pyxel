@@ -31,7 +31,11 @@ class Signals:
         signal(name).connect(listener)
 
     @staticmethod
-    def send(name: str, sender, other: Optional[Any] = None):
+    def send(name: str, sender):
+        signal(name).send(sender)
+
+    @staticmethod
+    def send_with(name: str, sender, other: Optional[Any] = None):
         signal(name).send(sender, other=other)
 
     @staticmethod

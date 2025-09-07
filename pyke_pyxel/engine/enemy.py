@@ -14,4 +14,4 @@ class Enemy(MovableActor):
         if not super().move(direction, map):
             sprite = map.sprite_at(self._moveTo)
             if sprite:
-                Signals.send(Signals.ENEMY.BLOCKED, self, sprite)
+                Signals.send_with(Signals.ENEMY.BLOCKED, self, sprite)

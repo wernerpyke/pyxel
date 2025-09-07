@@ -58,7 +58,7 @@ class PLAYER:
 class ENEMY:
     @staticmethod
     def DEMON():
-        sprite = MovableSprite("enemy", Coord(1, 3), 1)
+        sprite = MovableSprite("demon", Coord(1, 3), 1)
         sprite.set_up_animation(Coord(3, 3), 2)
         sprite.set_down_animation(Coord(1, 3), 2)
         sprite.set_left_animation(Coord(5, 3), 2, True)
