@@ -4,7 +4,7 @@ from engine.room import Room
 from engine.player import Player
 from engine.enemy import Enemy
 from engine.signals import DIRECTION
-from config import WALLS, DOOR, PROJECTILE, ENEMY
+from config import PROJECTILE, ENEMY
 
 # -- ======  Helper Functions ======= --
 
