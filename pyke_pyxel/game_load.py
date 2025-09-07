@@ -9,7 +9,7 @@ def build_horizontal_wall(room: Room, wallType, fromColumn: int, toColumn: int, 
     column = fromColumn
     while column <= toColumn:
         room.add_wall(wallType, column, row)
-        column += 1
+        column = column + 1
 
 
 
