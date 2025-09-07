@@ -4,7 +4,7 @@ from engine.room import Room
 from engine.player import Player
 from engine.enemy import Enemy
 from engine.signals import DIRECTION
-from config import WALLS, DOOR, PROTECTILE, ENEMY
+from config import WALLS, DOOR, PROJECTILE, ENEMY
 
 
 # -- ======  Helper Functions ======= --
@@ -59,7 +59,7 @@ def player_interacts_with_openable(sprite: OpenableSprite):
         sprite.open()
 
 def player_attacks(player: Player):
-     player.launch_projectile(PROTECTILE.FIREBALL, 2, player.currentDirection)
+     player.launch_projectile(PROJECTILE.FIREBALL, 2, player.currentDirection)
 
 def enemy_blocked_by(enemy: Enemy, other: Sprite):
      print(f"ENEMY {enemy.name} BLOCKED BY {other.name} AT {other.position}")

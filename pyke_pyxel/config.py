@@ -35,7 +35,7 @@ class DOOR:
         sprite = OpenableSprite(OBJECTS.DOOR, Coord(10, 15), Coord(8,15), Animation(Coord(8, 15), 3))
         return sprite
     
-class PROTECTILE:
+class PROJECTILE:
 
     @staticmethod
     def FIREBALL():
