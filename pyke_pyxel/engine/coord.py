@@ -1,13 +1,14 @@
 import math
-import constants
+from . import game
 
 class Coord:
     def __init__(self, col: int, row: int):
         self._col = col
         self._row = row
 
-        self._x = (self._col - 1) * constants.SIZE.TILE
-        self._y = (self._row - 1) * constants.SIZE.TILE
+        tile_size = game.GLOBAL_SETTINGS.size.tile
+        self._x = (self._col - 1) * tile_size
+        self._y = (self._row - 1) * tile_size
 
     def is_different_grid_location(self, coord: "Coord"):
         return self._col != coord._col or self._row != coord._row
@@ -20,19 +21,21 @@ class Coord:
         cloned._x = self._x + x
         cloned._y = self._y + y
 
+        tile_size = game.GLOBAL_SETTINGS.size.tile
+
         match direction:
             case "up":
-                cloned._col = math.floor(self.mid_x / constants.SIZE.TILE) + 1
-                cloned._row = math.floor(cloned.y / constants.SIZE.TILE) + 1
+                cloned._col = math.floor(self.mid_x / tile_size) + 1
+                cloned._row = math.floor(cloned.y / tile_size) + 1
             case "down":
-                cloned._col = math.floor(self.mid_x / constants.SIZE.TILE) + 1
-                cloned._row = math.floor((cloned.y + constants.SIZE.TILE) / constants.SIZE.TILE) + 1
+                cloned._col = math.floor(self.mid_x / tile_size) + 1
+                cloned._row = math.floor((cloned.y + tile_size) / tile_size) + 1
             case "left":
-                cloned._col = math.floor(cloned.x / constants.SIZE.TILE) + 1
-                cloned._row = math.floor(self.mid_y / constants.SIZE.TILE) + 1
+                cloned._col = math.floor(cloned.x / tile_size) + 1
+                cloned._row = math.floor(self.mid_y / tile_size) + 1
             case "right":
-                cloned._col = math.floor((cloned.x + constants.SIZE.TILE) / constants.SIZE.TILE) + 1
-                cloned._row = math.floor(self.mid_y / constants.SIZE.TILE) + 1
+                cloned._col = math.floor((cloned.x + tile_size) / tile_size) + 1
+                cloned._row = math.floor(self.mid_y / tile_size) + 1
 
         return cloned
     
@@ -45,9 +48,10 @@ class Coord:
         collide_y = coord._y
         sprite_x = self._x
         sprite_y = self._y
-        
-        w = constants.SIZE.TILE
-        h = constants.SIZE.TILE
+
+        tile_size = game.GLOBAL_SETTINGS.size.tile        
+        w = tile_size
+        h = tile_size
         tolerance = 1
         
         return (
@@ -67,11 +71,13 @@ class Coord:
     
     @property
     def mid_x(self) -> int:
-        return math.floor(self._x + (constants.SIZE.TILE / 2))
+        tile_size = game.GLOBAL_SETTINGS.size.tile
+        return math.floor(self._x + (tile_size / 2))
     
     @property
     def mid_y(self) -> int:
-        return math.floor(self._y + (constants.SIZE.TILE / 2))
+        tile_size = game.GLOBAL_SETTINGS.size.tile
+        return math.floor(self._y + (tile_size / 2))
     
     def __str__(self):
         return f"{self._col}/{self._row}"

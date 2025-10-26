@@ -1,5 +1,6 @@
 from engine.signals import Signals
 from engine.game import Game
+from engine.game_settings import GAME_SETTINGS, SIZE
 
 import game_load
 import game_loop
@@ -13,7 +14,15 @@ Signals.connect(Signals.PLAYER.ATTACK, game_loop.player_attacks)
 
 Signals.connect(Signals.ENEMY.BLOCKED, game_loop.enemy_blocked_by)
 
-game = Game("Go Pyke!", "assets/sample.pyxres")
+settings = GAME_SETTINGS(
+    debug=True,
+    size=SIZE(window=160))
+
+game = Game(
+        settings=settings,
+        title="Go Pyke!", 
+        spriteSheet="assets/sample.pyxres"
+        )
 
 game_load.build_room(game.room)
 

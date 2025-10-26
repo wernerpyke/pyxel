@@ -2,7 +2,8 @@ from typing import TYPE_CHECKING, Optional
 from dataclasses import dataclass
 
 import math
-import constants
+
+from . import game
 from .coord import Coord
 
 #if TYPE_CHECKING:
@@ -22,11 +23,13 @@ class MapLocation:
 
 class Map:
 
-    def __init__(self, width: int, height: int):
+    def __init__(self):
+        sizes = game.GLOBAL_SETTINGS.size
+
         self._grid: list[ list[MapLocation] ] = []
         self._edgeLocation = MapLocation(LOCATION_STATUS.BLOCKED)
-        self._cols = math.floor(width / constants.SIZE.TILE)
-        self._rows = math.floor(height / constants.SIZE.TILE)
+        self._cols = math.floor(sizes.window / sizes.tile)
+        self._rows = math.floor(sizes.window / sizes.tile)
 
         print(f"Map() {self._cols}/{self._rows}")
 

@@ -1,11 +1,11 @@
 import pyxel
-import constants
+from .game_settings import GAME_SETTINGS
 from .sprite import Sprite
 
-def background():
-    pyxel.cls(constants.COLOURS.BLACK)
+def background(settings: GAME_SETTINGS):
+    pyxel.cls(settings.colours.black)
 
-def sprite(sprite: Sprite):
+def sprite(sprite: Sprite, settings: GAME_SETTINGS):
     frame = sprite.active_frame
     position = sprite._position
 
@@ -20,6 +20,6 @@ def sprite(sprite: Sprite):
               img=0,
               u=frame.x,
               v=frame.y,
-              w=(constants.SIZE.TILE * -1) if sprite.is_flipped else constants.SIZE.TILE,
-              h=constants.SIZE.TILE,
-              colkey=constants.COLOURS.SPRITE_TRANSPARENCY)
+              w=(settings.size.tile * -1) if sprite.is_flipped else settings.size.tile,
+              h=settings.size.tile,
+              colkey=settings.colours.sprite_transparency)

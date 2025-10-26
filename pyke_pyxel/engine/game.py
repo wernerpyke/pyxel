@@ -1,10 +1,10 @@
-from typing import Callable, Optional
+from typing import Callable
 import pyxel
 
-import constants
 from . import draw
+from .game_settings import GAME_SETTINGS
 from .signals import Signals, DIRECTION
-from .map import Map, Coord
+from .map import Map
 from .sprite import Sprite, MovableSprite
 from .actor import Actor
 from .player import Player
@@ -12,13 +12,18 @@ from .enemy import Enemy
 from .projectile import Projectile
 from .room import Room
 
+GLOBAL_SETTINGS: GAME_SETTINGS = GAME_SETTINGS()
+
 class Game:
-    def __init__(self, title: str, spriteSheet: str):
+    def __init__(self, settings: GAME_SETTINGS, title: str, spriteSheet: str):
+        GLOBAL_SETTINGS = settings
+        self._settings = settings
+
         self._sprites: list[Sprite] = []
         self.movementTick = False
         self.spriteTick = 0
 
-        self._map = Map(constants.SIZE.WINDOW, constants.SIZE.WINDOW)
+        self._map = Map()
         self.room = Room(self._map)
 
         self._player: Player
@@ -29,7 +34,7 @@ class Game:
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
 
-        pyxel.init(constants.SIZE.WINDOW, constants.SIZE.WINDOW, fps=constants.FPS.GAME, title=title, quit_key=pyxel.KEY_ESCAPE)
+        pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(f"../{spriteSheet}")
         # pyxel.images[0].load(0, 0, "assets/pyxel_logo_38x16.png")
     
@@ -94,7 +99,7 @@ class Game:
 
     def draw(self):
         # Sprite Animations
-        if self.spriteTick < (constants.FPS.GAME / constants.FPS.ANIMATION):
+        if self.spriteTick < (self._settings.fps.game / self._settings.fps.animation):
             self.spriteTick += 1
         else:
             self.spriteTick = 0
@@ -102,11 +107,11 @@ class Game:
                 sprite.update_frame()
             
         # Background
-        draw.background()
+        draw.background(self._settings)
         
         # Sprites
         for sprite in self._sprites:
-            draw.sprite(sprite)
+            draw.sprite(sprite, self._settings)
 
         pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
         
