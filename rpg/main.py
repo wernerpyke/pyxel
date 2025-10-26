@@ -1,6 +1,7 @@
-from engine.signals import Signals
-from engine.game import Game
-from engine.game_settings import GAME_SETTINGS, SIZE
+from pathlib import Path
+from pyke_pyxel.signals import Signals
+from pyke_pyxel.game import Game
+from pyke_pyxel.game_settings import GAME_SETTINGS, SIZE
 
 import game_load
 import game_loop
@@ -21,7 +22,7 @@ settings = GAME_SETTINGS(
 game = Game(
         settings=settings,
         title="Go Pyke!", 
-        spriteSheet="assets/sample.pyxres"
+        sprite_sheet=f"{Path(__file__).parent.resolve()}/assets/sample.pyxres"
         )
 
 game_load.build_room(game.room)

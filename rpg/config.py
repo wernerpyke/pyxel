@@ -1,7 +1,7 @@
 from dataclasses import dataclass
-from engine.game import Game, Player
-from engine.map import Coord
-from engine.sprite import Sprite, Animation, OpenableSprite, MovableSprite
+from pyke_pyxel.game import Game, Player
+from pyke_pyxel.map import Coord
+from pyke_pyxel.sprite import Sprite, Animation, OpenableSprite, MovableSprite
 
 @dataclass
 class OBJECTS:

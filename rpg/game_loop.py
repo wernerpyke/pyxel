@@ -1,9 +1,9 @@
 import random
-from engine.sprite import Sprite, OpenableSprite
-from engine.room import Room
-from engine.player import Player
-from engine.enemy import Enemy
-from engine.signals import DIRECTION
+from pyke_pyxel.sprite import Sprite, OpenableSprite
+from pyke_pyxel.room import Room
+from pyke_pyxel.player import Player
+from pyke_pyxel.enemy import Enemy
+from pyke_pyxel.signals import DIRECTION
 from config import PROJECTILE, ENEMY
 
 # -- ======  Helper Functions ======= --

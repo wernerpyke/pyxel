@@ -8,7 +8,7 @@
             "name": "Game",
             "type": "debugpy",
             "request": "launch",
-            "program": "pyke_pyxel/main.py",
+            "program": "rpg/main.py",
             "console": "integratedTerminal"
         }
     ]

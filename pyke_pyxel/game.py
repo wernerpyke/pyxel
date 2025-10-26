@@ -15,7 +15,7 @@ from .room import Room
 GLOBAL_SETTINGS: GAME_SETTINGS = GAME_SETTINGS()
 
 class Game:
-    def __init__(self, settings: GAME_SETTINGS, title: str, spriteSheet: str):
+    def __init__(self, settings: GAME_SETTINGS, title: str, sprite_sheet: str):
         GLOBAL_SETTINGS = settings
         self._settings = settings
 
@@ -35,7 +35,7 @@ class Game:
         Signals.connect("enemy_removed", self._enemy_removed)
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
-        pyxel.load(f"../{spriteSheet}")
+        pyxel.load(sprite_sheet)
         # pyxel.images[0].load(0, 0, "assets/pyxel_logo_38x16.png")
     
     def start(self):
