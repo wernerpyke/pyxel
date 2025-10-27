@@ -5,10 +5,17 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Game",
+            "name": "RPG",
             "type": "debugpy",
             "request": "launch",
             "program": "rpg/main.py",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "TD",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "td/main.py",
             "console": "integratedTerminal"
         }
     ]

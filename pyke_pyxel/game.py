@@ -1,16 +1,13 @@
-from typing import Callable
+from typing import Callable, Optional
 import pyxel
 
 from . import draw
 from .game_settings import GAME_SETTINGS
-from .signals import Signals, DIRECTION
+from .signals import Signals
 from .map import Map
-from .sprite import Sprite, MovableSprite
+from .sprite import Sprite
 from .actor import Actor
-from .player import Player
 from .enemy import Enemy
-from .projectile import Projectile
-from .room import Room
 
 GLOBAL_SETTINGS: GAME_SETTINGS = GAME_SETTINGS()
 
@@ -24,13 +21,12 @@ class Game:
         self.spriteTick = 0
 
         self._map = Map()
-        self.room = Room(self._map)
-
-        self._player: Player
-        self._actors: list[Actor] = []
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
+
+        # TODO - should the below move to CharacterGame?
+        self._actors: list[Actor] = []
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
 
@@ -40,18 +36,6 @@ class Game:
     
     def start(self):
         pyxel.run(self.update, self.draw)
-
-    def add_player(self, sprite: Callable[[], MovableSprite]) -> Player:
-        _sprite = sprite()
-
-        self.player = Player(_sprite)
-
-        self._sprites.append(_sprite)
-
-        self.player._id = self._actors.__len__()
-        self._actors.append(self.player)
-
-        return self.player
 
     def _sprite_added(self, sprite: Sprite):
         sprite._id = self._sprites.__len__()
@@ -74,26 +58,6 @@ class Game:
 # ===== PYXEL =====
 
     def update(self):
-        # Keyboard
-        if pyxel.btnp(pyxel.KEY_X):
-            self.player.interact(self._map)
-        elif pyxel.btnp(pyxel.KEY_Z):
-            Signals.send(Signals.PLAYER.ATTACK, self.player)
-
-        # Player Movement
-        self.movementTick = not self.movementTick
-        if self.movementTick:
-            if pyxel.btn(pyxel.KEY_UP):
-                self.player.move(DIRECTION.UP, self._map)
-            elif pyxel.btn(pyxel.KEY_DOWN):
-                self.player.move(DIRECTION.DOWN, self._map)
-            elif pyxel.btn(pyxel.KEY_LEFT):
-                self.player.move(DIRECTION.LEFT, self._map)
-            elif pyxel.btn(pyxel.KEY_RIGHT):
-                self.player.move(DIRECTION.RIGHT, self._map)
-            else:
-                self.player.stop_moving()
-
         for actor in self._actors:
             actor.update(self._map, self.movementTick)
 
@@ -113,5 +77,5 @@ class Game:
         for sprite in self._sprites:
             draw.sprite(sprite, self._settings)
 
-        pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
+        # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
         
