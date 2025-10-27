@@ -6,7 +6,7 @@ from .projectile import Projectile
 from .sprite import Sprite, MovableSprite
 from .map import Map, Coord
 
-from . import DIRECTION
+from . import DIRECTION, log_debug
 
 class Actor:
 
@@ -40,7 +40,7 @@ class Actor:
     def _update(self, map: Map, update_movement: bool):
         for projectile in self._projectiles:
             if projectile.update(map) == False:
-                print(f"Actor.update() removing projectile")
+                log_debug(f"Actor.update() removing projectile")
                 self._projectiles.remove(projectile)
 
     @property 

@@ -1,6 +1,6 @@
 import pyxel
 
-from . import draw
+from . import draw, log_debug
 from .game_settings import GameSettings
 from .signals import Signals
 from .map import Map
@@ -20,7 +20,7 @@ class Game:
         self._settings = settings
 
         self._sprites: list[Sprite] = []
-        self.spriteTick = 0
+        self._animation_tick = 0
 
         self._map = Map()
         self.movement_tick: bool = False
@@ -39,17 +39,18 @@ class Game:
         # pyxel.images[0].load(0, 0, "assets/pyxel_logo_38x16.png")
     
     def start(self):
+        Signals.send(Signals.GAME.STARTED, self)
         pyxel.run(self.update, self.draw)
 
     def _sprite_added(self, sprite: Sprite):
         sprite._id = self._sprites.__len__()
-        print(f"GAME.sprite_added() {sprite._id}")
+        log_debug(f"GAME.sprite_added() {sprite._id}")
         self._sprites.append(sprite)
 
     def _sprite_removed(self, sprite: Sprite):
         if sprite in self._sprites:
             self._sprites.remove(sprite)
-            print(f"GAME.sprite_removed() {sprite._id}")
+            log_debug(f"GAME.sprite_removed() {sprite._id}")
 
     def _enemy_added(self, enemy: Enemy):
         self._actors.append(enemy)
@@ -57,22 +58,22 @@ class Game:
     def _enemy_removed(self, enemy: Enemy):
         if enemy in self._actors:
             self._actors.remove(enemy)
-            print(f"GAME._enemy_removed() {enemy._id}")
+            log_debug(f"GAME._enemy_removed() {enemy._id}")
 
 # ===== PYXEL =====
 
     def update(self):
-        # Player Movement
+        # movement
         self.movement_tick = not self.movement_tick
 
         for actor in self._actors:
             actor._update(self._map, self.movement_tick)
 
         # Sprite Animations
-        if self.spriteTick < (self._settings.fps.game / self._settings.fps.animation):
-            self.spriteTick += 1
+        if self._animation_tick < (self._settings.fps.game / self._settings.fps.animation):
+            self._animation_tick += 1
         else:
-            self.spriteTick = 0
+            self._animation_tick = 0
             for sprite in self._sprites:
                 sprite.update_frame()
 

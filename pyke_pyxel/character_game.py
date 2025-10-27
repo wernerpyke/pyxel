@@ -52,5 +52,9 @@ class CharacterGame(Game):
         super().update()
 
     @property
+    def player(self) -> Player:
+        return self._player
+
+    @property
     def room(self) -> Room:
         return self._room

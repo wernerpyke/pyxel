@@ -3,7 +3,7 @@ from dataclasses import dataclass
 
 import math
 
-from . import game
+from . import game, log_debug
 from .coord import Coord
 
 #if TYPE_CHECKING:
@@ -31,7 +31,7 @@ class Map:
         self._cols = math.floor(sizes.window / sizes.tile)
         self._rows = math.floor(sizes.window / sizes.tile)
 
-        print(f"Map() {self._cols}/{self._rows}")
+        log_debug(f"Map() {self._cols}/{self._rows}")
 
         for c in range(0, self._cols):
             row: list[MapLocation] = []

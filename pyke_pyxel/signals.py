@@ -7,6 +7,7 @@ class Signals:
     
     @dataclass
     class GAME:
+        STARTED = "game_started"
         SPRITE_REMOVED = "sprite_removed"
 
     @dataclass
@@ -18,6 +19,10 @@ class Signals:
     @dataclass
     class ENEMY:
         BLOCKED = "enemy_blocked"
+
+    @dataclass
+    class CELL_FIELD:
+        UPDATE = "cell_field_update"
 
     @staticmethod
     def connect(name: str, listener: Callable):

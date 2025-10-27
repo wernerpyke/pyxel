@@ -6,7 +6,7 @@ from pyke_pyxel.game_settings import GameSettings
 
 from . import game
 # from .game import Game
-from .cell_field import CellFied
+from .cell_field import CellField
 
 class FieldGame(game.Game):
 
@@ -15,7 +15,9 @@ class FieldGame(game.Game):
         
         # TODO - support non-square fields
         size = game.GLOBAL_SETTINGS.size
-        self._field = CellFied(size.window, size.window)
+        self._field = CellField(size.window, size.window)
+
+    # Lifecycle methods
 
     def update(self):
         self._field._update()
@@ -26,3 +28,9 @@ class FieldGame(game.Game):
         super()._draw_background()
 
         self._field._draw()
+
+    # Convenience accessors
+
+    @property
+    def field(self) -> CellField:
+        return self._field
