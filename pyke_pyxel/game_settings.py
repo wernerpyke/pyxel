@@ -1,28 +1,28 @@
 from dataclasses import dataclass, field
 
 @dataclass
-class FPS:
+class FpsSettings:
     game: int = 30
     animation: int = 8
 
 @dataclass
-class SIZE:
+class SizeSettings:
     window:int  = 160
     tile: int = 8
 
 @dataclass
-class COLOURS:
+class ColourSettings:
     sprite_transparency: int = 0
     black:int = 0
 
 @dataclass
-class GAME_SETTINGS:
+class GameSettings:
     debug: bool = False
 
-    fps: FPS = field(default_factory=FPS)
+    fps: FpsSettings = field(default_factory=FpsSettings)
 
-    size: SIZE = field(default_factory=SIZE)
+    size: SizeSettings = field(default_factory=SizeSettings)
 
-    colours: COLOURS = field(default_factory=COLOURS)
+    colours: ColourSettings = field(default_factory=ColourSettings)
 
 

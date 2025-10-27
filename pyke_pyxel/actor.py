@@ -1,10 +1,12 @@
 from dataclasses import dataclass
 from typing import Optional, Callable
 
-from .signals import Signals, DIRECTION
+from .signals import Signals
 from .projectile import Projectile
 from .sprite import Sprite, MovableSprite
 from .map import Map, Coord
+
+from . import DIRECTION
 
 class Actor:
 
@@ -35,7 +37,7 @@ class Actor:
         
         Signals._sprite_added(sprite)
 
-    def update(self, map: Map, move: bool):
+    def _update(self, map: Map, update_movement: bool):
         for projectile in self._projectiles:
             if projectile.update(map) == False:
                 print(f"Actor.update() removing projectile")
@@ -70,11 +72,11 @@ class MovableActor(Actor):
         self._moveInDirection = None
         self._sprite.deactivate_animations()
 
-    def update(self, map: Map, updateMovement: bool):
-        if self._moveInDirection and updateMovement:
+    def _update(self, map: Map, update_movement: bool):
+        if self._moveInDirection and update_movement:
             self.move(self._moveInDirection, map)
 
-        super().update(map, updateMovement)
+        super()._update(map, update_movement)
 
     def move(self, direction: str, map: Map):
         sprite = self._sprite

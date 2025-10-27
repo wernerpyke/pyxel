@@ -1,7 +1,7 @@
 from pathlib import Path
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.character_game import CharacterGame
-from pyke_pyxel.game_settings import GAME_SETTINGS, SIZE
+from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
 import game_load
 import game_loop
@@ -15,9 +15,9 @@ Signals.connect(Signals.PLAYER.ATTACK, game_loop.player_attacks)
 
 Signals.connect(Signals.ENEMY.BLOCKED, game_loop.enemy_blocked_by)
 
-settings = GAME_SETTINGS(
+settings = GameSettings(
     debug=True,
-    size=SIZE(window=160))
+    size=SizeSettings(window=160))
 
 game = CharacterGame(
         settings=settings,

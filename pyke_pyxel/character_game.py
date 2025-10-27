@@ -2,16 +2,17 @@ from typing import Callable, Optional
 
 import pyxel
 
-from pyke_pyxel.game_settings import GAME_SETTINGS
+from . import DIRECTION
+from .game_settings import GameSettings
 from .game import Game
 from .player import Player
-from .signals import Signals, DIRECTION
+from .signals import Signals
 from .sprite import Sprite, MovableSprite
 from .room import Room
 
 class CharacterGame(Game):
 
-    def __init__(self, settings: GAME_SETTINGS, title: str, sprite_sheet: str):
+    def __init__(self, settings: GameSettings, title: str, sprite_sheet: str):
         super().__init__(settings, title, sprite_sheet)
 
         self._player: Player
@@ -36,9 +37,7 @@ class CharacterGame(Game):
         elif pyxel.btnp(pyxel.KEY_Z):
             Signals.send(Signals.PLAYER.ATTACK, self._player)
         
-        # Player Movement
-        self.movementTick = not self.movementTick
-        if self.movementTick:
+        if self.movement_tick:
             if pyxel.btn(pyxel.KEY_UP):
                 self._player.move(DIRECTION.UP, self._map)
             elif pyxel.btn(pyxel.KEY_DOWN):

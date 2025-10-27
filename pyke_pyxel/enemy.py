@@ -1,9 +1,7 @@
-from typing import Optional
-
 from .actor import MovableActor
-from .signals import Signals, DIRECTION
-from .sprite import Sprite, OpenableSprite, MovableSprite
-from .map import Map, Coord
+from .signals import Signals
+from .sprite import MovableSprite
+from .map import Map
 
 class Enemy(MovableActor):
 

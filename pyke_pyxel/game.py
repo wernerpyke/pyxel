@@ -1,26 +1,29 @@
-from typing import Callable, Optional
 import pyxel
 
 from . import draw
-from .game_settings import GAME_SETTINGS
+from .game_settings import GameSettings
 from .signals import Signals
 from .map import Map
 from .sprite import Sprite
 from .actor import Actor
 from .enemy import Enemy
 
-GLOBAL_SETTINGS: GAME_SETTINGS = GAME_SETTINGS()
+GLOBAL_SETTINGS: GameSettings = GameSettings()
 
 class Game:
-    def __init__(self, settings: GAME_SETTINGS, title: str, sprite_sheet: str):
-        GLOBAL_SETTINGS = settings
+    def __init__(self, settings: GameSettings, title: str, sprite_sheet: str):
+        GLOBAL_SETTINGS.debug = settings.debug
+        GLOBAL_SETTINGS.size.window = settings.size.window
+        GLOBAL_SETTINGS.size.tile = settings.size.tile
+        GLOBAL_SETTINGS.fps.game = settings.fps.game
+        GLOBAL_SETTINGS.fps.animation = settings.fps.animation
         self._settings = settings
 
         self._sprites: list[Sprite] = []
-        self.movementTick = False
         self.spriteTick = 0
 
         self._map = Map()
+        self.movement_tick: bool = False
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
@@ -29,6 +32,7 @@ class Game:
         self._actors: list[Actor] = []
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
+        # End TODO
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(sprite_sheet)
@@ -58,10 +62,12 @@ class Game:
 # ===== PYXEL =====
 
     def update(self):
-        for actor in self._actors:
-            actor.update(self._map, self.movementTick)
+        # Player Movement
+        self.movement_tick = not self.movement_tick
 
-    def draw(self):
+        for actor in self._actors:
+            actor._update(self._map, self.movement_tick)
+
         # Sprite Animations
         if self.spriteTick < (self._settings.fps.game / self._settings.fps.animation):
             self.spriteTick += 1
@@ -69,13 +75,18 @@ class Game:
             self.spriteTick = 0
             for sprite in self._sprites:
                 sprite.update_frame()
-            
-        # Background
-        draw.background(self._settings)
+
+    def draw(self):    
+        self._draw_background()
         
-        # Sprites
-        for sprite in self._sprites:
-            draw.sprite(sprite, self._settings)
+        self._draw_sprites()
 
         # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
+
+    def _draw_background(self):
+        draw.background(self._settings)
+
+    def _draw_sprites(self):
+        for sprite in self._sprites:
+            draw.sprite(sprite, self._settings)
         

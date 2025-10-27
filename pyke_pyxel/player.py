@@ -1,7 +1,8 @@
 from typing import Optional
 
 from .actor import MovableActor
-from .signals import Signals, DIRECTION
+from . import DIRECTION
+from .signals import Signals
 from .sprite import Sprite, OpenableSprite, MovableSprite
 from .map import Map, Coord
 

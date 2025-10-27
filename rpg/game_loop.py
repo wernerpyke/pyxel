@@ -3,7 +3,7 @@ from pyke_pyxel.sprite import Sprite, OpenableSprite
 from pyke_pyxel.room import Room
 from pyke_pyxel.player import Player
 from pyke_pyxel.enemy import Enemy
-from pyke_pyxel.signals import DIRECTION
+from pyke_pyxel import DIRECTION
 from config import PROJECTILE, ENEMY
 
 # -- ======  Helper Functions ======= --

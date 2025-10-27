@@ -3,13 +3,6 @@ from dataclasses import dataclass
 from typing import Callable, Optional, Any
 from blinker import signal
 
-@dataclass
-class DIRECTION:
-    UP = "up"
-    DOWN = "down"
-    LEFT = "left"
-    RIGHT = "right"
-
 class Signals:
     
     @dataclass

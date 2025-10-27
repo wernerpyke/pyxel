@@ -1,8 +1,8 @@
-from typing import Optional
-
-from .signals import Signals, DIRECTION
+from .signals import Signals
 from .sprite import Sprite
 from .map import Map
+
+from . import DIRECTION
 
 class Projectile:
 
