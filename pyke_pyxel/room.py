@@ -1,5 +1,5 @@
 from typing import Callable
-from .coord import Coord
+from .base_types import Coord
 from .map import Map
 from .sprite import Sprite, OpenableSprite, MovableSprite
 from .signals import Signals

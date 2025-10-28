@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 import math
 
-from . import game, log_debug
-from .coord import Coord
+from . import GLOBAL_SETTINGS, game, log_debug
+from .base_types import Coord
 
 #if TYPE_CHECKING:
 from .sprite import Sprite, OpenableSprite
@@ -24,7 +24,7 @@ class MapLocation:
 class Map:
 
     def __init__(self):
-        sizes = game.GLOBAL_SETTINGS.size
+        sizes = GLOBAL_SETTINGS.size
 
         self._grid: list[ list[MapLocation] ] = []
         self._edgeLocation = MapLocation(LOCATION_STATUS.BLOCKED)

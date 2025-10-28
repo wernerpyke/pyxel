@@ -24,7 +24,7 @@ settings = GameSettings(
 game = CharacterGame(
         settings=settings,
         title="Pyke Dungeon RPG", 
-        sprite_sheet=f"{Path(__file__).parent.resolve()}/assets/sample.pyxres"
+        resources=f"{Path(__file__).parent.resolve()}/assets/sample.pyxres"
         )
 
 game_load.build_room(game.room)

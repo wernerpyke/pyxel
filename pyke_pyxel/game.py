@@ -1,5 +1,9 @@
+from dataclasses import dataclass
+from typing import Optional
 import pyxel
 
+from . import GLOBAL_SETTINGS
+from .base_types import Coord, TileMap
 from . import draw, log_debug
 from .game_settings import GameSettings
 from .signals import Signals
@@ -8,10 +12,8 @@ from .sprite import Sprite
 from .actor import Actor
 from .enemy import Enemy
 
-GLOBAL_SETTINGS: GameSettings = GameSettings()
-
 class Game:
-    def __init__(self, settings: GameSettings, title: str, sprite_sheet: str):
+    def __init__(self, settings: GameSettings, title: str, resources: str):
         GLOBAL_SETTINGS.debug = settings.debug
         GLOBAL_SETTINGS.size.window = settings.size.window
         GLOBAL_SETTINGS.size.tile = settings.size.tile
@@ -25,6 +27,8 @@ class Game:
         self._map = Map()
         self.movement_tick: bool = False
 
+        self._tile_map: Optional[TileMap] = None
+
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
 
@@ -35,12 +39,27 @@ class Game:
         # End TODO
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
-        pyxel.load(sprite_sheet)
+        pyxel.load(resources)
         # pyxel.images[0].load(0, 0, "assets/pyxel_logo_38x16.png")
     
     def start(self):
         Signals.send(Signals.GAME.STARTED, self)
         pyxel.run(self.update, self.draw)
+
+    def add_sprite(self, sprite: Sprite):
+        sprite._id = self._sprites.__len__()
+        log_debug(f"GAME.add_sprite() {sprite._id}")
+        self._sprites.append(sprite)
+
+    def add_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
+        self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
+        log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
+
+        # for t in pyxel.tilemaps:
+        #    print(f"TileMap: src:{t.imgsrc} w:{t.width} h:{t.height}")
+        #    print(f"{t.pget(0, 0)} {t.pget(0, 1)} {t.pget(0, 2)}")
+        #    print(f"{t.pget(1, 0)} {t.pget(1, 1)} {t.pget(1, 2)}")
+        #    print(f"{t.pget(2, 0)} {t.pget(2, 1)} {t.pget(2, 2)}")
 
     def _sprite_added(self, sprite: Sprite):
         sprite._id = self._sprites.__len__()
@@ -85,7 +104,10 @@ class Game:
         # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
 
     def _draw_background(self):
-        draw.background(self._settings)
+        draw.background(self._settings.colours.background)
+
+        if self._tile_map:
+            draw.tile_map(self._tile_map)
 
     def _draw_sprites(self):
         for sprite in self._sprites:

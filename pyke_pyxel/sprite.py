@@ -1,5 +1,5 @@
 from typing import Optional
-from .coord import Coord
+from .base_types import Coord
 
 class Animation:
     def __init__(self, startFrame: Coord, frames: int, flip: Optional[bool] = False):
@@ -18,7 +18,7 @@ class Sprite:
     Args:
         sheetCoordinate (Coordinate): The x/y-coordinate of the sprite on the resource sheet.
     """
-    def __init__(self, name: str, idleFrame: Coord):
+    def __init__(self, name: str, idleFrame: Coord, col_tile_count: int = 1, row_tile_count: int = 1):
         self._id: int = 0
         self.name = name
         self.idleFrame = idleFrame
@@ -30,6 +30,9 @@ class Sprite:
 
         self._animation: Optional[Animation] = None
         self._loop_animation: bool = True
+
+        self.col_tile_count: int = col_tile_count
+        self.row_tile_count: int = row_tile_count
 
     def __eq__(self, other):
         return isinstance(other, Sprite) and self._id == other._id
@@ -146,3 +149,9 @@ class MovableSprite(Sprite):
 
     def set_right_animation(self, startFrame: Coord, frameCount: int, flip: Optional[bool] = False):
         self.add_animation("right", Animation(startFrame, frameCount, flip))
+
+class MultiTileSprite(Sprite):
+    def __init__(self, name: str, idleFrame: Coord, tileCols: int, tileRows: int):
+        super().__init__(name, idleFrame)
+        self.tileCols = tileCols
+        self.tileRows = tileRows

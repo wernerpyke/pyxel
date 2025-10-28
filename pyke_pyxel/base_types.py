@@ -1,12 +1,13 @@
+from dataclasses import dataclass
 import math
-from . import game
+from . import GLOBAL_SETTINGS
 
 class Coord:
     def __init__(self, col: int, row: int):
         self._col = col
         self._row = row
 
-        tile_size = game.GLOBAL_SETTINGS.size.tile
+        tile_size = GLOBAL_SETTINGS.size.tile
         self._x = (self._col - 1) * tile_size
         self._y = (self._row - 1) * tile_size
 
@@ -21,7 +22,7 @@ class Coord:
         cloned._x = self._x + x
         cloned._y = self._y + y
 
-        tile_size = game.GLOBAL_SETTINGS.size.tile
+        tile_size = GLOBAL_SETTINGS.size.tile
 
         match direction:
             case "up":
@@ -49,7 +50,7 @@ class Coord:
         sprite_x = self._x
         sprite_y = self._y
 
-        tile_size = game.GLOBAL_SETTINGS.size.tile        
+        tile_size = GLOBAL_SETTINGS.size.tile        
         w = tile_size
         h = tile_size
         tolerance = 1
@@ -71,13 +72,19 @@ class Coord:
     
     @property
     def mid_x(self) -> int:
-        tile_size = game.GLOBAL_SETTINGS.size.tile
+        tile_size = GLOBAL_SETTINGS.size.tile
         return math.floor(self._x + (tile_size / 2))
     
     @property
     def mid_y(self) -> int:
-        tile_size = game.GLOBAL_SETTINGS.size.tile
+        tile_size = GLOBAL_SETTINGS.size.tile
         return math.floor(self._y + (tile_size / 2))
     
     def __str__(self):
         return f"{self._col}/{self._row}"
+    
+@dataclass
+class TileMap:
+    resource_position: Coord
+    tiles_wide: int
+    tiles_high: int

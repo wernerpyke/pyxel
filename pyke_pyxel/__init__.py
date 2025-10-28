@@ -1,4 +1,7 @@
 from dataclasses import dataclass
+from .game_settings import GameSettings
+
+GLOBAL_SETTINGS: GameSettings = GameSettings()
 
 @dataclass
 class DIRECTION:

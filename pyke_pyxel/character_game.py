@@ -12,8 +12,8 @@ from .room import Room
 
 class CharacterGame(Game):
 
-    def __init__(self, settings: GameSettings, title: str, sprite_sheet: str):
-        super().__init__(settings, title, sprite_sheet)
+    def __init__(self, settings: GameSettings, title: str, resources: str):
+        super().__init__(settings, title, resources)
 
         self._player: Player
         self._room = Room(self._map)

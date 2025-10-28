@@ -2,6 +2,7 @@ from typing import Optional
 from dataclasses import dataclass
 import pyxel
 
+from . import GLOBAL_SETTINGS
 from pyke_pyxel.signals import Signals
 
 """
@@ -14,13 +15,21 @@ from pyke_pyxel.signals import Signals
 
 """
 
-@dataclass
 class Cell:
-    x: int
-    y: int
-    colour: int = 0
-    can_propogate: bool = False
-    ttl: int = 0 
+
+    def __init__(self, x: int, y: int) -> None:
+        self.type: str = "empty"
+        self.x: int = x
+        self.y: int = y
+        self.colour: int = 0
+        self.can_propogate: bool = False
+        self.ttl: int = 0 
+
+    def reset(self):
+        self.type = "empty"
+        self.colour = 0
+        self.can_propogate = False
+        self.ttl = 0
 
 class CellField:
 
@@ -43,7 +52,7 @@ class CellField:
         for y in range(0, self._height):
             row: list[Cell] = []
             for x in range(0, self._width):
-                row.append(Cell(x=x, y=y, colour=0))
+                row.append(Cell(x, y))
             self._cells.append(row)
 
     # Lifecycle methods
@@ -52,8 +61,11 @@ class CellField:
         Signals.send(Signals.CELL_FIELD.UPDATE, self)
 
     def _draw(self):
+        transparent = GLOBAL_SETTINGS.colours.sprite_transparency
+
         for cell in self._all_cells:
-            pyxel.pset(cell.x, cell.y, cell.colour)
+            if cell.colour != transparent:
+                pyxel.pset(cell.x, cell.y, cell.colour)
 
     # Convenience accessors
 

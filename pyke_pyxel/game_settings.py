@@ -12,8 +12,8 @@ class SizeSettings:
 
 @dataclass
 class ColourSettings:
-    sprite_transparency: int = 0
-    black:int = 0
+    sprite_transparency: int = 0 # Black
+    background:int = 0 # Black
 
 @dataclass
 class GameSettings:

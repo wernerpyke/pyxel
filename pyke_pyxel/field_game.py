@@ -4,17 +4,17 @@ import pyxel
 
 from pyke_pyxel.game_settings import GameSettings
 
-from . import game
-# from .game import Game
+from . import GLOBAL_SETTINGS
+from .game import Game
 from .cell_field import CellField
 
-class FieldGame(game.Game):
+class FieldGame(Game):
 
-    def __init__(self, settings: GameSettings, title: str, sprite_sheet: str):
-        super().__init__(settings, title, sprite_sheet)
+    def __init__(self, settings: GameSettings, title: str, resources: str):
+        super().__init__(settings, title, resources)
         
         # TODO - support non-square fields
-        size = game.GLOBAL_SETTINGS.size
+        size = GLOBAL_SETTINGS.size
         self._field = CellField(size.window, size.window)
 
     # Lifecycle methods
@@ -28,6 +28,8 @@ class FieldGame(game.Game):
         super()._draw_background()
 
         self._field._draw()
+
+        super()._draw_sprites()
 
     # Convenience accessors
 
