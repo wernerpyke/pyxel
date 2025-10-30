@@ -10,12 +10,14 @@ class Fungus(Weapon):
     def __init__(self, position: Coord) -> None:
         super().__init__("fungus", position)
 
-        self.colour = COLOURS.GREEN
+        self.colour = COLOURS.GREEN_MINT
         
-        # We'll use TTL to track the 'strength' of a cell.
+        # TODO we'll use TTL to track the 'strength' of a cell.
         # if an enemy interacts with a cell the cell does damage to the enemy and
         # reduces its own ttl
-        self.ttl = 30 
+        self.power = 30
+
+        self.regrow: list[Cell] = []
 
     def launch(self, field: CellField):
         for i in range(5):
@@ -26,12 +28,28 @@ class Fungus(Weapon):
         new_cells = []
 
         # log_debug(f"Fungus {len(self.cells)} active cells")
+        if len(self.regrow) > 0:
+            for c in self.regrow:
+                log_debug(f"Fungus waiting to regrow {c.x}/{c.y} from {c.type}")
+
+        for c in self.regrow:
+            if (c.type == self.type) or c.is_empty:
+                c.type = self.type
+                c.can_propogate = True
+                # TODO - should we reset c.power here?
+                self.cells.append(c)
+                self.regrow.remove(c)
 
         propagate_to = 1
         if len(self.cells) < 10:
             propagate_to = 2
 
         for c in self.cells:
+            if (not c.is_empty) and (not c.type == self.type):
+                log_debug(f"Fungus {c.x}/{c.y} got usurped by {c.type}")
+                self.regrow.append(c)
+                continue
+
             if not c.can_propogate:
                 log_error(f"Fungus cells contains non-propagating cell at x:{c.x} y:{c.y}")
             
@@ -44,10 +62,6 @@ class Fungus(Weapon):
                     new_cells.append(self._prop(n))
                     neighbours.remove(n)
 
-            # if did_propogate:
-            #     c.can_propogate = False
-            # else:
-                # new_cells
         c.can_propogate = False
         self.cells = new_cells
 
@@ -57,6 +71,6 @@ class Fungus(Weapon):
         cell.type = self.type
         cell.colour = self.colour
         cell.can_propogate = True
-        cell.ttl = self.ttl
+        cell.power = self.power
         # log_debug(f"Fungus propagates to x:{cell.x} y:{cell.y}")
         return cell

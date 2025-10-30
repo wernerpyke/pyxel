@@ -15,7 +15,7 @@ class Bolt(Weapon):
 
         self.colour: int = COLOURS.WHITE
         self.direction_preference = direction_preference
-        self.ttl: int = random.randint(30, 200)
+        self.power: int = random.randint(30, 200)
 
     def launch(self, field: CellField):
         for i in range(5):
@@ -23,7 +23,7 @@ class Bolt(Weapon):
             cell.type = self.type
             cell.colour = self.colour
             cell.can_propogate = True
-            cell.ttl = self.ttl
+            cell.power = self.power
             self.cells.append(cell)
 
     def update(self, field: CellField) -> bool:
@@ -65,17 +65,20 @@ class Bolt(Weapon):
                             to = field.neighbour_NW(to)
 
                 if to:
+                    # Note: Bolt does not care whether to is empty
+                    # it does not do to.store_state
+
                     if to.type == self.type:
-                        print(f"Bolt collission at {to.x},{to.y} prop:{to.can_propogate} col:{to.colour} ttl:{to.ttl}")
+                        print(f"Bolt collission at {to.x},{to.y} prop:{to.can_propogate} col:{to.colour} ttl:{to.power}")
 
                     to.type = self.type
                     to.colour = self.colour
                     to.can_propogate = True
-                    to.ttl = self.ttl
+                    to.power = self.power
                     new_cells.append(to)
             else:
-                cell.ttl -= 1
-                if cell.ttl <= 0:
+                cell.power -= 1
+                if cell.power <= 0:
                     cell.reset()
                 else:
                     new_cells.append(cell)

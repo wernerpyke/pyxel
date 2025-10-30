@@ -16,20 +16,40 @@ class Cell:
     TYPE_EMPTY = "empty"
 
     def __init__(self, x: int, y: int) -> None:
-        self.type: str = "empty"
         self.x: int = x
         self.y: int = y
+        self._neighbours: list[Cell] = []
+
+        # state
+        self.type: str = "empty"
         self.colour: int = 0
         self.can_propogate: bool = False
-        self.ttl: int = 0
+        self.power: int = 0
 
-        self._neighbours: list[Cell] = []
+        self.stored_type: str = "empty"
+        self.stored_colour: int = 0
+        self.stored_can_propogate: bool = False
+        self.stored_power: int = 0
 
     def reset(self):
         self.type = "empty"
         self.colour = 0
         self.can_propogate = False
-        self.ttl = 0
+        self.power = 0
+
+        self.store_state()
+
+    def store_state(self):
+        self.stored_type = self.type
+        self.stored_colour = self.colour
+        self.stored_can_propogate = self.can_propogate
+        self.stored_power = self.power
+    
+    def recall_state(self):
+        self.type = self.stored_type
+        self.colour = self.stored_colour
+        self.can_propogate = self.stored_can_propogate
+        self.power = self.stored_power
     
     @property
     def is_empty(self):
@@ -114,51 +134,55 @@ class CellField:
         return None
 
     def neighbours(self, cell: Cell, filter_for_type: Optional[str] = None) -> list[Cell]:
-      # if len(cell._neighbours) == 0:
-        neighbours: list[Cell] = []
-        x = cell.x
-        y = cell.y
+        if len(cell._neighbours) == 0:
+            x = cell.x
+            y = cell.y
 
-        max_x = self._width - 1
-        max_y = self._height - 1
+            max_x = self._width - 1
+            max_y = self._height - 1
 
-        if y > 0: # N
-            n = self._cells[y - 1][x]
-            if filter_for_type == None or n.type == filter_for_type:
+            neighbours = cell._neighbours
+
+            if y > 0: # N
+                n = self._cells[y - 1][x]
                 neighbours.append(n)
-            if x > 0: # NW
-                n = self._cells[y - 1][x-1]
-                if filter_for_type == None or n.type == filter_for_type:
+                if x > 0: # NW
+                    n = self._cells[y - 1][x-1]
                     neighbours.append(n)
-            if x < max_x: # NE
-                n = self._cells[y - 1][x+1]
-                if filter_for_type == None or n.type == filter_for_type:
+                if x < max_x: # NE
+                    n = self._cells[y - 1][x+1]
                     neighbours.append(n)
-        
-        if y < max_y: # S
-            n = self._cells[y + 1][x]
-            if filter_for_type == None or n.type == filter_for_type:
+            
+            if y < max_y: # S
+                n = self._cells[y + 1][x]
                 neighbours.append(n)
-            if x > 0: # SW
-                n = self._cells[y + 1][x-1]
-                if filter_for_type == None or n.type == filter_for_type:
+                if x > 0: # SW
+                    n = self._cells[y + 1][x-1]
                     neighbours.append(n)
-            if x < max_x: # SE
-                n = self._cells[y + 1][x+1]
-                if filter_for_type == None or n.type == filter_for_type:
+                if x < max_x: # SE
+                    n = self._cells[y + 1][x+1]
                     neighbours.append(n)
 
-        if x < max_x: # E
-            n = self._cells[y][x+1]
-            if filter_for_type == None or n.type == filter_for_type:
-                neighbours.append(n)
-        
-        if x > 0: # W
-            n = self._cells[y][x-1]
-            if filter_for_type == None or n.type == filter_for_type:
+            if x < max_x: # E
+                n = self._cells[y][x+1]
                 neighbours.append(n)
             
-        return neighbours
+            if x > 0: # W
+                n = self._cells[y][x-1]
+                neighbours.append(n)
+        
+        if filter_for_type == None:
+             return cell._neighbours.copy() # copy is to allow modification of the cached neighbours
+        else:
+            return [
+                n for n in cell._neighbours if n.type == filter_for_type
+            ]
+
+            # neighbours: list[Cell] = []
+            # for n in cell._neighbours:
+            #    if n.type == filter_for_type:
+            #        neighbours.append(n)
+            # return neighbours
 
     
         

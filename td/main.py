@@ -13,7 +13,7 @@ settings = GameSettings()
 settings.size.window = 320
 settings.size.tile = 8
 
-settings.fps.game = 30
+settings.fps.game = 60
 
 settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
