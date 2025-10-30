@@ -18,14 +18,14 @@ class Sprite:
     Args:
         sheetCoordinate (Coordinate): The x/y-coordinate of the sprite on the resource sheet.
     """
-    def __init__(self, name: str, idleFrame: Coord, col_tile_count: int = 1, row_tile_count: int = 1):
+    def __init__(self, name: str, idle_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1):
         self._id: int = 0
         self.name = name
-        self.idleFrame = idleFrame
+        self.idle_frame = idle_frame
 
         self.animations: dict[str, Animation] = { }
-        self._position: Coord # = Coord(0, 0)
-        self.active_frame = self.idleFrame
+        self._position: Coord
+        self.active_frame = self.idle_frame
         self.is_flipped: bool = False
 
         self._animation: Optional[Animation] = None
@@ -62,14 +62,7 @@ class Sprite:
         self.is_flipped = False
 
     def set_position(self, position: Coord):
-        # if self._position and self._position.is_different_grid_location(position):
-        #     self._previousPosition = self._position
         self._position = position
-
-    # def return_to_previous_position(self):
-    #     if self._previousPosition:
-    #         self._position = self._previousPosition
-    #         self._previousPosition = None
 
     @property
     def position(self) -> Coord:
@@ -91,7 +84,7 @@ class Sprite:
 
             # print(f"Sprite.update_frame() frame:{self._animation.startFrame._col}+{animation._currentFrame}={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
         else:
-            self.active_frame = self.idleFrame
+            self.active_frame = self.idle_frame
 
 OPEN: int = 0
 CLOSED: int = 1
@@ -150,8 +143,50 @@ class MovableSprite(Sprite):
     def set_right_animation(self, startFrame: Coord, frameCount: int, flip: Optional[bool] = False):
         self.add_animation("right", Animation(startFrame, frameCount, flip))
 
-class MultiTileSprite(Sprite):
-    def __init__(self, name: str, idleFrame: Coord, tileCols: int, tileRows: int):
-        super().__init__(name, idleFrame)
-        self.tileCols = tileCols
-        self.tileRows = tileRows
+class CompoundSprite():
+    def __init__(self, name: str, cols: int, rows: int):
+        self.name = name
+        self._id: int = 0
+        self._position: Coord
+
+        self.cols: list[list[Coord]] = []
+        for c in range(0, cols):
+            row: list[Coord] = []
+            for r in range(0, rows):
+                row.append(Coord(c, r))
+            self.cols.append(row)
+
+    def __eq__(self, other):
+        return isinstance(other, Sprite) and self._id == other._id
+
+    def fill_tiles(self, tile: Coord):
+        for c in range(0, len(self.cols)):
+            row = self.cols[c]
+            for r in range(0, len(row)):
+                row[r] = tile
+
+    def fill_row(self, col: int, tile: Coord):
+        rows = self.cols[(col-1)]
+        for r in range(0, len(rows)):
+                rows[r] = tile
+
+    def fill_col(self, col: int, from_row: int, to_row: int, tile_col: int, tile_rows: list[int]):
+        rows = self.cols[(col-1)]
+        tile_index = 0
+        for r in range((from_row-1), to_row):
+            rows[r] = Coord(tile_col, tile_rows[tile_index])
+            tile_index += 1
+            tile_index = tile_index % len(tile_rows)
+
+    def set_tile(self, col: int, row: int, tile: Coord):
+        self.cols[(col-1)][(row-1)] = tile
+
+    def set_position(self, position: Coord):
+        self._position = position
+
+    @property
+    def position(self) -> Coord:
+        return self._position
+
+    
+        

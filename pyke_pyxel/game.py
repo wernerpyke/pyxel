@@ -8,7 +8,7 @@ from . import draw, log_debug
 from .game_settings import GameSettings
 from .signals import Signals
 from .map import Map
-from .sprite import Sprite
+from .sprite import CompoundSprite, Sprite
 from .actor import Actor
 from .enemy import Enemy
 
@@ -21,7 +21,7 @@ class Game:
         GLOBAL_SETTINGS.fps.animation = settings.fps.animation
         self._settings = settings
 
-        self._sprites: list[Sprite] = []
+        self._sprites: list[Sprite|CompoundSprite] = []
         self._animation_tick = 0
 
         self._map = Map()
@@ -46,7 +46,7 @@ class Game:
         Signals.send(Signals.GAME.STARTED, self)
         pyxel.run(self.update, self.draw)
 
-    def add_sprite(self, sprite: Sprite):
+    def add_sprite(self, sprite: Sprite|CompoundSprite):
         sprite._id = self._sprites.__len__()
         log_debug(f"GAME.add_sprite() {sprite._id}")
         self._sprites.append(sprite)
@@ -61,12 +61,12 @@ class Game:
         #    print(f"{t.pget(1, 0)} {t.pget(1, 1)} {t.pget(1, 2)}")
         #    print(f"{t.pget(2, 0)} {t.pget(2, 1)} {t.pget(2, 2)}")
 
-    def _sprite_added(self, sprite: Sprite):
+    def _sprite_added(self, sprite: Sprite|CompoundSprite):
         sprite._id = self._sprites.__len__()
         log_debug(f"GAME.sprite_added() {sprite._id}")
         self._sprites.append(sprite)
 
-    def _sprite_removed(self, sprite: Sprite):
+    def _sprite_removed(self, sprite: Sprite|CompoundSprite):
         if sprite in self._sprites:
             self._sprites.remove(sprite)
             log_debug(f"GAME.sprite_removed() {sprite._id}")
@@ -94,7 +94,9 @@ class Game:
         else:
             self._animation_tick = 0
             for sprite in self._sprites:
-                sprite.update_frame()
+                if isinstance(sprite, Sprite):
+                    sprite.update_frame()
+                # TODO support CompoundSprite animations?
 
     def draw(self):    
         self._draw_background()
@@ -107,9 +109,12 @@ class Game:
         draw.background(self._settings.colours.background)
 
         if self._tile_map:
-            draw.tile_map(self._tile_map)
+            draw.tile_map(self._tile_map, self._settings)
 
     def _draw_sprites(self):
         for sprite in self._sprites:
-            draw.sprite(sprite, self._settings)
+            if isinstance(sprite, Sprite):
+                draw.sprite(sprite, self._settings)
+            elif isinstance(sprite, CompoundSprite):
+                draw.compound_sprite(sprite, self._settings)
         

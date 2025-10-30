@@ -8,7 +8,7 @@ from pyke_pyxel.field_game import FieldGame
 
 import random
 
-from pyke_pyxel.sprite import Sprite
+from pyke_pyxel.sprite import Sprite, CompoundSprite
 
 class Bolt:
 
@@ -88,18 +88,14 @@ class Bolt:
         return len(self.cells) > 0
 
 
-position_left = Coord(16, 33)
-position_center = Coord(19, 32)
-position_right = Coord(23, 33)
+position_left = Coord(16, 35)
+position_center = Coord(19, 34)
+position_right = Coord(23, 35)
 
 bolts: list[Bolt] = []
 
 def game_started(game: FieldGame):
     print("Game Started")
-
-    base = Sprite("2", Coord(1, 1), col_tile_count=8, row_tile_count=8)
-    base.set_position(Coord(16, 32))
-    game.add_sprite(base)
 
     field = game.field
 
