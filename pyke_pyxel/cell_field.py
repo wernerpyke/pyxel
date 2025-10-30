@@ -1,21 +1,19 @@
 from typing import Optional
-from dataclasses import dataclass
 import pyxel
 
 from . import GLOBAL_SETTINGS
 from pyke_pyxel.signals import Signals
 
 """
-
     Note: another option for a matrix is
     
     import numpy as np
     rows, cols = 2, 3
     grid = np.empty((rows, cols), dtype=object)
-
 """
 
 class Cell:
+    TYPE_EMPTY = "empty"
 
     def __init__(self, x: int, y: int) -> None:
         self.type: str = "empty"
@@ -23,13 +21,19 @@ class Cell:
         self.y: int = y
         self.colour: int = 0
         self.can_propogate: bool = False
-        self.ttl: int = 0 
+        self.ttl: int = 0
+
+        self._neighbours: list[Cell] = []
 
     def reset(self):
         self.type = "empty"
         self.colour = 0
         self.can_propogate = False
         self.ttl = 0
+    
+    @property
+    def is_empty(self):
+        return self.type == "empty"
 
 class CellField:
 
@@ -109,26 +113,57 @@ class CellField:
             return self._cells[cell.y + 1][cell.x - 1]
         return None
 
-    """
-    def neighbours(self, cell: Cell) -> NeighbourCells:
-      if cell._neighbours is None:
-        TODO - load the neighbours
-            
-      return cell._neighbours
-
-    
+    def neighbours(self, cell: Cell, filter_for_type: Optional[str] = None) -> list[Cell]:
+      # if len(cell._neighbours) == 0:
         neighbours: list[Cell] = []
         x = cell.x
         y = cell.y
 
-        for ny in range(y - 1, y + 2):
-            for nx in range(x - 1, x + 2):
-                if (nx == x and ny == y) or nx < 0 or ny < 0 or nx >= self._width or ny >= self._height:
-                    continue
-                neighbours.append(self._cells[ny][nx])
+        max_x = self._width - 1
+        max_y = self._height - 1
 
+        if y > 0: # N
+            n = self._cells[y - 1][x]
+            if filter_for_type == None or n.type == filter_for_type:
+                neighbours.append(n)
+            if x > 0: # NW
+                n = self._cells[y - 1][x-1]
+                if filter_for_type == None or n.type == filter_for_type:
+                    neighbours.append(n)
+            if x < max_x: # NE
+                n = self._cells[y - 1][x+1]
+                if filter_for_type == None or n.type == filter_for_type:
+                    neighbours.append(n)
+        
+        if y < max_y: # S
+            n = self._cells[y + 1][x]
+            if filter_for_type == None or n.type == filter_for_type:
+                neighbours.append(n)
+            if x > 0: # SW
+                n = self._cells[y + 1][x-1]
+                if filter_for_type == None or n.type == filter_for_type:
+                    neighbours.append(n)
+            if x < max_x: # SE
+                n = self._cells[y + 1][x+1]
+                if filter_for_type == None or n.type == filter_for_type:
+                    neighbours.append(n)
+
+        if x < max_x: # E
+            n = self._cells[y][x+1]
+            if filter_for_type == None or n.type == filter_for_type:
+                neighbours.append(n)
+        
+        if x > 0: # W
+            n = self._cells[y][x-1]
+            if filter_for_type == None or n.type == filter_for_type:
+                neighbours.append(n)
+            
         return neighbours
-    """
+
+    
+        
+
+    
 
     def all_cells(self) -> list[Cell]:
         return self._all_cells

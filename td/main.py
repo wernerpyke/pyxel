@@ -1,4 +1,5 @@
 from pathlib import Path
+from pyke_pyxel import COLOURS
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.field_game import FieldGame
@@ -14,7 +15,8 @@ settings.size.tile = 8
 
 settings.fps.game = 30
 
-settings.colours.sprite_transparency = 15
+settings.colours.background = COLOURS.BLACK
+settings.colours.sprite_transparency = COLOURS.BEIGE
 
 game = FieldGame(
         settings=settings,
