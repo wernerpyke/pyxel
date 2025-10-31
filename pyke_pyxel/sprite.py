@@ -2,12 +2,12 @@ from typing import Optional
 from .base_types import Coord
 
 class Animation:
-    def __init__(self, startFrame: Coord, frames: int, flip: Optional[bool] = False):
-        self.startFrame = startFrame
+    def __init__(self, start_frame: Coord, frames: int, flip: Optional[bool] = False):
+        self.start_frame = start_frame
         self.frames = frames
         self.flip: bool = True if flip else False
         self._name: str
-        self._currentFrameIndex:int = 0
+        self._current_frame_index:int = 0
 
         self.paused = False
 
@@ -72,15 +72,15 @@ class Sprite:
         anim = self._animation
         
         if anim:
-            anim._currentFrameIndex += 1
-            if anim._currentFrameIndex >= anim.frames:
+            anim._current_frame_index += 1
+            if anim._current_frame_index >= anim.frames:
                 if self._loop_animation:
-                    anim._currentFrameIndex = 0
+                    anim._current_frame_index = 0
                 else:
                     self.deactivate_animations()
             
-            col = anim.startFrame._col + anim._currentFrameIndex
-            self.active_frame = Coord(col, anim.startFrame._row)
+            col = anim.start_frame._col + (anim._current_frame_index * self.col_tile_count)
+            self.active_frame = Coord(col, anim.start_frame._row)
 
             # print(f"Sprite.update_frame() frame:{self._animation.startFrame._col}+{animation._currentFrame}={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
         else:
@@ -131,17 +131,17 @@ class MovableSprite(Sprite):
         super().__init__(name, idleFrame)
         self.movementSpeed = movementSpeed
 
-    def set_up_animation(self, startFrame: Coord, frameCount: int, flip: Optional[bool] = False):
-        self.add_animation("up", Animation(startFrame, frameCount, flip))
+    def set_up_animation(self, start_frame: Coord, frame_count: int, flip: Optional[bool] = False):
+        self.add_animation("up", Animation(start_frame, frame_count, flip))
 
-    def set_down_animation(self, startFrame: Coord, frameCount: int, flip: Optional[bool] = False):
-        self.add_animation("down", Animation(startFrame, frameCount, flip))
+    def set_down_animation(self, start_frame: Coord, frame_count: int, flip: Optional[bool] = False):
+        self.add_animation("down", Animation(start_frame, frame_count, flip))
 
-    def set_left_animation(self, startFrame: Coord, frameCount: int, flip: Optional[bool] = False):
-        self.add_animation("left", Animation(startFrame, frameCount, flip))
+    def set_left_animation(self, start_frame: Coord, frame_count: int, flip: Optional[bool] = False):
+        self.add_animation("left", Animation(start_frame, frame_count, flip))
 
-    def set_right_animation(self, startFrame: Coord, frameCount: int, flip: Optional[bool] = False):
-        self.add_animation("right", Animation(startFrame, frameCount, flip))
+    def set_right_animation(self, start_frame: Coord, frame_count: int, flip: Optional[bool] = False):
+        self.add_animation("right", Animation(start_frame, frame_count, flip))
 
 class CompoundSprite():
     def __init__(self, name: str, cols: int, rows: int):

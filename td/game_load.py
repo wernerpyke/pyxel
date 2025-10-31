@@ -1,6 +1,6 @@
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
-from pyke_pyxel.sprite import Sprite, CompoundSprite
+from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite
 
 def vertical_bar(game: FieldGame, position: Coord):
     bar = CompoundSprite("bar", 3, 20)
@@ -40,6 +40,10 @@ def load_level(game: FieldGame):
 
     # vertical_bar(game, Coord(26, 8))
 
+    # Skeleton Coord(9,9)
+
     base = Sprite("base", Coord(1, 1), col_tile_count=8, row_tile_count=8)
     base.set_position(Coord(16, 33))
+    base.add_animation("loop", Animation(Coord(1, 1), 4))
+    base.activate_animation("loop")
     game.add_sprite(base)

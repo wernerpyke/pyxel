@@ -68,8 +68,8 @@ class Bolt(Weapon):
                     # Note: Bolt does not care whether to is empty
                     # it does not do to.store_state
 
-                    if to.type == self.type:
-                        print(f"Bolt collission at {to.x},{to.y} prop:{to.can_propogate} col:{to.colour} ttl:{to.power}")
+                    # if to.type == self.type:
+                    #    print(f"Bolt collission at {to.x},{to.y} prop:{to.can_propogate} col:{to.colour} ttl:{to.power}")
 
                     to.type = self.type
                     to.colour = self.colour

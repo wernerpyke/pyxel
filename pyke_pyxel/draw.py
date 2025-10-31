@@ -53,7 +53,7 @@ def tile_map(tile_map: TileMap, settings: GameSettings):
     repeat_cols = (screen_width // (tile_map.tiles_wide * 8)) + 1
     repeat_rows = (screen_height // (tile_map.tiles_high * 8)) + 1
 
-    tm = pyxel.tilemap(0)
+    tm = pyxel.tilemaps[0]
     tm_x = tile_map.resource_position.x
     tm_y = tile_map.resource_position.y
     tm_w = tile_map.tiles_wide * settings.size.tile

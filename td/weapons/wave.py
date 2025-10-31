@@ -2,25 +2,20 @@ from pyke_pyxel import COLOURS, log_error, log_debug
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import Cell, CellField
 
-from td.weapon import Weapon
+from td.weapons.weapon import Weapon
 
 class Wave(Weapon):
     def __init__(self, position: Coord) -> None:
         super().__init__("wave", position)
 
         self.radius = 0
-        self.ticks = 2
-        self.tick_counter = self.ticks # to ensure that the first update draws
 
     def launch(self, field: CellField):
         pass
 
     def update(self, field: CellField) -> bool:
-        if self.tick_counter < self.ticks:
-            self.tick_counter += 1
+        if self.should_skip_update():
             return len(self.cells) > 0
-        else:
-            self.tick_counter = 0
 
         self.radius += 1
 

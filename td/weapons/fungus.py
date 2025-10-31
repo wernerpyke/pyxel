@@ -28,9 +28,6 @@ class Fungus(Weapon):
         new_cells = []
 
         # log_debug(f"Fungus {len(self.cells)} active cells")
-        if len(self.regrow) > 0:
-            for c in self.regrow:
-                log_debug(f"Fungus waiting to regrow {c.x}/{c.y} from {c.type}")
 
         for c in self.regrow:
             if (c.type == self.type) or c.is_empty:
@@ -39,6 +36,8 @@ class Fungus(Weapon):
                 # TODO - should we reset c.power here?
                 self.cells.append(c)
                 self.regrow.remove(c)
+            else:
+                log_debug(f"Fungus waiting to regrow {c.x}/{c.y} from {c.type}")
 
         propagate_to = 1
         if len(self.cells) < 10:

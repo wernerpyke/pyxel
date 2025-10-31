@@ -8,7 +8,7 @@ from . import draw, log_debug
 from .game_settings import GameSettings
 from .signals import Signals
 from .map import Map
-from .sprite import CompoundSprite, Sprite
+from .sprite import Sprite, CompoundSprite
 from .actor import Actor
 from .enemy import Enemy
 
@@ -41,15 +41,23 @@ class Game:
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(resources)
         # pyxel.images[0].load(0, 0, "assets/pyxel_logo_38x16.png")
+
+        self._sprite_id = 0 # TODO is it ok for this to just increment?
     
     def start(self):
         Signals.send(Signals.GAME.STARTED, self)
         pyxel.run(self.update, self.draw)
 
     def add_sprite(self, sprite: Sprite|CompoundSprite):
-        sprite._id = self._sprites.__len__()
+        self._sprite_id += 1
+        sprite._id = self._sprite_id # self._sprites.__len__()
         log_debug(f"GAME.add_sprite() {sprite._id}")
         self._sprites.append(sprite)
+
+    def remove_sprite(self, sprite: Sprite|CompoundSprite):
+        if sprite in self._sprites:
+            self._sprites.remove(sprite)
+            log_debug(f"GAME.remove_sprite() {sprite._id}")
 
     def add_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
         self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
@@ -82,6 +90,8 @@ class Game:
 # ===== PYXEL =====
 
     def update(self):
+        Signals.send(Signals.GAME.UPDATE, self)
+
         # movement
         self.movement_tick = not self.movement_tick
 

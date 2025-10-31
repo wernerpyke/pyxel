@@ -27,6 +27,7 @@ game = FieldGame(
 load_level(game)
 
 Signals.connect(Signals.GAME.STARTED, game_loop.game_started)
-Signals.connect(Signals.CELL_FIELD.UPDATE, game_loop.game_state_update)
+Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
+Signals.connect(Signals.CELL_FIELD.UPDATE, game_loop.game_field_update)
 
 game.start()

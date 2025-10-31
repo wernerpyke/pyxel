@@ -17,6 +17,17 @@ class Coord:
     def is_same_grid_location(self, coord: "Coord"):
         return self._col == coord._col and self._row == coord._row
 
+    def move_by(self, x: int, y: int):
+        self._x += x
+        self._y += y
+
+        tile_size = GLOBAL_SETTINGS.size.tile
+        self._col = math.floor(self.mid_x / tile_size) + 1
+        self._row = math.floor(self.y / tile_size) + 1
+
+    def clone(self):
+        return Coord(self._col, self._row)
+
     def clone_by(self, x: int, y: int, direction: str):
         cloned = Coord(self._col, self._row)
         cloned._x = self._x + x
