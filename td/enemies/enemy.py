@@ -4,6 +4,7 @@ from pyke_pyxel import DIRECTION, log_debug
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import Cell
 from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Animation, Sprite
 
 
@@ -27,7 +28,7 @@ class Enemy:
     def _move_towards_target(self) -> tuple[int, int]:
         return (0, 1) # straight down
 
-    def update(self, field_cells: list[Cell]) -> bool:
+    def update(self, field_cells: list[Cell]) -> int: # 0: continue, 1: wins, -1: dies
         self.skip_counter += 1
         if self.skip_counter >= self.skip_move_updates:
             # log_debug(f"Enemy.update() move {self._sprite._id}")
@@ -50,9 +51,8 @@ class Enemy:
                     self.power = 0
 
         if self.power <= 0:
-            return False
+            return -1 # killed
         elif self._sprite.position.max_y > 320:
-            print("Enemy.update() REMOVE WINNING ENEMY")
-            return False
+            return 1 # wins
         else:
-            return True
+            return 0 # continue

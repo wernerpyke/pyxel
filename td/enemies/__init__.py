@@ -3,6 +3,7 @@ import random
 from pyke_pyxel import log_debug
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.signals import Signals
 from .enemy import Enemy
 from .skeleton import Skeleton
 
@@ -68,10 +69,22 @@ def update(game: FieldGame):
     field = game.field
     for e in enemies:
         cells = field.cells_at(e._sprite.position, include_empty=False)
-        if not e.update(cells):
-            # log_debug(f"enemies.update() remove {e._sprite._id}")
-            game.remove_sprite(e._sprite)
-            enemies.remove(e)
+
+
+
+        match e.update(cells):
+            case 0: # continue
+                pass
+            case -1: # killed
+                # log_debug(f"enemies.update() remove {e._sprite._id}")
+                game.remove_sprite(e._sprite)
+                enemies.remove(e)
+                Signals.send("enemy_killed", game)
+            case 1: # wins
+                print("Enemy.update() REMOVE WINNING ENEMY")
+                game.remove_sprite(e._sprite)
+                enemies.remove(e)
+                Signals.send("enemy_wins", game)
 
     if len(enemies) <= 15:
         launch_skeleton(game)

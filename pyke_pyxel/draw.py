@@ -2,10 +2,13 @@ import pyxel
 
 from .base_types import TileMap
 from .game_settings import GameSettings
-from .sprite import CompoundSprite, Sprite
+from .sprite import CompoundSprite, Sprite, TextSprite
 
 def background(colour: int):
     pyxel.cls(colour)
+
+def text(sprite: TextSprite, settings: GameSettings):
+    pyxel.text(10, 10, sprite._text, sprite._colour, font=sprite._font)
 
 def sprite(sprite: Sprite, settings: GameSettings):
     frame = sprite.active_frame

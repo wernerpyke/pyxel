@@ -1,3 +1,5 @@
+import pyxel
+
 from typing import Optional
 from .base_types import Coord
 
@@ -143,7 +145,7 @@ class MovableSprite(Sprite):
     def set_right_animation(self, start_frame: Coord, frame_count: int, flip: Optional[bool] = False):
         self.add_animation("right", Animation(start_frame, frame_count, flip))
 
-class CompoundSprite():
+class CompoundSprite:
     def __init__(self, name: str, cols: int, rows: int):
         self.name = name
         self._id: int = 0
@@ -188,5 +190,14 @@ class CompoundSprite():
     def position(self) -> Coord:
         return self._position
 
-    
-        
+class TextSprite:
+    def __init__(self, text: str, colour: int, font_file: str):
+        self._text = text
+        self._colour = colour
+        self._font = pyxel.Font(font_file)
+
+    def set_text(self, text: str):
+        self._text = text
+
+    def set_colour(self, colour: int):
+        self._colour = colour

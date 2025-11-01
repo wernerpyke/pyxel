@@ -11,6 +11,7 @@ from .map import Map
 from .sprite import Sprite, CompoundSprite
 from .actor import Actor
 from .enemy import Enemy
+from .hud import HUD
 
 class Game:
     def __init__(self, settings: GameSettings, title: str, resources: str):
@@ -28,6 +29,8 @@ class Game:
         self.movement_tick: bool = False
 
         self._tile_map: Optional[TileMap] = None
+
+        self._hud: Optional[HUD] = None
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
@@ -59,15 +62,15 @@ class Game:
             self._sprites.remove(sprite)
             # log_debug(f"GAME.remove_sprite() {sprite._id}")
 
-    def add_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
+    def set_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
         self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
-        log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
+        # log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
 
-        # for t in pyxel.tilemaps:
-        #    print(f"TileMap: src:{t.imgsrc} w:{t.width} h:{t.height}")
-        #    print(f"{t.pget(0, 0)} {t.pget(0, 1)} {t.pget(0, 2)}")
-        #    print(f"{t.pget(1, 0)} {t.pget(1, 1)} {t.pget(1, 2)}")
-        #    print(f"{t.pget(2, 0)} {t.pget(2, 1)} {t.pget(2, 2)}")
+    @property
+    def hud(self) -> HUD:
+        if self._hud == None:
+            self._hud = HUD()
+        return self._hud
 
     def _sprite_added(self, sprite: Sprite|CompoundSprite):
         sprite._id = self._sprites.__len__()
@@ -112,6 +115,9 @@ class Game:
         self._draw_background()
         
         self._draw_sprites()
+
+        if self._hud:
+            self._hud._draw(self._settings)
 
         # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
 

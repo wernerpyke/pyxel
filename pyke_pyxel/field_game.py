@@ -31,6 +31,9 @@ class FieldGame(Game):
 
         super()._draw_sprites()
 
+        if self._hud:
+            self._hud._draw(self._settings)
+
     # Convenience accessors
 
     @property

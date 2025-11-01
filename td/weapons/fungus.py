@@ -30,7 +30,8 @@ class Fungus(Weapon):
         # log_debug(f"Fungus {len(self.cells)} active cells")
 
         if self.update_count < 10:
-            print("Check")
+            pass
+            # print("Check")
 
         for c in self.regrow:
             if (c.type == self.type) or c.is_empty:
