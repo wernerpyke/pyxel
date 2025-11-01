@@ -8,9 +8,9 @@ from .wave import Wave
 from .weapon import Weapon
 from .bolt import Bolt
 
-position_left = Coord(16, 35)
-position_center = Coord(19, 34)
-position_right = Coord(23, 35)
+position_left = Coord(16, 31)
+position_center = Coord(19, 30)
+position_right = Coord(23, 31)
 
 weapons: list[Weapon] = []
 

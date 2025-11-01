@@ -6,7 +6,7 @@ from td.weapons.weapon import Weapon
 
 class Wave(Weapon):
     def __init__(self, position: Coord) -> None:
-        super().__init__("wave", position, power=5, update_delay=2)
+        super().__init__("wave", position, power=5, speed=1)
 
         self.radius = 0
 

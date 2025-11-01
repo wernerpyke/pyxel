@@ -11,7 +11,7 @@ import random
 class Bolt(Weapon):
 
     def __init__(self, position: Coord, direction_preference: str) -> None:
-        super().__init__("bolt", position, power=random.randint(30, 200), update_delay=0)
+        super().__init__("bolt", position, power=random.randint(30, 200), speed=10)
 
         self.colour: int = COLOURS.WHITE
         self.direction_preference = direction_preference
@@ -26,6 +26,7 @@ class Bolt(Weapon):
             self.cells.append(cell)
 
     def update(self, field: CellField) -> bool:
+        # Speed always =10, no need to call super().should_update()
         if len(self.cells) == 0:
             return False
         

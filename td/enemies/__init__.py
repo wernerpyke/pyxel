@@ -9,7 +9,7 @@ from .skeleton import Skeleton
 
 enemies: list[Enemy] = []
 
-positions = [
+launch_locations = [
     # left
     Coord(1, 4),
     Coord(3, 2),
@@ -57,7 +57,7 @@ positions = [
 ]
 
 def _random_location() -> Coord:
-    pos = positions[random.randint(0, (len(positions)-1))]
+    pos = launch_locations[random.randint(0, (len(launch_locations)-1))]
     return pos.clone()
 
 def launch_skeleton(game: FieldGame):
@@ -70,8 +70,6 @@ def update(game: FieldGame):
     for e in enemies:
         cells = field.cells_at(e._sprite.position, include_empty=False)
 
-
-
         match e.update(cells):
             case 0: # continue
                 pass
@@ -81,10 +79,10 @@ def update(game: FieldGame):
                 enemies.remove(e)
                 Signals.send("enemy_killed", game)
             case 1: # wins
-                print("Enemy.update() REMOVE WINNING ENEMY")
+                print(f"ENEMY WINS {e.power}")
                 game.remove_sprite(e._sprite)
                 enemies.remove(e)
                 Signals.send("enemy_wins", game)
 
-    if len(enemies) <= 15:
+    if len(enemies) <= 8:
         launch_skeleton(game)

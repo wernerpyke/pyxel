@@ -8,13 +8,14 @@ from .weapon import Weapon
 class Fungus(Weapon):
 
     def __init__(self, position: Coord) -> None:
-        super().__init__("fungus", position, power=5, update_delay=1)
+        super().__init__("fungus", position, power=5, speed=3)
 
         self.colour = COLOURS.GREEN_MINT
 
         self.regrow: list[Cell] = []
 
         self.update_count = 0
+        # self.skip_count = 0
 
     def launch(self, field: CellField):
         for i in range(5):
@@ -22,8 +23,11 @@ class Fungus(Weapon):
             self.cells.append(self._prop(cell))
 
     def update(self, field: CellField) -> bool:
+        self.update_count +=1
         if self.should_skip_update():
+            # self.skip_count += 1
             return len(self.cells) > 0
+        # print(f"SKIP FREQUENCY u:{self.update_count} s:{self.skip_count} => {(self.skip_count / self.update_count)} of {self.skip_frequency}")
 
         new_cells = []
 

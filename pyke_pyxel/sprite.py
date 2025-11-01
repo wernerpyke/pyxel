@@ -167,10 +167,10 @@ class CompoundSprite:
             for r in range(0, len(row)):
                 row[r] = tile
 
-    def fill_row(self, col: int, tile: Coord):
-        rows = self.cols[(col-1)]
-        for r in range(0, len(rows)):
-                rows[r] = tile
+    # def fill_row(self, col: int, tile: Coord):
+    #    rows = self.cols[(col-1)]
+    #    for r in range(0, len(rows)):
+    #            rows[r] = tile
 
     def fill_col(self, col: int, from_row: int, to_row: int, tile_col: int, tile_rows: list[int]):
         rows = self.cols[(col-1)]
@@ -179,6 +179,14 @@ class CompoundSprite:
             rows[r] = Coord(tile_col, tile_rows[tile_index])
             tile_index += 1
             tile_index = tile_index % len(tile_rows)
+
+    def fill_row(self, row: int, from_col: int, to_col: int, tile_row: int, tile_cols: list[int]):
+        tile_index = 0
+        for col_i in range((from_col-1), to_col):
+            col = self.cols[col_i]
+            col[(row-1)] = Coord(tile_cols[tile_index], tile_row)
+            tile_index += 1
+            tile_index = tile_index % len(tile_cols)
 
     def set_tile(self, col: int, row: int, tile: Coord):
         self.cols[(col-1)][(row-1)] = tile
