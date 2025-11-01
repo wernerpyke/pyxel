@@ -11,11 +11,10 @@ import random
 class Bolt(Weapon):
 
     def __init__(self, position: Coord, direction_preference: str) -> None:
-        super().__init__("bolt", position)
+        super().__init__("bolt", position, power=random.randint(30, 200), update_delay=0)
 
         self.colour: int = COLOURS.WHITE
         self.direction_preference = direction_preference
-        self.power: int = random.randint(30, 200)
 
     def launch(self, field: CellField):
         for i in range(5):

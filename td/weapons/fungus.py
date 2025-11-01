@@ -8,16 +8,13 @@ from .weapon import Weapon
 class Fungus(Weapon):
 
     def __init__(self, position: Coord) -> None:
-        super().__init__("fungus", position)
+        super().__init__("fungus", position, power=5, update_delay=1)
 
         self.colour = COLOURS.GREEN_MINT
-        
-        # TODO we'll use TTL to track the 'strength' of a cell.
-        # if an enemy interacts with a cell the cell does damage to the enemy and
-        # reduces its own ttl
-        self.power = 30
 
         self.regrow: list[Cell] = []
+
+        self.update_count = 0
 
     def launch(self, field: CellField):
         for i in range(5):
@@ -25,9 +22,15 @@ class Fungus(Weapon):
             self.cells.append(self._prop(cell))
 
     def update(self, field: CellField) -> bool:
+        if self.should_skip_update():
+            return len(self.cells) > 0
+
         new_cells = []
 
         # log_debug(f"Fungus {len(self.cells)} active cells")
+
+        if self.update_count < 10:
+            print("Check")
 
         for c in self.regrow:
             if (c.type == self.type) or c.is_empty:
@@ -37,7 +40,8 @@ class Fungus(Weapon):
                 self.cells.append(c)
                 self.regrow.remove(c)
             else:
-                log_debug(f"Fungus waiting to regrow {c.x}/{c.y} from {c.type}")
+                # log_debug(f"Fungus waiting to regrow {c.x}/{c.y} from {c.type}")
+                pass
 
         propagate_to = 1
         if len(self.cells) < 10:
@@ -45,12 +49,14 @@ class Fungus(Weapon):
 
         for c in self.cells:
             if (not c.is_empty) and (not c.type == self.type):
-                log_debug(f"Fungus {c.x}/{c.y} got usurped by {c.type}")
+                # log_debug(f"Fungus {c.x}/{c.y} got usurped by {c.type}")
                 self.regrow.append(c)
                 continue
 
             if not c.can_propogate:
-                log_error(f"Fungus cells contains non-propagating cell at x:{c.x} y:{c.y}")
+                # log_error(f"Fungus cells contains non-propagating cell at x:{c.x} y:{c.y}")
+                # This means that an enemy ate this cell while it was still waiting to propogate
+                continue
             
             neighbours = field.neighbours(c, filter_for_type=Cell.TYPE_EMPTY)
             random.shuffle(neighbours)
@@ -61,8 +67,13 @@ class Fungus(Weapon):
                     new_cells.append(self._prop(n))
                     neighbours.remove(n)
 
-        c.can_propogate = False
+            c.can_propogate = False
+        
         self.cells = new_cells
+
+        self.update_count += 1
+        if (len(self.cells) == 0) and self.update_count < 10:
+            print("WHOA")
 
         return len(self.cells) > 0
     

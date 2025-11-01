@@ -7,9 +7,9 @@ class Coord:
         self._col = col
         self._row = row
 
-        tile_size = GLOBAL_SETTINGS.size.tile
-        self._x = (self._col - 1) * tile_size
-        self._y = (self._row - 1) * tile_size
+        self.size = GLOBAL_SETTINGS.size.tile
+        self._x = (self._col - 1) * self.size
+        self._y = (self._row - 1) * self.size
 
     def is_different_grid_location(self, coord: "Coord"):
         return self._col != coord._col or self._row != coord._row
@@ -20,10 +20,8 @@ class Coord:
     def move_by(self, x: int, y: int):
         self._x += x
         self._y += y
-
-        tile_size = GLOBAL_SETTINGS.size.tile
-        self._col = math.floor(self.mid_x / tile_size) + 1
-        self._row = math.floor(self.y / tile_size) + 1
+        self._col = math.floor(self.mid_x / self.size) + 1
+        self._row = math.floor(self.y / self.size) + 1
 
     def clone(self):
         return Coord(self._col, self._row)
@@ -33,21 +31,19 @@ class Coord:
         cloned._x = self._x + x
         cloned._y = self._y + y
 
-        tile_size = GLOBAL_SETTINGS.size.tile
-
         match direction:
             case "up":
-                cloned._col = math.floor(self.mid_x / tile_size) + 1
-                cloned._row = math.floor(cloned.y / tile_size) + 1
+                cloned._col = math.floor(self.mid_x / self.size) + 1
+                cloned._row = math.floor(cloned.y / self.size) + 1
             case "down":
-                cloned._col = math.floor(self.mid_x / tile_size) + 1
-                cloned._row = math.floor((cloned.y + tile_size) / tile_size) + 1
+                cloned._col = math.floor(self.mid_x / self.size) + 1
+                cloned._row = math.floor((cloned.y + self.size) / self.size) + 1
             case "left":
-                cloned._col = math.floor(cloned.x / tile_size) + 1
-                cloned._row = math.floor(self.mid_y / tile_size) + 1
+                cloned._col = math.floor(cloned.x / self.size) + 1
+                cloned._row = math.floor(self.mid_y / self.size) + 1
             case "right":
-                cloned._col = math.floor((cloned.x + tile_size) / tile_size) + 1
-                cloned._row = math.floor(self.mid_y / tile_size) + 1
+                cloned._col = math.floor((cloned.x + self.size) / self.size) + 1
+                cloned._row = math.floor(self.mid_y / self.size) + 1
 
         return cloned
     
@@ -60,10 +56,8 @@ class Coord:
         collide_y = coord._y
         sprite_x = self._x
         sprite_y = self._y
-
-        tile_size = GLOBAL_SETTINGS.size.tile        
-        w = tile_size
-        h = tile_size
+     
+        w = h = self.size
         tolerance = 1
         
         return (
@@ -83,13 +77,27 @@ class Coord:
     
     @property
     def mid_x(self) -> int:
-        tile_size = GLOBAL_SETTINGS.size.tile
-        return math.floor(self._x + (tile_size / 2))
+        return math.floor(self._x + (self.size / 2))
     
     @property
     def mid_y(self) -> int:
-        tile_size = GLOBAL_SETTINGS.size.tile
-        return math.floor(self._y + (tile_size / 2))
+        return math.floor(self._y + (self.size / 2))
+    
+    @property
+    def min_x(self) -> int:
+        return self._x
+    
+    @property
+    def min_y(self) -> int:
+        return self._y
+    
+    @property
+    def max_x(self) -> int:
+        return self._x + self.size
+    
+    @property
+    def max_y(self) -> int:
+        return self._y + self.size
     
     def __str__(self):
         return f"{self._col}/{self._row}"

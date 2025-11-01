@@ -51,13 +51,13 @@ class Game:
     def add_sprite(self, sprite: Sprite|CompoundSprite):
         self._sprite_id += 1
         sprite._id = self._sprite_id # self._sprites.__len__()
-        log_debug(f"GAME.add_sprite() {sprite._id}")
+        # log_debug(f"GAME.add_sprite() {sprite._id}")
         self._sprites.append(sprite)
 
     def remove_sprite(self, sprite: Sprite|CompoundSprite):
         if sprite in self._sprites:
             self._sprites.remove(sprite)
-            log_debug(f"GAME.remove_sprite() {sprite._id}")
+            # log_debug(f"GAME.remove_sprite() {sprite._id}")
 
     def add_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
         self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)

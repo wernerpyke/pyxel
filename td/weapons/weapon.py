@@ -3,21 +3,23 @@ from pyke_pyxel.cell_field import Cell, CellField
 
 
 class Weapon:
-    def __init__(self, type: str, position: Coord) -> None:
+    def __init__(self, type: str, position: Coord, power: int, update_delay: int) -> None:
         self.position = position
         self.type = type
 
         self.cells: list[Cell] = []
 
-        self.skip_updates = 2 # this number reduces as speed increases
-        self.skip_counter = self.skip_updates # to ensure that the first update draws
+        self.power = power
+
+        self.should_skip_update_count = update_delay # this number reduces as speed increases
+        self.skip_update_count = self.should_skip_update_count # to ensure that the first update draws
 
     def should_skip_update(self) -> bool:
-        if self.skip_counter < self.skip_updates:
-            self.skip_counter += 1
+        if self.skip_update_count < self.should_skip_update_count:
+            self.skip_update_count += 1
             return True
         else:
-            self.skip_counter = 0
+            self.skip_update_count = 0
             return False
 
     def launch(self, field: CellField):

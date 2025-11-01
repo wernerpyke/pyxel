@@ -11,6 +11,7 @@ def game_started(game: FieldGame):
     field = game.field
 
     enemies.launch_skeleton(game)
+
     weapons.launch_fungus(field)
 
 def game_update(game: FieldGame):
@@ -18,3 +19,9 @@ def game_update(game: FieldGame):
 
 def game_field_update(field: CellField):
     weapons.update(field)
+
+    if not weapons.has_active_weapon("fungus"):
+        weapons.launch_fungus(field)
+
+    if not weapons.has_active_weapon("bolt"):
+        weapons.launch_bolt(field)

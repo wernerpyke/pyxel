@@ -6,7 +6,7 @@ from td.weapons.weapon import Weapon
 
 class Wave(Weapon):
     def __init__(self, position: Coord) -> None:
-        super().__init__("wave", position)
+        super().__init__("wave", position, power=5, update_delay=2)
 
         self.radius = 0
 
@@ -51,7 +51,7 @@ class Wave(Weapon):
                         cell.store_state()
 
                     cell.type = self.type
-                    cell.power = 5
+                    cell.power = self.power
                     cell.colour = COLOURS.RED
                     new_cells.append(cell)
 

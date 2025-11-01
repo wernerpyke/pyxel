@@ -15,6 +15,11 @@ position_right = Coord(23, 35)
 weapons: list[Weapon] = []
 
 def launch_fungus(field: CellField):
+    print("GameLoop launch fungus")
+
+    for c in field.cells_at(position_center): # Give fungus room to grow
+        c.reset()
+
     fungus = Fungus(position_center)
     fungus.launch(field)
     weapons.append(fungus)
@@ -23,6 +28,27 @@ def launch_wave(field: CellField):
     wave = Wave(Coord(20, 20))
     wave.launch(field)
     weapons.append(wave)
+
+def launch_bolt(field: CellField):
+    print("GameLoop launch bolt")
+    bolt: Bolt
+    i = random.randint(0,2)
+    match i:
+        case 0:
+            bolt = Bolt(position_left, DIRECTION.LEFT)
+        case 1:
+            bolt = Bolt(position_center, DIRECTION.UP)
+        case 2:
+            bolt = Bolt(position_right, DIRECTION.RIGHT)
+    bolt.launch(field)
+    weapons.append(bolt)
+
+def has_active_weapon(type: str) -> bool:
+    for w in weapons:
+        if w.type == type:
+            return True
+    
+    return False
 
 def update(field: CellField):
     to_remove: list[Weapon] = []
@@ -33,16 +59,3 @@ def update(field: CellField):
     for w in to_remove:
         log_debug(f"GameLoop remove {w.type}")
         weapons.remove(w)
-
-    if len(weapons) == 1:
-        bolt: Bolt
-        i = random.randint(0,2)
-        match i:
-            case 0:
-                bolt = Bolt(position_left, DIRECTION.LEFT)
-            case 1:
-                bolt = Bolt(position_center, DIRECTION.UP)
-            case 2:
-                bolt = Bolt(position_right, DIRECTION.RIGHT)
-        bolt.launch(field)
-        weapons.append(bolt)

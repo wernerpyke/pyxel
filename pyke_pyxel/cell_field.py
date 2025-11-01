@@ -1,6 +1,8 @@
 from typing import Optional
 import pyxel
 
+from pyke_pyxel.base_types import Coord
+
 from . import GLOBAL_SETTINGS
 from pyke_pyxel.signals import Signals
 
@@ -54,6 +56,9 @@ class Cell:
     @property
     def is_empty(self):
         return self.type == "empty"
+    
+    def __str__(self):
+        return f"{self.x}/{self.y}"
 
 class CellField:
 
@@ -182,15 +187,31 @@ class CellField:
             # for n in cell._neighbours:
             #    if n.type == filter_for_type:
             #        neighbours.append(n)
-            # return neighbours
-
-    
-        
-
-    
+            # return neighbours    
 
     def all_cells(self) -> list[Cell]:
         return self._all_cells
 
     def cell_at(self, x: int, y: int) -> Cell:
         return self._cells[y][x]
+    
+    def cells_at(self, position: Coord, include_empty: bool = False) -> list[Cell]:
+        cells: list[Cell] = []
+
+        min_y = position.min_y if position.min_y > 0 else 0
+        min_x = position.min_x if position.min_x > 0 else 0
+        max_y = position.max_y if position.max_y < self._height else self._height
+        max_x = position.max_x if position.max_x < self._width else self._width
+
+        for y in range(min_y, max_y):
+            for x in range(min_x, max_x):
+                if y >= len(self._cells):
+                    print("YUCK!")
+
+                cells.append(self._cells[y][x])
+
+        if not include_empty:
+            cells = [
+                c for c in cells if not c.is_empty
+            ]
+        return cells
