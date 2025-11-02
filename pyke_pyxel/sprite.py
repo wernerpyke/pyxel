@@ -1,6 +1,6 @@
 import pyxel
 
-from typing import Optional
+from typing import Optional, Callable
 from .base_types import Coord
 
 class Animation:
@@ -32,6 +32,7 @@ class Sprite:
 
         self._animation: Optional[Animation] = None
         self._loop_animation: bool = True
+        self._on_animation_end: Optional[Callable[[int], None]] = None
 
         self.col_tile_count: int = col_tile_count
         self.row_tile_count: int = row_tile_count
@@ -43,11 +44,14 @@ class Sprite:
         animation._name = name
         self.animations[name] = animation
         
-    def activate_animation(self, name, loop: bool = True):
+    def activate_animation(self, name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None):
         self._animation = self.animations[name]
         self._animation.paused = False
         self.is_flipped = self._animation.flip
         self._loop_animation = loop
+        self._on_animation_end = on_animation_end
+
+        self._animation._current_frame_index = 0
 
     def pause_animation(self):
         if self._animation:
@@ -74,15 +78,21 @@ class Sprite:
         anim = self._animation
         
         if anim:
-            anim._current_frame_index += 1
             if anim._current_frame_index >= anim.frames:
                 if self._loop_animation:
                     anim._current_frame_index = 0
                 else:
-                    self.deactivate_animations()
+                    if self._on_animation_end:
+                        id = self._id
+                        self._on_animation_end(id)
+                        self._on_animation_end = None
+                    else:
+                        self.deactivate_animations()
             
             col = anim.start_frame._col + (anim._current_frame_index * self.col_tile_count)
             self.active_frame = Coord(col, anim.start_frame._row)
+
+            anim._current_frame_index += 1
 
             # print(f"Sprite.update_frame() frame:{self._animation.startFrame._col}+{animation._currentFrame}={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
         else:

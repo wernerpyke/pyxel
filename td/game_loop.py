@@ -16,14 +16,6 @@ STATE = game_state()
 def game_started(game: FieldGame):
     print("Game Started")
 
-    # game.start_music(0)
-
-    field = game.field
-
-    enemies.launch_skeleton(game)
-
-    weapons.launch_fungus(field)
-
 def game_update(game: FieldGame):
     enemies.update(game)
 

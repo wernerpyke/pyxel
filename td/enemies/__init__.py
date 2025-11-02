@@ -74,6 +74,10 @@ def launch_skeleton(game: FieldGame):
     enemies.append(skeleton)
 
 def update(game: FieldGame):
+    def _remove_enemy_sprite(sprite_id: int):
+        print(f"REMOVE ENEMY SPRITE {sprite_id}")
+        game.remove_sprite_by_id(sprite_id)
+    
     field = game.field
     for e in enemies:
         if not _should_skip_update(e):
@@ -84,12 +88,12 @@ def update(game: FieldGame):
                     pass
                 case -1: # killed
                     # log_debug(f"enemies.update() remove {e._sprite._id}")
-                    game.remove_sprite(e._sprite)
                     enemies.remove(e)
-                    Signals.send("enemy_killed", game)
+                    e._sprite.activate_animation("die", loop=False, on_animation_end=_remove_enemy_sprite)
+                    Signals.send("enemy_dies", game)
                 case _: # win with damage
-                    game.remove_sprite(e._sprite)
                     enemies.remove(e)
+                    e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
                     Signals.send_with("enemy_wins", game, result)
 
     if len(enemies) <= 8:

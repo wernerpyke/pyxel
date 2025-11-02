@@ -7,9 +7,14 @@ from pyke_pyxel.sprite import Animation, Sprite
 
 class Enemy:
     def __init__(self, name: str, from_frame: Coord, power: int, speed: int) -> None:
-        self._sprite = Sprite(name, from_frame, 1, 1)
-        self._sprite.add_animation("loop", Animation(from_frame, 2))
-        self._sprite.activate_animation("loop")
+        sprite = Sprite(name, from_frame, 1, 1)
+        
+        sprite.add_animation("loop", Animation(from_frame, 2))
+        sprite.activate_animation("loop")
+
+        sprite.add_animation("kill", Animation(Coord(5,11), 2))
+        sprite.add_animation("die", Animation(Coord(7,10), 2))
+        self._sprite = sprite
 
         self.power = power
 
@@ -24,8 +29,8 @@ class Enemy:
         
         win_base_w = (game_w - 64) / 2
         self._base_top = game_h - 90
-        self._base_left = win_base_w
-        self._base_right = game_w - win_base_w
+        self._base_left = win_base_w + 4
+        self._base_right = game_w - win_base_w - 4
 
     def launch(self, game: FieldGame, position: Coord):
         # log_debug(f"Enemy.launch() {self._sprite._id} {position.y}")

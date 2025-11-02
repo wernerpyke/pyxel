@@ -1,26 +1,27 @@
 # 🕹️ Top-Down Pixel Art Game
 
-A simple top-down 2D pixel art game built in Python — created as a hands-on way to learn game development and Python programming.
+A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel) with two example games.
 
 ---
 
-## 🎯 Project Goals
-
-- Learn Python through practical, fun development
-- Build a small playable game from scratch
-- Explore game loops, sprite handling, input, and collision detection
-- Work with pixel art graphics in a top-down 2D style
-
 ## 🎯 Project Structure
 - `pyke_pyxel`: a semi-reusable, highly primitive game engine on top of Pyxel
-- `rpg`: skeleton for a room-based RPG
-- `pixi-common`: the beginnings of a type of tower defence game
+- `td`: the beginnings of a type of tower defence game
+- `rpg`: prototype for a room-based RPG
 
 ---
 
 ## 🧩 TODO
 
-- Cache TileMap image in draw.tile_map to avoid nested looping
+- In Game.remove_sprite:
+ - Consider moving to an approach in which a Sprite is flagged for deletion and then deleted in update()
+- In pyke_pyxel.draw.tile_map:
+ - cache image to avoid nested looping
+- In pyke_pyxel.draw.compound_sprite:
+ - Support horizontal flipping
+- In pyke_pyxel.sprite.CompoundSprite:
+ - cache image to avoid nested looping
+ - support animations
 
 ---
 
@@ -28,5 +29,7 @@ A simple top-down 2D pixel art game built in Python — created as a hands-on wa
 
 - **ChatGPT Python by Nicholas Barker** - to teach me Python and it's tooling in VSCode
 - **Python 3.x**
-- **[Pyxel](https://github.com/kitao/pyxel)** — retro game engine for Python
+- **[Pyxel](https://github.com/kitao/pyxel)** — a retro game engine for Python
+- **[Aseprite](https://www.aseprite.org/)** — a wonderful pixel art sprite editor
+- **[Blinker](https://github.com/pallets-eco/blinker)** - a fast Python in-process signal/event dispatching system
 - VSCode for development

@@ -54,13 +54,27 @@ class Game:
     def add_sprite(self, sprite: Sprite|CompoundSprite):
         self._sprite_id += 1
         sprite._id = self._sprite_id # self._sprites.__len__()
-        # log_debug(f"GAME.add_sprite() {sprite._id}")
+        # log_debug(f"GAME.add_sprite() {sprite._id} {sprite.name}")
+        # if sprite.name == "skeleton":
+        #    print("YUCK")
         self._sprites.append(sprite)
 
     def remove_sprite(self, sprite: Sprite|CompoundSprite):
+        # TODO
+        # for both here, in remove_sprite_by_id and _sprite_removed
+        # it might be cleaner to mark sprite._to_be_removed = True
+        # and then removing them in update()
+        #
         if sprite in self._sprites:
             self._sprites.remove(sprite)
             # log_debug(f"GAME.remove_sprite() {sprite._id}")
+
+    def remove_sprite_by_id(self, sprite_id: int):
+        for s in self._sprites:
+            if s._id == sprite_id:
+                # log_debug(f"GAME.remove_sprite_by_id() {sprite_id}")
+                self._sprites.remove(s)
+                return
 
     def set_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
         self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
