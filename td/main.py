@@ -31,6 +31,6 @@ Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
 Signals.connect(Signals.CELL_FIELD.UPDATE, game_loop.game_field_update)
 
 Signals.connect("enemy_dies", game_loop.enemy_killed)
-Signals.connect("enemy_wins", game_loop.enemy_wins)
+Signals.connect("enemy_attacks", game_loop.enemy_wins)
 
 game.start()

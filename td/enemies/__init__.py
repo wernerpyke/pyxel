@@ -94,7 +94,7 @@ def update(game: FieldGame):
                 case _: # win with damage
                     enemies.remove(e)
                     e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
-                    Signals.send_with("enemy_wins", game, result)
+                    Signals.send_with("enemy_attacks", game, result)
 
     if len(enemies) <= 8:
         launch_skeleton(game)
