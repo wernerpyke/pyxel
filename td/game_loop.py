@@ -16,6 +16,8 @@ STATE = game_state()
 def game_started(game: FieldGame):
     print("Game Started")
 
+    # game.start_music(0)
+
     field = game.field
 
     enemies.launch_skeleton(game)
@@ -40,8 +42,10 @@ def enemy_killed(game: FieldGame):
     text.set_colour(COLOURS.GREEN_MINT)
     text.set_text(f"{STATE.score}")
 
-def enemy_wins(game: FieldGame):
-    STATE.score -= 1
+def enemy_wins(game: FieldGame, other: int):
+    damage = other
+    print(f"ENEMY SCORES damage:{damage}")
+    STATE.score -= damage
     text = game.hud.get_text()
     text.set_colour(COLOURS.RED)
     text.set_text(f"{STATE.score}")

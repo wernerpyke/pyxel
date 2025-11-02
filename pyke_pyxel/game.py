@@ -66,6 +66,12 @@ class Game:
         self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
         # log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
 
+    def start_music(self, number: int):
+        pyxel.playm(number, loop=True)
+
+    def stop_music(self):
+        pyxel.stop()
+
     @property
     def hud(self) -> HUD:
         if self._hud == None:

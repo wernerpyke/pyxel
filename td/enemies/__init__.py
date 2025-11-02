@@ -60,6 +60,14 @@ def _random_location() -> Coord:
     pos = launch_locations[random.randint(0, (len(launch_locations)-1))]
     return pos.clone()
 
+def _should_skip_update(enemy: Enemy) -> bool:
+    speed = enemy._speed
+    if speed == 10:
+        return False
+    
+    skip_frequency = (10 - speed) / 10
+    return random.random() < skip_frequency
+
 def launch_skeleton(game: FieldGame):
     skeleton = Skeleton()
     skeleton.launch(game, _random_location()) # positions[0].clone()) # _random_location())
@@ -68,21 +76,21 @@ def launch_skeleton(game: FieldGame):
 def update(game: FieldGame):
     field = game.field
     for e in enemies:
-        cells = field.cells_at(e._sprite.position, include_empty=False)
-
-        match e.update(cells):
-            case 0: # continue
-                pass
-            case -1: # killed
-                # log_debug(f"enemies.update() remove {e._sprite._id}")
-                game.remove_sprite(e._sprite)
-                enemies.remove(e)
-                Signals.send("enemy_killed", game)
-            case 1: # wins
-                print(f"ENEMY WINS {e.power}")
-                game.remove_sprite(e._sprite)
-                enemies.remove(e)
-                Signals.send("enemy_wins", game)
+        if not _should_skip_update(e):
+            cells = field.cells_at(e._sprite.position, include_empty=False)
+            result = e.update(cells)
+            match result:
+                case 0: # continue
+                    pass
+                case -1: # killed
+                    # log_debug(f"enemies.update() remove {e._sprite._id}")
+                    game.remove_sprite(e._sprite)
+                    enemies.remove(e)
+                    Signals.send("enemy_killed", game)
+                case _: # win with damage
+                    game.remove_sprite(e._sprite)
+                    enemies.remove(e)
+                    Signals.send_with("enemy_wins", game, result)
 
     if len(enemies) <= 8:
         launch_skeleton(game)

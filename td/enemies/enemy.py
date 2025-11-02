@@ -1,23 +1,31 @@
-import random
-
-from pyke_pyxel import DIRECTION, log_debug
+from pyke_pyxel import GLOBAL_SETTINGS, log_debug, log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import Cell
 from pyke_pyxel.field_game import FieldGame
-from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Animation, Sprite
 
 
 class Enemy:
-    def __init__(self, name: str, from_frame: Coord, power: int) -> None:
+    def __init__(self, name: str, from_frame: Coord, power: int, speed: int) -> None:
         self._sprite = Sprite(name, from_frame, 1, 1)
         self._sprite.add_animation("loop", Animation(from_frame, 2))
         self._sprite.activate_animation("loop")
 
         self.power = power
 
-        self.skip_move_updates = 4 # this number reduces as speed increases
-        self.skip_counter = 0
+        if speed > 10:
+            log_error(f"Enemy({type}) speed > 10")
+            speed = 10
+        self._speed = speed
+
+        # Calculate the boundaries of the win condition
+        game_w = game_h = GLOBAL_SETTINGS.size.window
+        self._plants_top_y = game_h - 24
+        
+        win_base_w = (game_w - 64) / 2
+        self._base_top = game_h - 90
+        self._base_left = win_base_w
+        self._base_right = game_w - win_base_w
 
     def launch(self, game: FieldGame, position: Coord):
         # log_debug(f"Enemy.launch() {self._sprite._id} {position.y}")
@@ -28,31 +36,39 @@ class Enemy:
     def _move_towards_target(self) -> tuple[int, int]:
         return (0, 1) # straight down
 
-    def update(self, field_cells: list[Cell]) -> int: # 0: continue, 1: wins, -1: dies
-        self.skip_counter += 1
-        if self.skip_counter >= self.skip_move_updates:
-            # log_debug(f"Enemy.update() move {self._sprite._id}")
-            to = self._move_towards_target()
-            self._sprite.position.move_by(to[0], to[1])
-            self.skip_counter = 0
+    def _calculate_win(self) -> int:
+        max_y = self._sprite.position.max_y
+        if max_y < self._base_top:
+            return 0 # No
+
+        if max_y >= self._plants_top_y: # in plants
+            return 1 # Yes
+
+        mid_x = self._sprite.position.mid_x
+        if mid_x >= self._base_left and mid_x <= self._base_right: # in base
+            return 2 # Super Yes
+        else:
+            return 0 # No
+
+    def update(self, field_cells: list[Cell]) -> int: # 0: continue, -1: dies, 1: wins, 2: super wins
+        to = self._move_towards_target()
+        self._sprite.position.move_by(to[0], to[1])
+        self.skip_counter = 0
         
         if len(field_cells) > 0:
             for c in field_cells:
                 if self.power > c.power:
-                    #print(f"ENEMY {self._sprite.name} EATS {c.power} => {self.power}")
                     self.power -= c.power
                     # TODO - there's a messy thing here, we're resetting a cell which may be in a weapon's active cells
                     # See Fungus.update(). Another possibility is to check if not c.can_propogate:
                     c.reset()
                     # c.power = 0
                 else:
-                    # print(f"ENEMY {self._sprite.name} KILLED {c.power} => {self.power}")
                     c.power -= self.power
                     self.power = 0
 
         if self.power <= 0:
             return -1 # killed
-        elif self._sprite.position.max_y > 320:
-            return 1 # wins
         else:
-            return 0 # continue
+            win_count = self._calculate_win()
+            return win_count

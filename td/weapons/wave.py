@@ -14,9 +14,6 @@ class Wave(Weapon):
         pass
 
     def update(self, field: CellField) -> bool:
-        if self.should_skip_update():
-            return len(self.cells) > 0
-
         self.radius += 1
 
         new_cells = []
