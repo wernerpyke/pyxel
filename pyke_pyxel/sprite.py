@@ -20,10 +20,10 @@ class Sprite:
     Args:
         sheetCoordinate (Coordinate): The x/y-coordinate of the sprite on the resource sheet.
     """
-    def __init__(self, name: str, idle_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1):
+    def __init__(self, name: str, default_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1):
         self._id: int = 0
         self.name = name
-        self.idle_frame = idle_frame
+        self.idle_frame = default_frame
 
         self.animations: dict[str, Animation] = { }
         self._position: Coord
@@ -74,7 +74,7 @@ class Sprite:
     def position(self) -> Coord:
         return self._position
 
-    def update_frame(self):
+    def _update_frame(self):
         anim = self._animation
         
         if anim:
@@ -114,11 +114,11 @@ class OpenableSprite(Sprite):
 
     def close(self):
         self._status = CLOSED
-        self.update_frame()
+        self._update_frame()
 
     def open(self):
         self._status = OPEN
-        self.update_frame()
+        self._update_frame()
 
     @property
     def is_closed(self) -> bool:
@@ -128,7 +128,7 @@ class OpenableSprite(Sprite):
     def is_open(self) -> bool:
         return self._status == OPEN
     
-    def update_frame(self):
+    def _update_frame(self):
         match self._status:
             case 0: # Open
                 self.active_frame = self._openFrame
@@ -213,6 +213,13 @@ class TextSprite:
         self._text = text
         self._colour = colour
         self._font = pyxel.Font(font_file)
+
+    def set_position(self, position: Coord):
+        self._position = position
+
+    @property
+    def position(self) -> Coord:
+        return self._position
 
     def set_text(self, text: str):
         self._text = text

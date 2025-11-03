@@ -26,4 +26,6 @@ class GameSettings:
 
     colours: ColourSettings = field(default_factory=ColourSettings)
 
+    mouse_enabled: bool = False
+
 

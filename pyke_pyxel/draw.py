@@ -1,5 +1,7 @@
 import pyxel
 
+from pyke_pyxel.button import Button
+
 from .base_types import TileMap
 from .game_settings import GameSettings
 from .sprite import CompoundSprite, Sprite, TextSprite
@@ -7,8 +9,26 @@ from .sprite import CompoundSprite, Sprite, TextSprite
 def background(colour: int):
     pyxel.cls(colour)
 
-def text(sprite: TextSprite, settings: GameSettings):
-    pyxel.text(10, 10, sprite._text, sprite._colour, font=sprite._font)
+def text(sprite: TextSprite):
+    pyxel.text(sprite.position.x, sprite.position.y, sprite._text, sprite._colour, font=sprite._font)
+
+def button(button: Button, settings: GameSettings):
+    frame = button._up_frame
+    if button.is_down:
+        frame = button._down_frame
+    position = button._position
+
+    width = settings.size.tile * button.col_tile_count
+    height = settings.size.tile * button.row_tile_count
+
+    pyxel.blt(x=position.x,
+              y=position.y,
+              img=0,
+              u=frame.x,
+              v=frame.y,
+              w=width,
+              h=height,
+              colkey=settings.colours.sprite_transparency)
 
 def sprite(sprite: Sprite, settings: GameSettings):
     frame = sprite.active_frame

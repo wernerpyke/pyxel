@@ -8,9 +8,9 @@ from .wave import Wave
 from .weapon import Weapon
 from .bolt import Bolt
 
-position_left = Coord(16, 31)
+# position_left = Coord(16, 31)
 position_center = Coord(19, 30)
-position_right = Coord(23, 31)
+# position_right = Coord(23, 31)
 
 weapons: list[Weapon] = []
 
@@ -29,17 +29,10 @@ def launch_wave(field: CellField):
     wave.launch(field)
     weapons.append(wave)
 
-def launch_bolt(field: CellField):
-    # log_debug("GameLoop launch bolt")
-    bolt: Bolt
-    i = random.randint(0,2)
-    match i:
-        case 0:
-            bolt = Bolt(position_left, DIRECTION.LEFT)
-        case 1:
-            bolt = Bolt(position_center, DIRECTION.UP)
-        case 2:
-            bolt = Bolt(position_right, DIRECTION.RIGHT)
+def launch_bolt(location: Coord, 
+                propagate_direction: str,
+                field: CellField):
+    bolt = Bolt(location, propagate_direction)
     bolt.launch(field)
     weapons.append(bolt)
 

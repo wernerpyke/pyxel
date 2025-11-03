@@ -1,4 +1,4 @@
-# 🕹️ Top-Down Pixel Art Game
+# 🕹️ Pixel-art Games with Pyxel (and pixel art)
 
 A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel) with two example games.
 
@@ -13,15 +13,15 @@ A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel
 
 ## 🧩 TODO
 
-- In Game.remove_sprite:
- - Consider moving to an approach in which a Sprite is flagged for deletion and then deleted in update()
-- In pyke_pyxel.draw.tile_map:
- - cache image to avoid nested looping
-- In pyke_pyxel.draw.compound_sprite:
- - Support horizontal flipping
-- In pyke_pyxel.sprite.CompoundSprite:
- - cache image to avoid nested looping
- - support animations
+- In `Game.remove_sprite`:
+    - Consider moving to an approach in which a Sprite is flagged for deletion and then deleted in `update()` rather than removed from the array immediately. The current approach might be a cause for weird callback-type bugs.
+- In `pyke_pyxel.draw.tile_map`:
+    - Cache image to avoid nested looping
+- In `pyke_pyxel.draw.compound_sprite`:
+    - Support horizontal flipping
+- In `pyke_pyxel.sprite.CompoundSprite`:
+    - Cache image to avoid nested looping
+    - Support animations
 
 ---
 

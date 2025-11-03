@@ -7,6 +7,7 @@ from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
 from game_load import load_level
 import game_loop
+import ui
 
 settings = GameSettings()
 
@@ -18,6 +19,8 @@ settings.fps.game = 60
 settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
 
+settings.mouse_enabled = True
+
 game = FieldGame(
         settings=settings,
         title="Pyke Tower", 
@@ -28,9 +31,13 @@ load_level(game)
 
 Signals.connect(Signals.GAME.STARTED, game_loop.game_started)
 Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
-Signals.connect(Signals.CELL_FIELD.UPDATE, game_loop.game_field_update)
+Signals.connect(Signals.MOUSE.MOVE, ui.mouse_move)
+Signals.connect(Signals.MOUSE.DOWN, ui.mouse_down)
+Signals.connect(Signals.MOUSE.UP, ui.mouse_up)
 
 Signals.connect("enemy_dies", game_loop.enemy_killed)
 Signals.connect("enemy_attacks", game_loop.enemy_wins)
+
+Signals.connect("ui_weapon_selected", game_loop.ui_weapon_selected)
 
 game.start()

@@ -22,8 +22,10 @@ class Signals:
         BLOCKED = "enemy_blocked"
 
     @dataclass
-    class CELL_FIELD:
-        UPDATE = "cell_field_update"
+    class MOUSE:
+        DOWN = "mouse_down"
+        UP = "mouse_up"
+        MOVE = "mouse_move"
 
     @staticmethod
     def connect(name: str, listener: Callable):

@@ -86,9 +86,6 @@ class CellField:
 
     # Lifecycle methods
 
-    def _update(self):
-        Signals.send(Signals.CELL_FIELD.UPDATE, self)
-
     def _draw(self):
         transparent = GLOBAL_SETTINGS.colours.sprite_transparency
 

@@ -16,6 +16,19 @@ class Coord:
     
     def is_same_grid_location(self, coord: "Coord"):
         return self._col == coord._col and self._row == coord._row
+    
+    def contains(self, x: int, y: int):
+        min_x = self._x
+        max_x = self._x + self.size
+        if x < min_x or x > max_x:
+            return False
+        
+        min_y = self._y
+        max_y = self._y + self.size
+        if y < min_y or y > max_y:
+            return False
+        
+        return True
 
     def move_by(self, x: int, y: int):
         self._x += x

@@ -19,11 +19,6 @@ class FieldGame(Game):
 
     # Lifecycle methods
 
-    def update(self):
-        self._field._update()
-
-        super().update()
-
     def draw(self):
         super()._draw_background()
 

@@ -1,24 +1,21 @@
-from pathlib import Path
-from pyke_pyxel import GLOBAL_SETTINGS
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite, TextSprite
 
+from game_state import STATE
+
 def load_level(game: FieldGame):
     game.set_tilemap(Coord(1, 1), 8, 8)
 
-    mountain = Sprite("mountain", Coord(1, 17), 32, 12)
+    mountain = Sprite("mountain", Coord(1, 21), 32, 12)
     mountain.set_position(Coord(4, 1))
     game.add_sprite(mountain)
 
     _add_plants(game)
 
     _add_base(game)
-
-    score_text = TextSprite("*", 
-                            GLOBAL_SETTINGS.colours.hud_text,
-                            f"{Path(__file__).parent.resolve()}/assets/t0-14b-uni.bdf")
-    game.hud.set_text(score_text)
+    STATE.score_text.set_position(Coord(2,2))
+    game.hud.add_text(STATE.score_text)
 
 def _add_plants(game: FieldGame):
     s = CompoundSprite("plants", 40, 4)

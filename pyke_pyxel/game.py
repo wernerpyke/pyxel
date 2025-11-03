@@ -43,7 +43,13 @@ class Game:
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(resources)
-        # pyxel.images[0].load(0, 0, "assets/pyxel_logo_38x16.png")
+        
+        self._send_mouse_events = False
+        self._mouse_at_x: int = 0
+        self._mouse_at_y: int = 0
+        if settings.mouse_enabled:
+            pyxel.mouse(True)
+            self._send_mouse_events = True
 
         self._sprite_id = 0 # TODO is it ok for this to just increment?
     
@@ -54,9 +60,6 @@ class Game:
     def add_sprite(self, sprite: Sprite|CompoundSprite):
         self._sprite_id += 1
         sprite._id = self._sprite_id # self._sprites.__len__()
-        # log_debug(f"GAME.add_sprite() {sprite._id} {sprite.name}")
-        # if sprite.name == "skeleton":
-        #    print("YUCK")
         self._sprites.append(sprite)
 
     def remove_sprite(self, sprite: Sprite|CompoundSprite):
@@ -115,6 +118,20 @@ class Game:
     def update(self):
         Signals.send(Signals.GAME.UPDATE, self)
 
+        # mouse
+        if self._send_mouse_events:
+            x = pyxel.mouse_x
+            y = pyxel.mouse_y
+            if (not x == self._mouse_at_x) or (not y == self._mouse_at_y):
+                self._mouse_at_x = x
+                self._mouse_at_y = y
+                Signals.send_with(Signals.MOUSE.MOVE, self, (self._mouse_at_x, self._mouse_at_y))
+
+            if pyxel.btnp(pyxel.MOUSE_BUTTON_LEFT):
+                Signals.send_with(Signals.MOUSE.DOWN, self, (self._mouse_at_x, self._mouse_at_y))
+            if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
+                Signals.send(Signals.MOUSE.UP, self)
+
         # movement
         self.movement_tick = not self.movement_tick
 
@@ -128,7 +145,7 @@ class Game:
             self._animation_tick = 0
             for sprite in self._sprites:
                 if isinstance(sprite, Sprite):
-                    sprite.update_frame()
+                    sprite._update_frame()
                 # TODO support CompoundSprite animations?
 
     def draw(self):    

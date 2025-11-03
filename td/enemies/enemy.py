@@ -12,7 +12,7 @@ class Enemy:
         sprite.add_animation("loop", Animation(from_frame, 2))
         sprite.activate_animation("loop")
 
-        sprite.add_animation("kill", Animation(Coord(5,11), 2))
+        sprite.add_animation("kill", Animation(Coord(5,10), 2))
         sprite.add_animation("die", Animation(Coord(7,10), 2))
         self._sprite = sprite
 
