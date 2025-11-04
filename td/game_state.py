@@ -49,6 +49,9 @@ class GameMap:
 
 @dataclass
 class game_state:
+    #
+    music_enabled = False
+
     map = GameMap()
     score: int = 0
     score_text = TextSprite("*", 

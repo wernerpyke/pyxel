@@ -15,6 +15,8 @@ update_queue: list[str] = []
 
 def game_started(game: FieldGame):
     print("Game Started")
+    if STATE.music_enabled:
+        game.start_music(0)
 
 def game_update(game: FieldGame):
     for u in update_queue:
@@ -30,14 +32,19 @@ def game_update(game: FieldGame):
                         game.field)
                 else:
                     log_error("game_loop.game_update no launch location")
+            case "launch_fungus":
+                location = STATE.launch_location
+                if location:
+                    weapons.launch_fungus(
+                        location.launch_from, 
+                        game.field)
+                else:
+                    log_error("game_loop.game_update no launch location")
     update_queue.clear()
 
     enemies.update(game)
 
     weapons.update(game.field)
-
-    if not weapons.has_active_weapon("fungus"):
-        weapons.launch_fungus(game.field)
 
 def enemy_killed(game: FieldGame):
     STATE.score += 1

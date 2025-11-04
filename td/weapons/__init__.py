@@ -8,19 +8,15 @@ from .wave import Wave
 from .weapon import Weapon
 from .bolt import Bolt
 
-# position_left = Coord(16, 31)
-position_center = Coord(19, 30)
-# position_right = Coord(23, 31)
-
 weapons: list[Weapon] = []
 
-def launch_fungus(field: CellField):
+def launch_fungus(location: Coord, field: CellField):
     # log_debug("GameLoop launch fungus")
 
-    for c in field.cells_at(position_center): # Give fungus room to grow
+    for c in field.cells_at(location): # Give fungus room to grow
         c.reset()
 
-    fungus = Fungus(position_center)
+    fungus = Fungus(location)
     fungus.launch(field)
     weapons.append(fungus)
 
