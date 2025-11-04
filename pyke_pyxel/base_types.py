@@ -1,15 +1,43 @@
 from dataclasses import dataclass
 import math
+from typing import Optional
 from . import GLOBAL_SETTINGS
 
 class Coord:
     def __init__(self, col: int, row: int):
-        self._col = col
-        self._row = row
+        self._col: int = col
+        self._row: int = row
 
         self.size = GLOBAL_SETTINGS.size.tile
-        self._x = (self._col - 1) * self.size
-        self._y = (self._row - 1) * self.size
+        self._x: int = (self._col - 1) * self.size
+        self._y: int = (self._row - 1) * self.size
+
+    @staticmethod
+    def with_center(x: int, y: int, size: Optional[int] = None) -> "Coord":
+        c = Coord(0, 0)
+        if size:
+            c.size = size
+        half = math.floor(c.size / 2)
+        c._x = x - half
+        c._y = y - half
+
+        c._col = round(x / c.size) + 1
+        c._row = round(y / c.size) + 1
+
+        return c
+    
+    @staticmethod
+    def with_xy(x: int, y: int, size: Optional[int] = None) -> "Coord":
+        c = Coord(0, 0)
+        if size:
+            c.size = size
+        c._x = x
+        c._y = y
+
+        c._col = round(x / c.size) + 1
+        c._row = round(y / c.size) + 1
+
+        return c
 
     def is_different_grid_location(self, coord: "Coord"):
         return self._col != coord._col or self._row != coord._row

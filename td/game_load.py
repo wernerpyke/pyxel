@@ -27,8 +27,8 @@ def _add_plants(game: FieldGame):
     game.add_sprite(s)
 
 def _add_base(game):
-    base = Sprite("base", Coord(1, 1), col_tile_count=8, row_tile_count=8)
-    base.set_position(Coord(16, 29))
+    base = Sprite("base", Coord(1, 1), col_tile_count=8, row_tile_count=7)
+    base.set_position(Coord(16, 30))
     base.add_animation("loop", Animation(Coord(1, 1), 4))
     base.activate_animation("loop")
     game.add_sprite(base)
