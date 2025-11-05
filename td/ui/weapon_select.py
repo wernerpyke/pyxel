@@ -21,8 +21,8 @@ class buttons:
 BUTTONS = buttons()
 
 def display(game: FieldGame):  
-    BUTTONS.bolt.set_position(Coord(12, 22))
-    BUTTONS.fungus.set_position(Coord(20, 22))
+    BUTTONS.bolt.set_position(Coord(12, 36))
+    BUTTONS.fungus.set_position(Coord(17, 36))
 
     game.hud.add_button(BUTTONS.bolt)
     game.hud.add_button(BUTTONS.fungus)
@@ -31,13 +31,16 @@ def hide(game: FieldGame):
     game.hud.remove_button(BUTTONS.bolt)
     game.hud.remove_button(BUTTONS.fungus)
 
-def mouse_down(x: int, y: int):
+def mouse_down(x: int, y: int) -> bool:
     if BUTTONS.bolt.contains(x, y):
         BUTTONS.bolt.push_down()
+        return True # TODO - should this rather be done through game_loop.update_queue?
     elif BUTTONS.fungus.contains(x, y):
         BUTTONS.fungus.push_down()
+        return True
+    else:
+        return False
     
-
 def mouse_up():
     if BUTTONS.bolt.is_down:
         BUTTONS.bolt.pop_up()

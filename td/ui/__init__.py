@@ -13,16 +13,15 @@ def mouse_move(game: FieldGame, other: tuple[int, int]):
             if STATE.launch_location and STATE.launch_location.name == location.name:
                 return # Current location
             
+            STATE.launch_location = location 
+
+            # Mark the location
             marker = STATE.ui_marker_sprite
             marker.set_position(Coord.with_center(
                 location.position.mid_x, 
                 location.position.mid_y, 
                 size=16))
             game.add_sprite(marker)
-
-            print(f"LOCATION:{location.position.mid_x}/{location.position.mid_y} MARKER:{marker.position.mid_x}/{marker.position.mid_y}")
-
-            STATE.launch_location = location # Mark the location
             
         else:
             STATE.launch_location = None # Clear the location
@@ -36,7 +35,8 @@ def mouse_down(game: FieldGame, other: tuple[int, int]):
                 weapon_select.display(game)
                 STATE.ui_state = "select_weapon"
         case "select_weapon":
-            weapon_select.mouse_down(other[0], other[1])
+            if not weapon_select.mouse_down(other[0], other[1]):
+                hide_weapons_ui(game)
 
 def mouse_up(game: FieldGame):
     match STATE.ui_state:

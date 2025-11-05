@@ -3,6 +3,7 @@ import random
 from pyke_pyxel import DIRECTION, log_debug
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import CellField
+from td.game_state import STATE, LaunchLocation
 from .fungus import Fungus
 from .wave import Wave
 from .weapon import Weapon
@@ -25,10 +26,9 @@ def launch_wave(field: CellField):
     wave.launch(field)
     weapons.append(wave)
 
-def launch_bolt(location: Coord, 
-                propagate_direction: str,
+def launch_bolt(location: LaunchLocation,
                 field: CellField):
-    bolt = Bolt(location, propagate_direction)
+    bolt = Bolt(location.position, location.orientation, location.propagate)
     bolt.launch(field)
     weapons.append(bolt)
 
@@ -63,5 +63,7 @@ def update(field: CellField):
             to_remove.append(w)
     
     for w in to_remove:
-        # log_debug(f"GameLoop remove {w.type}")
         weapons.remove(w)
+
+    # if len(weapons) == 0:
+    #    launch_bolt(STATE.map.launch_locations[5], field)

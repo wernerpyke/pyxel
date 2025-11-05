@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Any, Optional
 import pyxel
 
 from pyke_pyxel.base_types import Coord
@@ -27,17 +27,20 @@ class Cell:
         self.colour: int = 0
         self.can_propogate: bool = False
         self.power: int = 0
+        self.tag: Any = None
 
         self.stored_type: str = "empty"
         self.stored_colour: int = 0
         self.stored_can_propogate: bool = False
         self.stored_power: int = 0
+        self.stored_tag: Any = None
 
     def reset(self):
         self.type = "empty"
         self.colour = 0
         self.can_propogate = False
         self.power = 0
+        self.tag = None
 
         self.store_state()
 
@@ -46,12 +49,20 @@ class Cell:
         self.stored_colour = self.colour
         self.stored_can_propogate = self.can_propogate
         self.stored_power = self.power
+        self.stored_tag = self.tag
     
     def recall_state(self):
         self.type = self.stored_type
         self.colour = self.stored_colour
         self.can_propogate = self.stored_can_propogate
         self.power = self.stored_power
+        self.tag = self.stored_tag
+
+        self.stored_type = "empty"
+        self.stored_colour = 0
+        self.stored_can_propogate = False
+        self.stored_power = 0
+        self.stored_tag = None
     
     @property
     def is_empty(self):

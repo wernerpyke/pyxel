@@ -9,30 +9,70 @@ from pyke_pyxel.sprite import Sprite, TextSprite
 class LaunchLocation:
     name: str
     position: Coord
-    propagate_direction: str
+    orientation: str
+    propagate: list[str]
 
 class GameMap:
 
     def __init__(self) -> None:
         self.launch_locations: list[LaunchLocation] = [
+            # The order of propagate= is important
+            # see Bolt.launch() - the first item in the list is used to tag the first set of cells
             LaunchLocation("1", 
                             position=Coord.with_center(124, 268),
-                            propagate_direction=DIRECTION.LEFT),
+                            orientation="vertical",
+                            propagate=[ DIRECTION.LEFT, 
+                                        DIRECTION.LEFT, 
+                                        DIRECTION.LEFT,
+                                        DIRECTION.UP,
+                                        DIRECTION.DOWN]),
+            
             LaunchLocation("2", 
                             position=Coord.with_center(130, 244),
-                            propagate_direction=DIRECTION.LEFT),
+                            orientation="horizontal",
+                            propagate=[ DIRECTION.LEFT,
+                                        DIRECTION.LEFT, 
+                                        DIRECTION.LEFT,
+                                        DIRECTION.UP,
+                                        DIRECTION.RIGHT]),
+            
             LaunchLocation("3", 
                             position=Coord.with_center(140, 234),
-                            propagate_direction=DIRECTION.UP),
+                            orientation="horizontal",
+                            propagate=[ DIRECTION.UP,
+                                        DIRECTION.UP, 
+                                        DIRECTION.LEFT,
+                                        DIRECTION.LEFT, 
+                                        DIRECTION.RIGHT]),
+            
             LaunchLocation("4", 
                             position=Coord.with_center(164, 234),
-                            propagate_direction=DIRECTION.RIGHT),
+                            orientation="horizontal",
+                            propagate=[ DIRECTION.UP,
+                                        DIRECTION.UP,
+                                        DIRECTION.LEFT, 
+                                        DIRECTION.RIGHT, 
+                                        DIRECTION.RIGHT]),
+            
             LaunchLocation("5", 
                             position=Coord.with_center(174, 244),
-                            propagate_direction=DIRECTION.RIGHT),
+                            orientation="horizontal",
+                            propagate=[ DIRECTION.RIGHT, 
+                                        DIRECTION.RIGHT, 
+                                        DIRECTION.RIGHT,
+                                        DIRECTION.UP, 
+                                        DIRECTION.LEFT
+                                        ]),
+            
             LaunchLocation("6", 
                             position=Coord.with_center(180, 268),
-                            propagate_direction=DIRECTION.RIGHT),
+                            orientation="vertical",
+                            propagate=[ DIRECTION.RIGHT, 
+                                        DIRECTION.RIGHT, 
+                                        DIRECTION.RIGHT,
+                                        DIRECTION.UP, 
+                                        DIRECTION.DOWN
+                                        ])
         ]
     
     def launch_location_at(self, x: int, y: int) -> Optional[LaunchLocation]:

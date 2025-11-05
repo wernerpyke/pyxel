@@ -26,10 +26,7 @@ def game_update(game: FieldGame):
             case "launch_bolt":
                 location = STATE.launch_location
                 if location:
-                    weapons.launch_bolt(
-                        location.position, 
-                        location.propagate_direction, 
-                        game.field)
+                    weapons.launch_bolt(location, game.field)
                 else:
                     log_error("game_loop.game_update no launch location")
             case "launch_fungus":
