@@ -19,10 +19,10 @@ def load_level(game: FieldGame):
 
 def _add_plants(game: FieldGame):
     s = CompoundSprite("plants", 40, 4)
-    s.fill_row(1, 1, 40, tile_row=10, tile_cols=[1, 2, 3, 4])
-    s.fill_row(2, 1, 40, tile_row=11, tile_cols=[1, 2, 3, 4])
-    s.fill_row(3, 1, 40, tile_row=12, tile_cols=[1, 2, 3, 4])
-    s.fill_row(4, 1, 40, tile_row=13, tile_cols=[1, 2, 3, 4])
+    s.fill_row(1, 1, 40, tile_row=9, tile_cols=[1, 2, 3, 4])
+    s.fill_row(2, 1, 40, tile_row=10, tile_cols=[1, 2, 3, 4])
+    s.fill_row(3, 1, 40, tile_row=11, tile_cols=[1, 2, 3, 4])
+    s.fill_row(4, 1, 40, tile_row=12, tile_cols=[1, 2, 3, 4])
     s.set_position(Coord(1, 37))
     game.add_sprite(s)
 

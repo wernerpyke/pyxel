@@ -37,6 +37,14 @@ def game_update(game: FieldGame):
                         game.field)
                 else:
                     log_error("game_loop.game_update no launch location")
+            case "launch_meteor":
+                location = STATE.launch_location
+                if location:
+                    weapons.launch_meteor(
+                        location.position, 
+                        game.field)
+                else:
+                    log_error("game_loop.game_update no launch location")
     update_queue.clear()
 
     enemies.update(game)

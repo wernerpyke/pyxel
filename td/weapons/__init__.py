@@ -5,7 +5,7 @@ from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import CellField
 from td.game_state import STATE, LaunchLocation
 from .fungus import Fungus
-from .wave import Wave
+from .meteor import Meteor
 from .weapon import Weapon
 from .bolt import Bolt
 
@@ -21,10 +21,11 @@ def launch_fungus(location: Coord, field: CellField):
     fungus.launch(field)
     weapons.append(fungus)
 
-def launch_wave(field: CellField):
-    wave = Wave(Coord(20, 20))
-    wave.launch(field)
-    weapons.append(wave)
+def launch_meteor(location: Coord,
+                    field: CellField):
+    meteor = Meteor(location)
+    meteor.launch(field)
+    weapons.append(meteor)
 
 def launch_bolt(location: LaunchLocation,
                 field: CellField):
@@ -59,8 +60,10 @@ def update(field: CellField):
         if _should_skip_update(w):
             if not w.is_alive:
                 to_remove.append(w)
-        elif w.update(field) == False:
-            to_remove.append(w)
+        else:
+            w.update(field)
+            if not w.is_alive:
+                to_remove.append(w)
     
     for w in to_remove:
         weapons.remove(w)

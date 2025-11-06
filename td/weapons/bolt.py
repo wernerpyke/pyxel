@@ -27,14 +27,15 @@ class Bolt(Weapon):
             else:
                 cell = field.cell_at(self.position.x, self.position.y + (i*2))
             
-            cell.tag = self.default_propogate
-            cell.type = self.type
-            cell.colour = self.colour
-            cell.can_propogate = True
-            cell.power = self.power
-            self.cells.append(cell)
+            if cell:
+                cell.tag = self.default_propogate
+                cell.type = self.type
+                cell.colour = self.colour
+                cell.can_propogate = True
+                cell.power = self.power
+                self.cells.append(cell)
 
-    def update(self, field: CellField) -> bool:
+    def update(self, field: CellField):
         if len(self.cells) == 0:
             return False
         
@@ -61,8 +62,6 @@ class Bolt(Weapon):
                     new_cells.append(cell)
 
         self.cells = new_cells
-
-        return len(self.cells) > 0
     
     def _select_next_cell(self, cell: Cell, field: CellField) -> Optional[Cell]:
         to: Optional[Cell] = None

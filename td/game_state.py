@@ -94,7 +94,7 @@ class game_state:
     # UI
     ui_state: str = "select_location"
     launch_location: Optional[LaunchLocation] = None
-    ui_marker_sprite = Sprite("location_marker", Coord(5, 11), col_tile_count=2, row_tile_count=2)
+    ui_marker_sprite = Sprite("location_marker", Coord(5, 10), col_tile_count=2, row_tile_count=2)
 
     # Sound
     music_enabled = False

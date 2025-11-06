@@ -7,7 +7,7 @@ from .enemy import Enemy
 class Skeleton(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("skeleton", Coord(9,9), 
+        super().__init__("skeleton", Coord(9,8), 
                          power=random.randint(300, 500), 
                          speed=2)
 

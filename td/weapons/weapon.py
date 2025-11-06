@@ -24,12 +24,14 @@ class Weapon:
 
     def launch(self, field: CellField):
         print("Weapon.launch() implement in your class")
-        pass
 
-    def update(self, field: CellField) -> bool:
+    def update(self, field: CellField):
         print("Weapon.update() implement in your class")
-        return False
     
+    # def _track_cell(self, cell: Cell):
+    #    if not cell.is_border:
+    #        self._cells.append(cell)
+
     @property
     def is_alive(self) -> bool:
         return len(self.cells) > 0

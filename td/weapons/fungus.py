@@ -18,10 +18,10 @@ class Fungus(Weapon):
 
     def launch(self, field: CellField):
         for i in range(5):
-            cell = field.cell_at(self.position.x + (i*2), self.position.y)
-            self.cells.append(self._prop(cell))
+            if cell := field.cell_at(self.position.x + (i*2), self.position.y):
+                self.cells.append(self._prop(cell))
 
-    def update(self, field: CellField) -> bool:
+    def update(self, field: CellField):
         self.update_count +=1
 
         new_cells = []
@@ -74,8 +74,6 @@ class Fungus(Weapon):
         self.update_count += 1
         if (len(self.cells) == 0) and self.update_count < 10:
             print("WHOA")
-
-        return len(self.cells) > 0
     
     def _prop(self, cell: Cell) -> Cell:
         cell.type = self.type

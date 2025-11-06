@@ -106,42 +106,42 @@ class CellField:
 
     # Convenience accessors
 
-    def neighbour_N(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_N(self, cell: Cell) -> Cell|None:
         if cell.y > 0:
             return self._cells[cell.y - 1][cell.x]
         return None
     
-    def neighbour_S(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_S(self, cell: Cell) -> Cell|None:
         if cell.y < self._height - 1:
             return self._cells[cell.y + 1][cell.x]
         return None
     
-    def neighbour_E(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_E(self, cell: Cell) -> Cell|None:
         if cell.x < self._width - 1:
             return self._cells[cell.y][cell.x + 1]
         return None
     
-    def neighbour_W(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_W(self, cell: Cell) -> Cell|None:
         if cell.x > 0:
             return self._cells[cell.y][cell.x - 1]
         return None
     
-    def neighbour_NE(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_NE(self, cell: Cell) -> Cell|None:
         if cell.x < self._width - 1 and cell.y > 0:
             return self._cells[cell.y - 1][cell.x + 1]
         return None
     
-    def neighbour_NW(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_NW(self, cell: Cell) -> Cell|None:
         if cell.x > 0 and cell.y > 0:
             return self._cells[cell.y - 1][cell.x - 1]
         return None
     
-    def neighbour_SE(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_SE(self, cell: Cell) -> Cell|None:
         if cell.x < self._width - 1 and cell.y < self._height - 1:
             return self._cells[cell.y + 1][cell.x + 1]
         return None
     
-    def neighbour_SW(self, cell: Cell) -> Optional[Cell]:
+    def neighbour_SW(self, cell: Cell) -> Cell|None:
         if cell.x > 0 and cell.y < self._height - 1:
             return self._cells[cell.y + 1][cell.x - 1]
         return None
@@ -191,16 +191,11 @@ class CellField:
                 n for n in cell._neighbours if n.type == filter_for_type
             ]
 
-            # neighbours: list[Cell] = []
-            # for n in cell._neighbours:
-            #    if n.type == filter_for_type:
-            #        neighbours.append(n)
-            # return neighbours    
-
-    def all_cells(self) -> list[Cell]:
-        return self._all_cells
-
-    def cell_at(self, x: int, y: int) -> Cell:
+    def cell_at(self, x: int, y: int) -> Cell|None:
+        if y < 0 or y >= len(self._cells):
+            return None
+        if x < 0 or x >= len(self._cells[0]):
+            return None
         return self._cells[y][x]
     
     def cells_at(self, position: Coord, include_empty: bool = False) -> list[Cell]:
@@ -213,13 +208,62 @@ class CellField:
 
         for y in range(min_y, max_y):
             for x in range(min_x, max_x):
-                if y >= len(self._cells):
-                    print("YUCK!")
-
                 cells.append(self._cells[y][x])
 
         if not include_empty:
             cells = [
                 c for c in cells if not c.is_empty
             ]
+        return cells
+
+    def cells_in_line(self, from_position: Coord, to_position: Coord) -> list[Cell]:
+        cells: list[Cell] = []
+
+        from_x = from_position.x
+        from_y = from_position.y
+        to_x = to_position.x
+        to_y = to_position.y
+
+        # Create a line on the grid between (from_x, from_y) and (to_x, to_y) using Bresenham's algorithm.
+        # This implementation handles all octants.
+        
+        # Ensure coordinates are within bounds for the simple example
+        # In a real application, you'd add robust clipping/boundary checks.
+        distance_x = abs(to_x - from_x)
+        distance_y = abs(to_y - from_y)
+        
+        # Determine direction of step
+        step_x = 1 if from_x < to_x else -1
+        step_y = 1 if from_y < to_y else -1
+
+        # Initial decision parameter (simplified for this general case)
+        err = distance_x - distance_y
+        
+        current_x, current_y = from_x, from_y
+
+        # Main loop iterates until the end point is reached
+        # The loop condition ensures the drawing stops at (x1, y1)
+        while True:
+            # Draw the pixel at the current coordinates (y is row, x is column)
+            # Note: In a list-of-lists matrix, the first index is the row (y-coordinate)
+            # and the second index is the column (x-coordinate).
+            if 0 <= current_y < len(self._cells) and 0 <= current_x < len(self._cells[0]):
+                # print(f"Draw x:{current_x} y:{current_y}")
+                cells.append(self._cells[current_y][current_x])
+
+            # Exit condition: if we've reached the end point
+            if current_x == to_x and current_y == to_y:
+                break
+
+            # Calculate the next step
+            e2 = 2 * err
+            
+            if e2 > -distance_y:  # Move in x-direction
+                err -= distance_y
+                current_x += step_x
+            
+            if e2 < distance_x:  # Move in y-direction
+                err += distance_x
+                current_y += step_y
+
         return cells
