@@ -19,22 +19,29 @@ def game_started(game: FieldGame):
         game.start_music(0)
 
     ui.show_title_screen(game)
+    STATE.ui_state = "select_title_screen_option"
 
 def game_update(game: FieldGame):
     _process_update_queue(game)
 
-    if STATE.ui_state == "select_title_screen_option": # TODO - this is not super robust
+    if STATE.ui_state == "select_title_screen_option" or STATE.ui_state == "wait":
+        # TODO - this is not super robust
         return
     
     enemies.update(game)
     weapons.update(game.field)
 
-def _process_update_queue(game):
+def _process_update_queue(game: FieldGame):
     for u in update_queue:
         match u:
+            case "ui_fade_from_title_to_game":
+                game.fx.circular_wipe(COLOURS.BLUE_DARK, True, "ui_title_screen_fade_out_complete")
+                STATE.ui_state = "wait"
             case "load_level":
                 ui.hide_title_screen(game)
                 load_level(game)
+                game.fx.circular_wipe(COLOURS.BLUE_DARK, False, "ui_game_screen_fade_in_complete")
+                STATE.ui_state = "wait"
             case "hide_weapon_ui":
                 ui.hide_weapons_ui(game)
             case "launch_bolt":
@@ -71,7 +78,7 @@ def enemy_killed(game: FieldGame):
     text.set_colour(COLOURS.GREEN_MINT)
     text.set_text(f"{STATE.score}")
 
-def enemy_wins(game: FieldGame, other: int):
+def enemy_attacks(game: FieldGame, other: int):
     damage = other
     # print(f"ENEMY SCORES damage:{damage}")
     STATE.score -= damage
@@ -80,11 +87,16 @@ def enemy_wins(game: FieldGame, other: int):
     text.set_text(f"{STATE.score}")
 
 def ui_game_start_selected(sender):
+    update_queue.append("ui_fade_from_title_to_game")
+
+def ui_title_screen_fade_out_complete(sender):
     update_queue.append("load_level")
+
+def ui_game_screen_fade_in_complete(sender):
+    STATE.ui_state = "select_location"
 
 def ui_weapon_selected(name: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location
     # which is required by launch_weapon
     update_queue.append(f"launch_{name}")
     update_queue.append("hide_weapon_ui")
-    

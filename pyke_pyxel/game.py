@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from typing import Optional
 import pyxel
 
+from pyke_pyxel.fx import FX
+
 from . import GLOBAL_SETTINGS
 from .base_types import Coord, TileMap
 from . import draw, log_debug
@@ -31,6 +33,7 @@ class Game:
         self._tile_map: Optional[TileMap] = None
 
         self._hud: Optional[HUD] = None
+        self._fx: Optional[FX] = None
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
@@ -94,6 +97,12 @@ class Game:
         if self._hud == None:
             self._hud = HUD()
         return self._hud
+    
+    @property
+    def fx(self) -> FX:
+        if self._fx == None:
+            self._fx = FX(self._settings)
+        return self._fx
 
     def _sprite_added(self, sprite: Sprite|CompoundSprite):
         sprite._id = self._sprites.__len__()
@@ -155,6 +164,9 @@ class Game:
 
         if self._hud:
             self._hud._draw(self._settings)
+
+        if self._fx and self._fx._is_active:
+            self._fx._draw()
 
         # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
 

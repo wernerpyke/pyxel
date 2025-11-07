@@ -59,11 +59,9 @@ def mouse_up(game: FieldGame):
 
 def show_title_screen(game: FieldGame):
     title_screen.display(game)
-    STATE.ui_state = "select_title_screen_option"
 
 def hide_title_screen(game: FieldGame):
     title_screen.hide(game)
-    STATE.ui_state = "select_location"
 
 def hide_weapons_ui(game: FieldGame):
     weapon_select.hide(game)

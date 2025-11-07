@@ -33,8 +33,10 @@ Signals.connect(Signals.MOUSE.DOWN, ui.mouse_down)
 Signals.connect(Signals.MOUSE.UP, ui.mouse_up)
 
 Signals.connect("enemy_dies", game_loop.enemy_killed)
-Signals.connect("enemy_attacks", game_loop.enemy_wins)
+Signals.connect("enemy_attacks", game_loop.enemy_attacks)
 
+Signals.connect("ui_title_screen_fade_out_complete", game_loop.ui_title_screen_fade_out_complete)
+Signals.connect("ui_game_screen_fade_in_complete", game_loop.ui_game_screen_fade_in_complete)
 Signals.connect("ui_game_start_selected", game_loop.ui_game_start_selected)
 Signals.connect("ui_weapon_selected", game_loop.ui_weapon_selected)
 
