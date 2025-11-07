@@ -17,14 +17,14 @@ class Meteor(Weapon):
         to_y = position.y - random.randint(80, 120)
         to = Coord.with_xy(to_x, to_y)
 
-        super().__init__("wave", to, power=20, speed=10)
+        super().__init__("meteor", to, power=20, speed=10)
 
         self._from = position
         self._to = to
         self._has_landed = False
 
         self._radius = 0
-        self._decay_rate = 1
+        self._decay_rate = 2
         # TODO - calc max_radius as a way of determining decay rate
 
     @property
@@ -95,15 +95,15 @@ class Meteor(Weapon):
 
         # POWER-UP: decay rate increases more slowly
         if self._radius > 40:
-            self._decay_rate = 2
-        if self._radius > 80:
             self._decay_rate = 3
-        if self._radius > 120:
+        if self._radius > 80:
             self._decay_rate = 4
-        if self._radius > 200:
+        if self._radius > 120:
             self._decay_rate = 5
-        if self._radius > 220:
+        if self._radius > 160:
             self._decay_rate = 6
+        if self._radius > 200:
+            self._decay_rate = 7
 
         new_cells = []
         for c in self.cells:

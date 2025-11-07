@@ -2,14 +2,15 @@ from pyke_pyxel.base_types import Coord
 from pyke_pyxel import GLOBAL_SETTINGS
 
 class Button:
-    def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1) -> None:
+    def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0) -> None:
         self._id = 0
         
         self.name = name
         self._up_frame = up_frame
         self._down_frame = down_frame
-        self.col_tile_count = col_tile_count
-        self.row_tile_count = row_tile_count
+        self._col_tile_count = col_tile_count
+        self._row_tile_count = row_tile_count
+        self._resource_image_index = resource_image_index
 
         # TODO - this is only needed because Coord.contains() does not know how many tiles wide it is
         # Another possibility is to allow Coord() to be created with col_tile_count & row_tile_count

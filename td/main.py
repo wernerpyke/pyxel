@@ -5,7 +5,6 @@ from pyke_pyxel.signals import Signals
 from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
-from game_load import load_level
 import game_loop
 import ui
 
@@ -27,8 +26,6 @@ game = FieldGame(
         resources=f"{Path(__file__).parent.resolve()}/assets/td_assets.pyxres"
         )
 
-load_level(game)
-
 Signals.connect(Signals.GAME.STARTED, game_loop.game_started)
 Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
 Signals.connect(Signals.MOUSE.MOVE, ui.mouse_move)
@@ -38,6 +35,7 @@ Signals.connect(Signals.MOUSE.UP, ui.mouse_up)
 Signals.connect("enemy_dies", game_loop.enemy_killed)
 Signals.connect("enemy_attacks", game_loop.enemy_wins)
 
+Signals.connect("ui_game_start_selected", game_loop.ui_game_start_selected)
 Signals.connect("ui_weapon_selected", game_loop.ui_weapon_selected)
 
 game.start()

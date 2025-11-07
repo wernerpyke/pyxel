@@ -10,17 +10,31 @@ import weapons
 import enemies
 import ui
 from game_state import STATE
+from game_load import load_level
 
 update_queue: list[str] = []
 
 def game_started(game: FieldGame):
-    print("Game Started")
     if STATE.music_enabled:
         game.start_music(0)
 
+    ui.show_title_screen(game)
+
 def game_update(game: FieldGame):
+    _process_update_queue(game)
+
+    if STATE.ui_state == "select_title_screen_option": # TODO - this is not super robust
+        return
+    
+    enemies.update(game)
+    weapons.update(game.field)
+
+def _process_update_queue(game):
     for u in update_queue:
         match u:
+            case "load_level":
+                ui.hide_title_screen(game)
+                load_level(game)
             case "hide_weapon_ui":
                 ui.hide_weapons_ui(game)
             case "launch_bolt":
@@ -47,9 +61,9 @@ def game_update(game: FieldGame):
                     log_error("game_loop.game_update no launch location")
     update_queue.clear()
 
-    enemies.update(game)
-
-    weapons.update(game.field)
+#
+# Signals
+#
 
 def enemy_killed(game: FieldGame):
     STATE.score += 1
@@ -64,6 +78,9 @@ def enemy_wins(game: FieldGame, other: int):
     text = STATE.score_text
     text.set_colour(COLOURS.RED)
     text.set_text(f"{STATE.score}")
+
+def ui_game_start_selected(sender):
+    update_queue.append("load_level")
 
 def ui_weapon_selected(name: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location

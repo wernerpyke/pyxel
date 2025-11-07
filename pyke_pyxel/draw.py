@@ -2,7 +2,7 @@ import pyxel
 
 from pyke_pyxel.button import Button
 
-from .base_types import TileMap
+from .base_types import Image, TileMap
 from .game_settings import GameSettings
 from .sprite import CompoundSprite, Sprite, TextSprite
 
@@ -12,18 +12,33 @@ def background(colour: int):
 def text(sprite: TextSprite):
     pyxel.text(sprite.position.x, sprite.position.y, sprite._text, sprite._colour, font=sprite._font)
 
+def image(image: Image, settings: GameSettings):
+    width = settings.size.tile * image.col_tile_count
+    height = settings.size.tile * image.row_tile_count
+
+    position = image.position
+
+    pyxel.blt(x=position.x,
+              y=position.y,
+              img=image.resource_image_index,
+              u=image.frame.x,
+              v=image.frame.y,
+              w=width,
+              h=height,
+              colkey=settings.colours.sprite_transparency)
+
 def button(button: Button, settings: GameSettings):
     frame = button._up_frame
     if button.is_down:
         frame = button._down_frame
     position = button._position
 
-    width = settings.size.tile * button.col_tile_count
-    height = settings.size.tile * button.row_tile_count
+    width = settings.size.tile * button._col_tile_count
+    height = settings.size.tile * button._row_tile_count
 
     pyxel.blt(x=position.x,
               y=position.y,
-              img=0,
+              img=button._resource_image_index,
               u=frame.x,
               v=frame.y,
               w=width,
@@ -41,7 +56,7 @@ def sprite(sprite: Sprite, settings: GameSettings):
 
     pyxel.blt(x=position.x,
               y=position.y,
-              img=0,
+              img=sprite._resource_image_index,
               u=frame.x,
               v=frame.y,
               w=width, # (settings.size.tile * -1) if sprite.is_flipped else settings.size.tile,
@@ -62,7 +77,7 @@ def compound_sprite(sprite: CompoundSprite, settings: GameSettings):
 
                 pyxel.blt(x=sprite.position.x + (c * settings.size.tile),
                           y=sprite.position.y + (r * settings.size.tile),
-                          img=0,
+                          img=sprite._resource_image_index,
                           u=tile.x,
                           v=tile.y,
                           w=width,
@@ -76,7 +91,7 @@ def tile_map(tile_map: TileMap, settings: GameSettings):
     repeat_cols = (screen_width // (tile_map.tiles_wide * 8)) + 1
     repeat_rows = (screen_height // (tile_map.tiles_high * 8)) + 1
 
-    tm = pyxel.tilemaps[0]
+    tm = pyxel.tilemaps[tile_map.resource_index]
     tm_x = tile_map.resource_position.x
     tm_y = tile_map.resource_position.y
     tm_w = tile_map.tiles_wide * settings.size.tile

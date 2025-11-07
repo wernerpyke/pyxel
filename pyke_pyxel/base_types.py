@@ -148,3 +148,14 @@ class TileMap:
     resource_position: Coord
     tiles_wide: int
     tiles_high: int
+    resource_index: int=0
+
+@dataclass
+class Image:
+    frame: Coord
+    position: Coord
+    col_tile_count: int = 1
+    row_tile_count: int = 1
+    resource_image_index: int=0
+
+    _id: int = 0

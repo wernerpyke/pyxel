@@ -91,9 +91,10 @@ class game_state:
                             GLOBAL_SETTINGS.colours.hud_text,
                             f"{Path(__file__).parent.resolve()}/assets/t0-14b-uni.bdf")
     
-    # UI
-    ui_state: str = "select_location"
     launch_location: Optional[LaunchLocation] = None
+    
+    # UI
+    ui_state: str = ""
     ui_marker_sprite = Sprite("location_marker", Coord(5, 10), col_tile_count=2, row_tile_count=2)
 
     # Sound

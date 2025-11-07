@@ -52,6 +52,14 @@ def mouse_down(x: int, y: int) -> bool:
     else:
         return False
     
+def mouse_move(x: int, y: int):
+    if BUTTONS.bolt.is_down and not BUTTONS.bolt.contains(x, y):
+        BUTTONS.bolt.pop_up()
+    elif BUTTONS.fungus.is_down and not BUTTONS.fungus.contains(x, y):
+        BUTTONS.fungus.pop_up()
+    elif BUTTONS.meteor.is_down and not BUTTONS.meteor.contains(x, y):
+        BUTTONS.meteor.pop_up()
+
 def mouse_up():
     if BUTTONS.bolt.is_down:
         BUTTONS.bolt.pop_up()

@@ -5,22 +5,18 @@ from .base_types import Coord
 
 class Animation:
     def __init__(self, start_frame: Coord, frames: int, flip: Optional[bool] = False):
-        self.start_frame = start_frame
-        self.frames = frames
+        self._start_frame = start_frame
+        self._frames = frames
         self.flip: bool = True if flip else False
+
         self._name: str
         self._current_frame_index:int = 0
 
-        self.paused = False
+        self._paused = False
 
 class Sprite:
-    """
-    Represents a game sprite
     
-    Args:
-        sheetCoordinate (Coordinate): The x/y-coordinate of the sprite on the resource sheet.
-    """
-    def __init__(self, name: str, default_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1):
+    def __init__(self, name: str, default_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0):
         self._id: int = 0
         self.name = name
         self.idle_frame = default_frame
@@ -34,8 +30,10 @@ class Sprite:
         self._loop_animation: bool = True
         self._on_animation_end: Optional[Callable[[int], None]] = None
 
-        self.col_tile_count: int = col_tile_count
-        self.row_tile_count: int = row_tile_count
+        self.col_tile_count = col_tile_count
+        self.row_tile_count = row_tile_count
+
+        self._resource_image_index = resource_image_index
 
     def __eq__(self, other):
         return isinstance(other, Sprite) and self._id == other._id
@@ -46,7 +44,7 @@ class Sprite:
         
     def activate_animation(self, name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None):
         self._animation = self.animations[name]
-        self._animation.paused = False
+        self._animation._paused = False
         self.is_flipped = self._animation.flip
         self._loop_animation = loop
         self._on_animation_end = on_animation_end
@@ -55,15 +53,15 @@ class Sprite:
 
     def pause_animation(self):
         if self._animation:
-            self._animation.paused = True
+            self._animation._paused = True
 
     def unpause_animation(self):
         if self._animation:
-            self._animation.paused = False
+            self._animation._paused = False
 
     def deactivate_animations(self):
         if self._animation:
-            self._animation.paused = False
+            self._animation._paused = False
         self._animation = None
         self.is_flipped = False
 
@@ -78,7 +76,7 @@ class Sprite:
         anim = self._animation
         
         if anim:
-            if anim._current_frame_index >= anim.frames:
+            if anim._current_frame_index >= anim._frames:
                 if self._loop_animation:
                     anim._current_frame_index = 0
                 else:
@@ -89,8 +87,8 @@ class Sprite:
                     else:
                         self.deactivate_animations()
             
-            col = anim.start_frame._col + (anim._current_frame_index * self.col_tile_count)
-            self.active_frame = Coord(col, anim.start_frame._row)
+            col = anim._start_frame._col + (anim._current_frame_index * self.col_tile_count)
+            self.active_frame = Coord(col, anim._start_frame._row)
 
             anim._current_frame_index += 1
 
@@ -156,10 +154,11 @@ class MovableSprite(Sprite):
         self.add_animation("right", Animation(start_frame, frame_count, flip))
 
 class CompoundSprite:
-    def __init__(self, name: str, cols: int, rows: int):
+    def __init__(self, name: str, cols: int, rows: int, resource_image_index: int=0):
         self.name = name
         self._id: int = 0
         self._position: Coord
+        self._resource_image_index = resource_image_index
 
         self.cols: list[list[Coord]] = []
         for c in range(0, cols):
