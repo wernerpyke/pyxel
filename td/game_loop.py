@@ -14,13 +14,13 @@ from game_load import load_level
 
 update_queue: list[str] = []
 
-JUMP_TO_GAME=True
+SKIP_TITLE_SCREEN=False
 
 def game_started(game: FieldGame):
     if STATE.music_enabled:
         game.start_music(0)
 
-    if JUMP_TO_GAME:
+    if SKIP_TITLE_SCREEN:
         load_level(game)
         STATE.ui_state = "select_location"
     else:
