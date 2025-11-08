@@ -8,7 +8,7 @@ from .weapon import Weapon
 class Fungus(Weapon):
 
     def __init__(self, position: Coord) -> None:
-        super().__init__("fungus", position, power=5, speed=4)
+        super().__init__("fungus", position, power=3, speed=4)
 
         self.colour = COLOURS.GREEN_MINT
 

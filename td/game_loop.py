@@ -14,12 +14,18 @@ from game_load import load_level
 
 update_queue: list[str] = []
 
+JUMP_TO_GAME=True
+
 def game_started(game: FieldGame):
     if STATE.music_enabled:
         game.start_music(0)
 
-    ui.show_title_screen(game)
-    STATE.ui_state = "select_title_screen_option"
+    if JUMP_TO_GAME:
+        load_level(game)
+        STATE.ui_state = "select_location"
+    else:
+        ui.show_title_screen(game)
+        STATE.ui_state = "select_title_screen_option"
 
 def game_update(game: FieldGame):
     _process_update_queue(game)

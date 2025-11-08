@@ -17,7 +17,7 @@ class Meteor(Weapon):
         to_y = position.y - random.randint(80, 120)
         to = Coord.with_xy(to_x, to_y)
 
-        super().__init__("meteor", to, power=20, speed=10)
+        super().__init__("meteor", to, power=10, speed=10)
 
         self._from = position
         self._to = to

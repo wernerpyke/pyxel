@@ -6,8 +6,14 @@ from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.signals import Signals
 from .enemy import Enemy
 from .skeleton import Skeleton
+from .orb import Orb
 
 enemies: list[Enemy] = []
+
+def launch_orb(game: FieldGame):
+    orb = Orb()
+    orb.launch(game, _random_location())
+    enemies.append(orb)
 
 def launch_skeleton(game: FieldGame):
     skeleton = Skeleton()
@@ -20,23 +26,23 @@ def update(game: FieldGame):
     
     field = game.field
     for e in enemies:
-        if not _should_skip_update(e):
-            cells = field.cells_at(e._sprite.position, include_empty=False)
-            result = e.update(cells)
-            match result:
-                case 0: # continue
-                    pass
-                case -1: # killed
-                    # log_debug(f"enemies.update() remove {e._sprite._id}")
-                    enemies.remove(e)
-                    e._sprite.activate_animation("die", loop=False, on_animation_end=_remove_enemy_sprite)
-                    Signals.send("enemy_dies", game)
-                case _: # win with damage
-                    enemies.remove(e)
-                    e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
-                    Signals.send_with("enemy_attacks", game, result)
+        cells = field.cells_at(e._sprite.position, include_empty=False)
+        result = e.update(cells)
+        match result:
+            case 0: # continue
+                pass
+            case -1: # killed
+                # log_debug(f"enemies.update() remove {e._sprite._id}")
+                enemies.remove(e)
+                e._sprite.activate_animation("die", loop=False, on_animation_end=_remove_enemy_sprite)
+                Signals.send("enemy_dies", game)
+            case _: # win with damage
+                enemies.remove(e)
+                e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
+                Signals.send_with("enemy_attacks", game, result)
 
-    if len(enemies) <= 8:
+    if len(enemies) < 1:
+        launch_orb(game)
         launch_skeleton(game)
 
 launch_locations = [
@@ -50,11 +56,3 @@ launch_locations = [
 def _random_location() -> Coord:
     pos = launch_locations[random.randint(0, (len(launch_locations)-1))]
     return pos.clone()
-
-def _should_skip_update(enemy: Enemy) -> bool:
-    speed = enemy._speed
-    if speed == 10:
-        return False
-    
-    skip_frequency = (10 - speed) / 10
-    return random.random() < skip_frequency
