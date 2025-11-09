@@ -6,12 +6,16 @@ from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
 import game_loop
+from td.game_state import STATE
 import ui
 
 settings = GameSettings()
 
 settings.size.window = 320
 settings.size.tile = 8
+# Override GameSettings.size.window
+STATE.map.width = 320
+STATE.map.height = 320
 
 settings.fps.game = 60
 
@@ -19,6 +23,8 @@ settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
 
 settings.mouse_enabled = True
+
+
 
 game = FieldGame(
         settings=settings,

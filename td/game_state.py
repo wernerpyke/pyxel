@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import random
 from pathlib import Path
 from typing import Optional
 from pyke_pyxel import DIRECTION, GLOBAL_SETTINGS
@@ -15,7 +16,10 @@ class LaunchLocation:
 class GameMap:
 
     def __init__(self) -> None:
-        self.launch_locations: list[LaunchLocation] = [
+        self.width = GLOBAL_SETTINGS.size.window
+        self.height = GLOBAL_SETTINGS.size.window
+
+        self._launch_locations: list[LaunchLocation] = [
             # The order of propagate= is important
             # see Bolt.launch() - the first item in the list is used to tag the first set of cells
             LaunchLocation("1", 
@@ -76,11 +80,12 @@ class GameMap:
         ]
     
     def launch_location_at(self, x: int, y: int) -> Optional[LaunchLocation]:
-        for l in self.launch_locations:
+        for l in self._launch_locations:
             p = l.position
             if x >= p.min_x and x < p.max_x and y >= p.min_y and y < p.max_y:
                 return l
         return None
+
 
 
 @dataclass

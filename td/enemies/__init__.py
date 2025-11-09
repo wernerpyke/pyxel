@@ -4,21 +4,27 @@ from pyke_pyxel import log_debug
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.signals import Signals
+from td.enemies.mage import Mage
 from .enemy import Enemy
 from .skeleton import Skeleton
 from .orb import Orb
 
 enemies: list[Enemy] = []
 
+def launch_skeleton(game: FieldGame):
+    skeleton = Skeleton()
+    skeleton.launch(game, _random_location())
+    enemies.append(skeleton)
+
 def launch_orb(game: FieldGame):
     orb = Orb()
     orb.launch(game, _random_location())
     enemies.append(orb)
 
-def launch_skeleton(game: FieldGame):
-    skeleton = Skeleton()
-    skeleton.launch(game, _random_location())
-    enemies.append(skeleton)
+def launch_mage(game: FieldGame):
+    mage = Mage()
+    mage.launch(game, _random_location())
+    enemies.append(mage)
 
 def update(game: FieldGame):
     def _remove_enemy_sprite(sprite_id: int):
@@ -42,8 +48,9 @@ def update(game: FieldGame):
                 Signals.send_with("enemy_attacks", game, result)
 
     if len(enemies) < 1:
-        launch_orb(game)
-        launch_skeleton(game)
+        launch_mage(game)
+        # launch_orb(game)
+        # launch_skeleton(game)
 
 launch_locations = [
     Coord(2, 4), Coord(3, 2), Coord(4, 4), Coord(5, 6), Coord(7, 11), Coord(8, 8), Coord(9, 11), 

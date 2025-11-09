@@ -14,7 +14,7 @@ from game_load import load_level
 
 update_queue: list[str] = []
 
-SKIP_TITLE_SCREEN=False
+SKIP_TITLE_SCREEN=True
 
 def game_started(game: FieldGame):
     if STATE.music_enabled:

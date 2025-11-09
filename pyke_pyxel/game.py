@@ -93,6 +93,10 @@ class Game:
         pyxel.stop()
 
     @property
+    def map(self) -> Map:
+        return self._map
+
+    @property
     def hud(self) -> HUD:
         if self._hud == None:
             self._hud = HUD()

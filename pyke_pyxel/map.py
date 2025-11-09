@@ -1,9 +1,11 @@
+
 from typing import TYPE_CHECKING, Optional
 from dataclasses import dataclass
 
 import math
+import random
 
-from . import GLOBAL_SETTINGS, game, log_debug
+from . import GLOBAL_SETTINGS, log_debug
 from .base_types import Coord
 
 #if TYPE_CHECKING:
@@ -24,12 +26,14 @@ class MapLocation:
 class Map:
 
     def __init__(self):
-        sizes = GLOBAL_SETTINGS.size
+        size = GLOBAL_SETTINGS.size
 
         self._grid: list[ list[MapLocation] ] = []
         self._edgeLocation = MapLocation(LOCATION_STATUS.BLOCKED)
-        self._cols = math.floor(sizes.window / sizes.tile)
-        self._rows = math.floor(sizes.window / sizes.tile)
+        self._width = size.window
+        self._height = size.window
+        self._cols = math.floor(size.window / size.tile)
+        self._rows = math.floor(size.window / size.tile)
 
         log_debug(f"Map() {self._cols}/{self._rows}")
 
@@ -125,6 +129,48 @@ class Map:
         if coord._row >= self._grid[0].__len__() - 1:
             return None
         return self._grid[coord._col - 1][coord._row - 1 + 1]
+    
+    def x_is_left_of_center(self, x: int) -> bool:
+        return x < self._width / 2
+    
+    def y_is_above_center(self, y: int) -> bool:
+        return y < self._height / 2
+
+    def shortest_distance_to_sides(self, from_x: int) -> int:
+        distance_to_left = from_x
+        distance_to_right = self._width - from_x
+        return min(distance_to_left, distance_to_right)
+
+    def random_distance_to_right(self, from_x: int, min: int, max: int) -> int:
+        distance = self._width - from_x
+        if min > distance:
+            x = distance
+        elif max > distance:
+            x = random.randint(min, distance)
+        else:
+            x = random.randint(min, max)
+        
+        if from_x + x >= 320:
+            x -= 8 # 1 tile width, TODO this is messy
+        return x
+        
+    def random_distance_to_left(self, from_x: int, min: int, max: int) -> int:
+        distance = from_x
+        if min > distance:
+            return distance
+        elif max > distance:
+            return random.randint(min, distance)
+        else:
+            return random.randint(min, max)
+        
+    def random_distance_down(self, from_y: int, min: int, max: int) -> int:
+        distance = self._height - from_y
+        if min > distance:
+            return distance
+        elif max > distance:
+            return random.randint(min, distance)
+        else:
+            return random.randint(min, max)
 
     # @staticmethod
     # def find_nearby(sprites: list["Sprite"], for_sprite: "Sprite") -> list["Sprite"]:
