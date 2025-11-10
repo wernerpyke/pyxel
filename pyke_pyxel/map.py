@@ -135,6 +135,22 @@ class Map:
     
     def y_is_above_center(self, y: int) -> bool:
         return y < self._height / 2
+    
+    def bound_to_width(self, x: int) -> int:
+        if x < 0: 
+            return 0
+        elif x > self._width:
+            return self._width
+        else:
+            return x
+        
+    def bound_to_height(self, y: int) -> int:
+        if y < 0: 
+            return 0
+        elif y > self._height:
+            return self._height
+        else:
+            return y
 
     def shortest_distance_to_sides(self, from_x: int) -> int:
         distance_to_left = from_x
@@ -171,6 +187,18 @@ class Map:
             return random.randint(min, distance)
         else:
             return random.randint(min, max)
+        
+    @property
+    def center_x(self) -> int:
+        return self._width // 2
+    
+    @property
+    def center_y(self) -> int:
+        return self._height // 2
+    
+    @property
+    def bottom_y(self) -> int:
+        return self._height
 
     # @staticmethod
     # def find_nearby(sprites: list["Sprite"], for_sprite: "Sprite") -> list["Sprite"]:

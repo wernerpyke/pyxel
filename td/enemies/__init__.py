@@ -8,6 +8,7 @@ from td.enemies.mage import Mage
 from .enemy import Enemy
 from .skeleton import Skeleton
 from .orb import Orb
+from .bat import Bat
 
 enemies: list[Enemy] = []
 
@@ -25,6 +26,11 @@ def launch_mage(game: FieldGame):
     mage = Mage()
     mage.launch(game, _random_location())
     enemies.append(mage)
+
+def launch_bat(game: FieldGame, position: Coord):
+    bat = Bat()
+    bat.launch(game, position)
+    enemies.append(bat)
 
 def update(game: FieldGame):
     def _remove_enemy_sprite(sprite_id: int):

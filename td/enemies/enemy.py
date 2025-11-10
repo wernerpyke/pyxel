@@ -34,8 +34,7 @@ class Enemy:
         self._base_right = game_w - win_base_w - 4
 
     def launch(self, game: FieldGame, position: Coord):
-        log_debug(f"Enemy.launch() {self._sprite._id} x:{position.x} y:{position.y}")
-        
+        # log_debug(f"Enemy.launch() {self._sprite._id} x:{position.x} y:{position.y}")
         self._sprite.set_position(position)
         game.add_sprite(self._sprite)
 

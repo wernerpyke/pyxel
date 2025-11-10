@@ -59,7 +59,7 @@ def sprite(sprite: Sprite, settings: GameSettings):
               img=sprite._resource_image_index,
               u=frame.x,
               v=frame.y,
-              w=width, # (settings.size.tile * -1) if sprite.is_flipped else settings.size.tile,
+              w=width,
               h=height,
               colkey=settings.colours.sprite_transparency)
     
