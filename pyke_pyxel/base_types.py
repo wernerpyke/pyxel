@@ -4,19 +4,21 @@ from typing import Optional
 from . import GLOBAL_SETTINGS
 
 class Coord:
-    def __init__(self, col: int, row: int):
+    def __init__(self, col: int, row: int, size: Optional[int] = None):
         self._col: int = col
         self._row: int = row
 
-        self.size = GLOBAL_SETTINGS.size.tile
+        if size:
+            self.size = size
+        else:
+            self.size = GLOBAL_SETTINGS.size.tile
+        
         self._x: int = (self._col - 1) * self.size
         self._y: int = (self._row - 1) * self.size
 
     @staticmethod
     def with_center(x: int, y: int, size: Optional[int] = None) -> "Coord":
-        c = Coord(0, 0)
-        if size:
-            c.size = size
+        c = Coord(0, 0, size)
         half = math.floor(c.size / 2)
         c._x = x - half
         c._y = y - half
@@ -28,9 +30,7 @@ class Coord:
     
     @staticmethod
     def with_xy(x: int, y: int, size: Optional[int] = None) -> "Coord":
-        c = Coord(0, 0)
-        if size:
-            c.size = size
+        c = Coord(0, 0, size)
         c._x = x
         c._y = y
 
@@ -65,12 +65,13 @@ class Coord:
         self._row = math.floor(self.y / self.size) + 1
 
     def clone(self):
-        return Coord(self._col, self._row)
+        return Coord(self._col, self._row, self.size)
 
-    def clone_by(self, x: int, y: int, direction: str):
+    def clone_by(self, x: int, y: int, direction: Optional[str] = None):
         cloned = Coord(self._col, self._row)
         cloned._x = self._x + x
         cloned._y = self._y + y
+        cloned.size = self.size
 
         match direction:
             case "up":
@@ -85,6 +86,9 @@ class Coord:
             case "right":
                 cloned._col = math.floor((cloned.x + self.size) / self.size) + 1
                 cloned._row = math.floor(self.mid_y / self.size) + 1
+            case _:
+                cloned._col = math.floor(cloned.mid_x / self.size) + 1
+                cloned._row = math.floor(cloned.y / self.size) + 1
 
         return cloned
     
