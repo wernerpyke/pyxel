@@ -53,6 +53,9 @@ class Meteor(Weapon):
         else:
             self._update_expand(field)
     
+    def kill(self):
+        pass # allow the existing instance to continue
+
     def _draw_star(self, center: Cell, field: CellField):
         self.cells = []
 

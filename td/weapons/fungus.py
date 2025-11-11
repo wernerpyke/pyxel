@@ -14,23 +14,19 @@ class Fungus(Weapon):
 
         self.regrow: list[Cell] = []
 
-        self.update_count = 0
-
     def launch(self, field: CellField):
         for i in range(5):
             if cell := field.cell_at(self.position.x + (i*2), self.position.y):
                 self.cells.append(self._prop(cell))
 
+    def kill(self):
+        self.cells = []
+
     def update(self, field: CellField):
-        self.update_count +=1
 
         new_cells = []
 
         # log_debug(f"Fungus {len(self.cells)} active cells")
-
-        if self.update_count < 10:
-            pass
-            # print("Check")
 
         for c in self.regrow:
             if (c.type == self.type) or c.is_empty:
@@ -70,10 +66,6 @@ class Fungus(Weapon):
             c.can_propogate = False
         
         self.cells = new_cells
-
-        self.update_count += 1
-        if (len(self.cells) == 0) and self.update_count < 10:
-            print("WHOA")
     
     def _prop(self, cell: Cell) -> Cell:
         cell.type = self.type

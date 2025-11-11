@@ -1,14 +1,14 @@
 import time
 
-from .ui import GameStateUI
-from .map import GameMap
-from .enemies import GameStateEnemies
+from .ui import GameUI
+from .weapons import GameWeapons
+from .enemies import GameEnemies
 
 class GameState:
     def __init__(self) -> None:
-        self.map = GameMap()
-        self.ui = GameStateUI()
-        self.enemies = GameStateEnemies()
+        self.ui = GameUI()
+        self.weapons = GameWeapons()
+        self.enemies = GameEnemies()
         # Sound
         self.music_enabled = False
 
@@ -29,6 +29,6 @@ class GameState:
 
     def update(self):
         self._running_time = time.time() - self._start_time
-        # Update enemy counts etc
+        # TODO: progress level based on running time etc
 
 STATE = GameState()

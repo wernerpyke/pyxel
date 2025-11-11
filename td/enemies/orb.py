@@ -3,7 +3,7 @@ import random
 
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
-from td.state import STATE
+from pyke_pyxel import GLOBAL_SETTINGS
 from .enemy import Enemy
 
 class Orb(Enemy):
@@ -29,7 +29,7 @@ class Orb(Enemy):
         
         cycles = 3 # Number of full sine cycles over the height
         # Frequency factor (B in the formula: B = (Cycles * 2*pi) / Total_Height)
-        self._frequency_factor = (cycles * 2 * math.pi) / (STATE.map.height - start_y)
+        self._frequency_factor = (cycles * 2 * math.pi) / (GLOBAL_SETTINGS.size.window - start_y)
         
         return super().launch(game, position)
 

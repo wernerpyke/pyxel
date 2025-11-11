@@ -1,12 +1,13 @@
 import time
 import random
 
-class GameStateEnemies:
+class GameEnemies:
     def __init__(self) -> None:
-        self._launch_frequency = 2 # seconds
+        
         self._max_count = 3 # count
         self._available_enemies = ["skeleton", "orb", "mage"]
 
+        self._launch_frequency = 2 # seconds
         self._previous_launch_time = 0
 
     def launch_enemy_type(self, current_enemy_count: int) -> str|None:

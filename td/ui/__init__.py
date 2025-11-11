@@ -1,8 +1,11 @@
 from dataclasses import dataclass
+from pyke_pyxel import log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 
+from pyke_pyxel.sprite import Sprite
 from td.state import STATE
+from td.state.weapons import WeaponLocation
 from . import title_screen
 from . import weapon_select
 
@@ -14,13 +17,13 @@ def mouse_move(game: FieldGame, other: tuple[int, int]):
         case "select_title_screen_option":
             title_screen.mouse_move(x, y)
         case "select_location":
-            map = STATE.map
-            location = map.weapon_location_at(x, y)
+            weapons = STATE.weapons
+            location = weapons.location_at(x, y)
             if location:
-                if map.selected_location and map.selected_location.name == location.name:
+                if weapons.selected_location and weapons.selected_location.name == location.name:
                     return # Current location
                 
-                map.selected_location = location 
+                weapons.selected_location = location 
 
                 # Mark the location
                 marker = UI.marker_sprite
@@ -28,11 +31,11 @@ def mouse_move(game: FieldGame, other: tuple[int, int]):
                     location.position.mid_x, 
                     location.position.mid_y, 
                     size=16))
-                game.add_sprite(marker)
+                game.hud.add_sprite(marker)
                 
             else:
-                map.selected_location = None # Clear the location
-                game.remove_sprite(UI.marker_sprite)
+                weapons.selected_location = None # Clear the location
+                game.hud.remove_sprite(UI.marker_sprite)
         case "select_weapon":
             weapon_select.mouse_move(x, y)
 
@@ -44,7 +47,7 @@ def mouse_down(game: FieldGame, other: tuple[int, int]):
         case "select_title_screen_option":
             title_screen.mouse_down(x, y)
         case "select_location":
-            if STATE.map.selected_location:
+            if STATE.weapons.selected_location:
                 weapon_select.display(game)
                 UI.state = "select_weapon"
         case "select_weapon":
@@ -68,6 +71,25 @@ def hide_title_screen(game: FieldGame):
 
 def hide_weapons_ui(game: FieldGame):
     weapon_select.hide(game)
-    STATE.map.selected_location = None
-    game.remove_sprite(STATE.ui.marker_sprite)
+    STATE.weapons.selected_location = None
+    game.hud.remove_sprite(STATE.ui.marker_sprite)
     STATE.ui.state = "select_location"
+
+def set_weapon_marker(name: str, location: WeaponLocation, game: FieldGame):
+    if location.marker:
+        game.hud.remove_sprite(location.marker)
+    
+    match name:
+        case "bolt":
+            frame = Coord(7, 10)
+        case "fungus":
+            frame = Coord(8, 10)
+        case "meteor":
+            frame = Coord(7, 11)
+        case _:
+            log_error(f"ui.set_weapon_marker invalid weapon:{name}")
+            return
+
+    location.marker = Sprite(f"{name}_marker", frame)
+    location.marker.set_position(location.position)
+    game.hud.add_sprite(location.marker)

@@ -5,7 +5,7 @@ from pyke_pyxel.base_types import Coord
 from pyke_pyxel.sprite import Sprite, TextSprite
 
 @dataclass
-class GameStateUI:
+class GameUI:
     state: str = ""
     score_text = TextSprite("*", 
                             GLOBAL_SETTINGS.colours.hud_text,

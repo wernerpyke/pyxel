@@ -83,12 +83,13 @@ class Bolt(Weapon):
 
         self.cells = new_cells
     
+    def kill(self):
+        pass # allow the existing instance to continue
+    
     def _select_next_cell(self, cell: Cell, field: CellField) -> Optional[Cell]:
         to: Optional[Cell] = None
 
-        next_d = self.propagate[
-            random.randint(0, len(self.propagate)-1)
-            ]
+        next_d = self.propagate[random.randint(0, len(self.propagate)-1)]
         
         d = f"{cell.tag}-{next_d}"
 

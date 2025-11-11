@@ -1,5 +1,3 @@
-import random
-
 from pyke_pyxel import log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import Cell, CellField
@@ -27,6 +25,9 @@ class Weapon:
 
     def update(self, field: CellField):
         print("Weapon.update() implement in your class")
+
+    def kill(self):
+        print("Weapon.kill() implement in your class")
     
     # def _track_cell(self, cell: Cell):
     #    if not cell.is_border:

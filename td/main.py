@@ -13,9 +13,6 @@ settings = GameSettings()
 
 settings.size.window = 320
 settings.size.tile = 8
-# Override GameSettings.size.window
-STATE.map.width = 320
-STATE.map.height = 320
 
 settings.fps.game = 60
 

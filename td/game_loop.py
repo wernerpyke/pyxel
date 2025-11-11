@@ -4,6 +4,7 @@ from pyke_pyxel import COLOURS, log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 
+from pyke_pyxel.sprite import Sprite
 from td.state import STATE
 from game_load import load_level
 
@@ -40,7 +41,7 @@ def game_update(game: FieldGame):
     
     STATE.update()
     enemies.update(game)
-    weapons.update(game.field)
+    STATE.weapons.update(game.field)
 
 def _process_update_queue(game: FieldGame):
     for u in update_queue:
@@ -58,40 +59,39 @@ def _process_update_queue(game: FieldGame):
             case "launch_weapon":
                 _process_launch_weapon(u.params, game) # type: ignore
             case "launch_enemy":
-                name: str = u.params[0] # type: ignore
+                type: str = u.params[0] # type: ignore
                 x: int = u.params[1] # type: ignore
                 y: int = u.params[2] # type: ignore
-                _process_launch_enemy(name, x, y, game)
+                _process_launch_enemy(type, x, y, game)
             case _:
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()
 
-def _process_launch_weapon(name: str, game: FieldGame):
-    location = STATE.map.selected_location
+def _process_launch_weapon(type: str, game: FieldGame):
+    location = STATE.weapons.selected_location
     if not location:
         log_error("game_loop._process_launch_weapon no launch location")
         return
 
-    match name:
+    match type:
         case "bolt":
-            weapons.launch_bolt(location, game.field)
+            ui.set_weapon_marker(type, location, game)
+            location.activate(type)
         case "fungus":
-            weapons.launch_fungus(
-                    location.position, 
-                    game.field)
+            ui.set_weapon_marker(type, location, game)
+            location.activate(type)
         case "meteor":
-            weapons.launch_meteor(
-                    location.position, 
-                    game.field)
+            ui.set_weapon_marker(type, location, game)
+            location.activate(type)
         case _:
-            log_error(f"game_loop._process_launch_weapon unrecognised name:{name}")
+            log_error(f"game_loop._process_launch_weapon unrecognised name:{type}")
 
-def _process_launch_enemy(name: str, x: int, y: int, game: FieldGame):
-    match name:
+def _process_launch_enemy(type: str, x: int, y: int, game: FieldGame):
+    match type:
         case "bat":
             enemies.launch_bat(game, Coord.with_xy(x, y))
         case _:
-            log_error(f"game_loop._process_launch_enemy unrecognised name {name}")
+            log_error(f"game_loop._process_launch_enemy unrecognised name {type}")
 
 #
 # Signals
