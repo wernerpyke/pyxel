@@ -1,10 +1,11 @@
 import random
 
-from pyke_pyxel import log_debug
+from pyke_pyxel import log_debug, log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.signals import Signals
 from td.enemies.mage import Mage
+from td.state import STATE
 from .enemy import Enemy
 from .skeleton import Skeleton
 from .orb import Orb
@@ -53,10 +54,18 @@ def update(game: FieldGame):
                 e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
                 Signals.send_with("enemy_attacks", game, result)
 
-    if len(enemies) < 1:
-        launch_mage(game)
-        # launch_orb(game)
-        # launch_skeleton(game)
+    type = STATE.enemies.launch_enemy_type(len(enemies))
+    if type:
+        match type:
+            case "skeleton":
+                launch_skeleton(game)
+            case "orb":
+                launch_orb(game)
+            case "mage":
+                launch_mage(game)
+            case _:
+                log_error(f"enemies.update invalid enemy type:{type}")
+        
 
 launch_locations = [
     Coord(2, 4), Coord(3, 2), Coord(4, 4), Coord(5, 6), Coord(7, 11), Coord(8, 8), Coord(9, 11), 

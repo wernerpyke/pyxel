@@ -6,7 +6,7 @@ from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
 import game_loop
-from td.game_state import STATE
+from td.state import STATE
 import ui
 
 settings = GameSettings()

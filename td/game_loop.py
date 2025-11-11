@@ -1,18 +1,17 @@
 from dataclasses import dataclass
 from typing import Any, Optional
 from pyke_pyxel import COLOURS, log_error
-from pyke_pyxel.button import Button
-from pyke_pyxel.cell_field import CellField, Cell
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
+
+from td.state import STATE
+from game_load import load_level
 
 import weapons
 import enemies
 import ui
-from game_state import STATE
-from game_load import load_level
 
-SKIP_TITLE_SCREEN=True
+DEBUG_SKIP_TITLE_SCREEN=True
 
 @dataclass
 class UpdateQueueItem:
@@ -22,23 +21,24 @@ class UpdateQueueItem:
 update_queue: list[UpdateQueueItem] = []
 
 def game_started(game: FieldGame):
-    if STATE.music_enabled:
-        game.start_music(0)
-
-    if SKIP_TITLE_SCREEN:
+    if DEBUG_SKIP_TITLE_SCREEN:
         load_level(game)
-        STATE.ui_state = "select_location"
+        STATE.ui.state = "select_location"
+        STATE.start()
     else:
         ui.show_title_screen(game)
-        STATE.ui_state = "select_title_screen_option"
+        STATE.ui.state = "select_title_screen_option"
+
+    if STATE.music_enabled:
+        game.start_music(0)
 
 def game_update(game: FieldGame):
     _process_update_queue(game)
 
-    if STATE.ui_state == "select_title_screen_option" or STATE.ui_state == "wait":
-        # TODO - this is not super robust
-        return
+    if STATE.ui.state == "select_title_screen_option" or STATE.ui.state == "wait":
+        return # TODO - this is not super robust
     
+    STATE.update()
     enemies.update(game)
     weapons.update(game.field)
 
@@ -47,12 +47,12 @@ def _process_update_queue(game: FieldGame):
         match u.type:
             case "ui_fade_from_title_to_game":
                 game.fx.circular_wipe(COLOURS.BLUE_DARK, True, "ui_title_screen_fade_out_complete")
-                STATE.ui_state = "wait"
+                STATE.ui.state = "wait"
             case "load_level":
                 ui.hide_title_screen(game)
                 load_level(game)
                 game.fx.circular_wipe(COLOURS.BLUE_DARK, False, "ui_game_screen_fade_in_complete")
-                STATE.ui_state = "wait"
+                STATE.ui.state = "wait"
             case "hide_weapon_ui":
                 ui.hide_weapons_ui(game)
             case "launch_weapon":
@@ -67,7 +67,7 @@ def _process_update_queue(game: FieldGame):
     update_queue.clear()
 
 def _process_launch_weapon(name: str, game: FieldGame):
-    location = STATE.launch_location
+    location = STATE.map.selected_location
     if not location:
         log_error("game_loop._process_launch_weapon no launch location")
         return
@@ -99,7 +99,7 @@ def _process_launch_enemy(name: str, x: int, y: int, game: FieldGame):
 
 def enemy_killed(game: FieldGame):
     STATE.score += 1
-    text = STATE.score_text
+    text = STATE.ui.score_text
     text.set_colour(COLOURS.GREEN_MINT)
     text.set_text(f"{STATE.score}")
 
@@ -107,7 +107,7 @@ def enemy_attacks(game: FieldGame, other: int):
     damage = other
     # print(f"ENEMY SCORES damage:{damage}")
     STATE.score -= damage
-    text = STATE.score_text
+    text = STATE.ui.score_text
     text.set_colour(COLOURS.RED)
     text.set_text(f"{STATE.score}")
 
@@ -124,7 +124,8 @@ def ui_title_screen_fade_out_complete(sender):
     update_queue.append(UpdateQueueItem("load_level"))
 
 def ui_game_screen_fade_in_complete(sender):
-    STATE.ui_state = "select_location"
+    STATE.start()
+    STATE.ui.state = "select_location"
 
 def ui_weapon_selected(name: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location

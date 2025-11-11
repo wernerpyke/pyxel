@@ -3,7 +3,7 @@ import random
 
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
-from td.game_state import STATE
+from td.state import STATE
 from .enemy import Enemy
 
 class Orb(Enemy):

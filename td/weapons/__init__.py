@@ -1,9 +1,10 @@
 import random
 
-from pyke_pyxel import DIRECTION, log_debug
+from pyke_pyxel import log_debug
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import CellField
-from td.game_state import STATE, LaunchLocation
+from td.state import STATE
+from td.state.map import WeaponLocation
 from .fungus import Fungus
 from .meteor import Meteor
 from .weapon import Weapon
@@ -27,9 +28,9 @@ def launch_meteor(location: Coord,
     meteor.launch(field)
     weapons.append(meteor)
 
-def launch_bolt(location: LaunchLocation,
+def launch_bolt(location: WeaponLocation,
                 field: CellField):
-    bolt = Bolt(location.position, location.orientation, location.propagate)
+    bolt = Bolt(location.name, location.position, location.orientation)
     bolt.launch(field)
     weapons.append(bolt)
 
@@ -67,6 +68,3 @@ def update(field: CellField):
     
     for w in to_remove:
         weapons.remove(w)
-
-    # if len(weapons) == 0:
-    #    launch_bolt(STATE.map.launch_locations[5], field)

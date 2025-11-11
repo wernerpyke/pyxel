@@ -2,7 +2,7 @@ from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite, TextSprite
 
-from game_state import STATE
+from td.state import STATE
 
 def load_level(game: FieldGame):
     game.set_tilemap(Coord(1, 1), 8, 8)
@@ -14,8 +14,8 @@ def load_level(game: FieldGame):
     _add_plants(game)
 
     _add_base(game)
-    STATE.score_text.set_position(Coord(2,2))
-    game.hud.add_text(STATE.score_text)
+    STATE.ui.score_text.set_position(Coord(2,2))
+    game.hud.add_text(STATE.ui.score_text)
 
 def _add_plants(game: FieldGame):
     s = CompoundSprite("plants", 40, 4)

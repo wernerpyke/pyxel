@@ -10,15 +10,35 @@ import random
 
 class Bolt(Weapon):
 
-    def __init__(self, position: Coord, orientation: str, propagate: list[str]) -> None:
+    def __init__(self, location_name: str, position: Coord, orientation: str) -> None:
         super().__init__("bolt", position, power=random.randint(100, 200), speed=10)
 
         self.cell_count = 5
 
         self.colour: int = COLOURS.WHITE
         self.orientation = orientation
-        self.propagate = propagate
-        self.default_propogate = propagate[0]
+        
+        self.propagate = []
+        match location_name:
+            case "1":
+                self.propagate = [ DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.UP, DIRECTION.DOWN]
+
+            case "2":
+                self.propagate = [ DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.UP, DIRECTION.RIGHT]
+        
+            case "3":
+                self.propagate=[ DIRECTION.UP, DIRECTION.UP, DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.RIGHT]
+        
+            case "4":
+                self.propagate=[ DIRECTION.UP, DIRECTION.UP, DIRECTION.LEFT, DIRECTION.RIGHT, DIRECTION.RIGHT]
+        
+            case "5":
+                self.propagate=[ DIRECTION.RIGHT, DIRECTION.RIGHT, DIRECTION.RIGHT, DIRECTION.UP, DIRECTION.LEFT]
+        
+            case "6":
+                self.propagate=[ DIRECTION.RIGHT, DIRECTION.RIGHT, DIRECTION.RIGHT, DIRECTION.UP, DIRECTION.DOWN]
+
+        self.default_propogate = self.propagate[0]
 
     def launch(self, field: CellField):
         for i in range(self.cell_count):

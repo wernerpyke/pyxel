@@ -1,12 +1,11 @@
 import math
 import random
 
-from pyke_pyxel import DIRECTION
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.cell_field import Cell
 from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.signals import Signals
-from td.game_state import STATE
+from td.state import STATE
 from .enemy import Enemy
 
 class Mage(Enemy):
