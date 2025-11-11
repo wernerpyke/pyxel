@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from pyke_pyxel import log_error
+from pyke_pyxel import DIRECTION, log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 
@@ -91,5 +91,5 @@ def set_weapon_marker(name: str, location: WeaponLocation, game: FieldGame):
             return
 
     location.marker = Sprite(f"{name}_marker", frame)
-    location.marker.set_position(location.position)
+    location.marker.set_position(location.position) # .clone_by(0, -8))
     game.hud.add_sprite(location.marker)

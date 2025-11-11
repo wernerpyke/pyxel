@@ -56,9 +56,6 @@ class Bolt(Weapon):
                 self.cells.append(cell)
 
     def update(self, field: CellField):
-        if len(self.cells) == 0:
-            return False
-        
         new_cells = []
 
         for cell in self.cells:

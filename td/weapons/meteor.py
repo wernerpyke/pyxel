@@ -1,4 +1,5 @@
 import random
+import math
 
 from pyke_pyxel import COLOURS, log_error, log_debug
 from pyke_pyxel.base_types import Coord
@@ -25,14 +26,8 @@ class Meteor(Weapon):
 
         self._radius = 0
         self._decay_rate = 2
+        self._degrees_step = 4 # POWER-UP, reduce to 1. Generate one point for each step between 0 and 360
         # TODO - calc max_radius as a way of determining decay rate
-
-    @property
-    def is_alive(self) -> bool:
-        if self._radius == 0:
-            return True
-        else:
-            return len(self.cells) > 0
 
     def launch(self, field: CellField):
         self.line = field.cells_in_line(self._from, self._to)
@@ -49,12 +44,18 @@ class Meteor(Weapon):
                 self.line_index += 1
             else:
                 self._has_landed = True
-            return True
         else:
             self._update_expand(field)
     
     def kill(self):
         pass # allow the existing instance to continue
+    
+    @property
+    def is_alive(self) -> bool:
+        if self._radius == 0:
+            return True
+        else:
+            return len(self.cells) > 0
 
     def _draw_star(self, center: Cell, field: CellField):
         self.cells = []
@@ -93,20 +94,20 @@ class Meteor(Weapon):
             c.power = self.power * 2
             self.cells.append(c)
 
-    def _update_expand(self, field):
+    def _update_expand(self, field: CellField):
         self._radius += 1
 
         # POWER-UP: decay rate increases more slowly
         if self._radius > 40:
-            self._decay_rate = 3
+            self._decay_rate = 2
         if self._radius > 80:
-            self._decay_rate = 4
+            self._decay_rate = 3
         if self._radius > 120:
-            self._decay_rate = 5
+            self._decay_rate = 4
         if self._radius > 160:
-            self._decay_rate = 6
+            self._decay_rate = 5
         if self._radius > 200:
-            self._decay_rate = 7
+            self._decay_rate = 6
 
         new_cells = []
         for c in self.cells:
@@ -116,7 +117,27 @@ class Meteor(Weapon):
                 new_cells.append(c)
             else:
                 c.recall_state()
+        
+        for degrees in range(0, 361, self._degrees_step): # Loop from 0 to 360 degrees (inclusive of 360 for a closed loop)
+            
+            # 1. Convert the angle to radians (required by math.cos/sin)
+            radians = math.radians(degrees)
+            
+            # 2. Calculate the X and Y coordinates
+            x = self._to.x + round(self._radius * math.cos(radians))
+            y = self._to.y + round(self._radius * math.sin(radians))
+            cell = field.cell_at(x, y)
+            if cell:
+                if not cell.is_empty:
+                    cell.store_state()
 
+                cell.type = self.type
+                cell.power = self.power
+                self._update_cell_colour(cell)
+                new_cells.append(cell)
+
+        """
+        MUCH SLOWER implementation - but draws a full (no gaps) circle
         TOLERANCE = 0.5 
         radius_outer_squared = (self._radius + TOLERANCE)**2
         radius_inner_squared = (self._radius - TOLERANCE)**2
@@ -124,8 +145,8 @@ class Meteor(Weapon):
         for y in range(field._height):
             for x in range(field._width):
                 distance_squared = (x - self.position.x)**2 + (y - self.position.y)**2
-                if (distance_squared > radius_inner_squared and 
-                    distance_squared <= radius_outer_squared):
+                if (distance_squared > radius_inner_squared) and (distance_squared <= radius_outer_squared):
+                    
                     cell = field.cell_at(x, y)
 
                     if not cell.is_empty:
@@ -135,6 +156,7 @@ class Meteor(Weapon):
                     cell.power = self.power
                     self._update_cell_colour(cell)
                     new_cells.append(cell)
+        """
 
         self.cells = new_cells
 

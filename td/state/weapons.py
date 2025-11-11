@@ -18,7 +18,6 @@ class WeaponLocation:
         self.position = position
         self.orientation = orientation    
     
-
         self._type: str|None = None
         self._cooldown: float = 8 # seconds
         self._previous_launch_time: float = 0
