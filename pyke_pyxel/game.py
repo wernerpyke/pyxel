@@ -28,7 +28,6 @@ class Game:
         self._animation_tick = 0
 
         self._map = Map()
-        self.movement_tick: bool = False
 
         self._tile_map: Optional[TileMap] = None
 
@@ -37,12 +36,6 @@ class Game:
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
-
-        # TODO - should the below move to CharacterGame?
-        self._actors: list[Actor] = []
-        Signals.connect("enemy_added", self._enemy_added)
-        Signals.connect("enemy_removed", self._enemy_removed)
-        # End TODO
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(resources)
@@ -118,14 +111,6 @@ class Game:
             self._sprites.remove(sprite)
             log_debug(f"GAME.sprite_removed() {sprite._id}")
 
-    def _enemy_added(self, enemy: Enemy):
-        self._actors.append(enemy)
-
-    def _enemy_removed(self, enemy: Enemy):
-        if enemy in self._actors:
-            self._actors.remove(enemy)
-            log_debug(f"GAME._enemy_removed() {enemy._id}")
-
 # ===== PYXEL =====
 
     def update(self):
@@ -144,12 +129,6 @@ class Game:
                 Signals.send_with(Signals.MOUSE.DOWN, self, (self._mouse_at_x, self._mouse_at_y))
             if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
                 Signals.send(Signals.MOUSE.UP, self)
-
-        # movement
-        self.movement_tick = not self.movement_tick
-
-        for actor in self._actors:
-            actor._update(self._map, self.movement_tick)
 
         # Sprite Animations
         if self._animation_tick < (self._settings.fps.game / self._settings.fps.animation):

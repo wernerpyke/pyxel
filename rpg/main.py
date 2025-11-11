@@ -1,6 +1,6 @@
 from pathlib import Path
 from pyke_pyxel.signals import Signals
-from pyke_pyxel.character_game import CharacterGame
+from pyke_pyxel.rpg_game import RPGGame
 from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
 import game_load
@@ -21,7 +21,7 @@ settings = GameSettings(
     debug=True,
     size=SizeSettings(window=160))
 
-game = CharacterGame(
+game = RPGGame(
         settings=settings,
         title="Pyke Dungeon RPG", 
         resources=f"{Path(__file__).parent.resolve()}/assets/sample.pyxres"

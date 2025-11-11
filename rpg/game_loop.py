@@ -1,6 +1,6 @@
 import random
 from pyke_pyxel import log_info
-from pyke_pyxel.character_game import CharacterGame
+from pyke_pyxel.rpg_game import RPGGame
 from pyke_pyxel.sprite import Sprite, OpenableSprite
 from pyke_pyxel.room import Room
 from pyke_pyxel.player import Player
@@ -15,7 +15,7 @@ def choose_random_direction():
 
 # -- ======  Game Loop ======= --
 
-def game_started(game: CharacterGame):
+def game_started(game: RPGGame):
      log_info("GAME STARTED")
 
      enemy = game.room.add_enemy(ENEMY.DEMON, 10, 12)

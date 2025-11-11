@@ -43,6 +43,9 @@ class Sprite:
         self.animations[name] = animation
         
     def activate_animation(self, name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None):
+        if self._animation and self._animation._name == name:
+            return
+        
         self._animation = self.animations[name]
         self._animation._paused = False
         self.is_flipped = self._animation.flip
@@ -89,10 +92,9 @@ class Sprite:
             
             col = anim._start_frame._col + (anim._current_frame_index * self.col_tile_count)
             self.active_frame = Coord(col, anim._start_frame._row)
-
+            # print(f"Sprite.update_frame() frame:{anim._start_frame._col}+({anim._current_frame_index}*{self.col_tile_count})={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
+            
             anim._current_frame_index += 1
-
-            # print(f"Sprite.update_frame() frame:{self._animation.startFrame._col}+{animation._currentFrame}={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
         else:
             self.active_frame = self.idle_frame
 
@@ -137,9 +139,9 @@ class OpenableSprite(Sprite):
 
 class MovableSprite(Sprite):
 
-    def __init__(self, name: str, idleFrame: Coord, movementSpeed: int):
+    def __init__(self, name: str, idleFrame: Coord, movement_speed: int):
         super().__init__(name, idleFrame)
-        self.movementSpeed = movementSpeed
+        self.movementSpeed = movement_speed
 
     def set_up_animation(self, start_frame: Coord, frame_count: int, flip: Optional[bool] = False):
         self.add_animation("up", Animation(start_frame, frame_count, flip))
