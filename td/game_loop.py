@@ -4,11 +4,9 @@ from pyke_pyxel import COLOURS, log_error
 from pyke_pyxel.base_types import Coord
 from pyke_pyxel.field_game import FieldGame
 
-from pyke_pyxel.sprite import Sprite
 from td.state import STATE
 from game_load import load_level
 
-import weapons
 import enemies
 import ui
 

@@ -6,8 +6,9 @@ from pyke_pyxel.field_game import FieldGame
 from pyke_pyxel.game_settings import GameSettings, SizeSettings
 
 import game_loop
-from td.state import STATE
 import ui
+
+from td.profiler import ProfileGame
 
 settings = GameSettings()
 
@@ -20,8 +21,6 @@ settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
 
 settings.mouse_enabled = True
-
-
 
 game = FieldGame(
         settings=settings,

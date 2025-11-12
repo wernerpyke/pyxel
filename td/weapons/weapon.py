@@ -4,7 +4,7 @@ from pyke_pyxel.cell_field import Cell, CellField
 
 
 class Weapon:
-    def __init__(self, type: str, position: Coord, power: int, speed: int) -> None:
+    def __init__(self, type: str, position: Coord, power: float, speed: int) -> None:
         self.position = position
         self.type = type
 

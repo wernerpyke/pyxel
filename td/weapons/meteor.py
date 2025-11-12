@@ -18,15 +18,15 @@ class Meteor(Weapon):
         to_y = position.y - random.randint(80, 120)
         to = Coord.with_xy(to_x, to_y)
 
-        super().__init__("meteor", to, power=10, speed=10)
+        super().__init__("meteor", to, power=20, speed=10)
 
         self._from = position
         self._to = to
         self._has_landed = False
 
         self._radius = 0
-        self._decay_rate = 2
-        self._degrees_step = 4 # POWER-UP, reduce to 1. Generate one point for each step between 0 and 360
+        self._decay_rate = 4 # POWER-UP reduce decay rate
+        self._degrees_step = 4 # POWER-UP, reduce to 0.5. Generate one point for each step between 0 and 360
         # TODO - calc max_radius as a way of determining decay rate
 
     def launch(self, field: CellField):
@@ -98,43 +98,57 @@ class Meteor(Weapon):
         self._radius += 1
 
         # POWER-UP: decay rate increases more slowly
+        decay = self._decay_rate
         if self._radius > 40:
-            self._decay_rate = 2
+            decay = self._decay_rate * 1.2
         if self._radius > 80:
-            self._decay_rate = 3
+            decay = self._decay_rate * 1.5
         if self._radius > 120:
-            self._decay_rate = 4
+            decay = self._decay_rate * 2
         if self._radius > 160:
-            self._decay_rate = 5
+            decay = self._decay_rate * 2.2
         if self._radius > 200:
-            self._decay_rate = 6
+            decay = self._decay_rate * 2.5
 
-        new_cells = []
+        new_cells: list[Cell] = []
         for c in self.cells:
             if c.power > 0:
-                c.power -= self._decay_rate
+                c.power -= decay
                 self._update_cell_colour(c)
                 new_cells.append(c)
             else:
                 c.recall_state()
-        
-        for degrees in range(0, 361, self._degrees_step): # Loop from 0 to 360 degrees (inclusive of 360 for a closed loop)
+
+        # print(f"DRAW NEW {len(new_cells)}")
+
+        degrees = 0
+        prev_x = prev_y = -1
+        while degrees <= 360:
             
             # 1. Convert the angle to radians (required by math.cos/sin)
             radians = math.radians(degrees)
+            degrees += self._degrees_step # make the loop safe
             
             # 2. Calculate the X and Y coordinates
             x = self._to.x + round(self._radius * math.cos(radians))
             y = self._to.y + round(self._radius * math.sin(radians))
+            if x == prev_x and y == prev_y:
+                continue # skip
+
+            prev_x, prev_y = x, y
+
             cell = field.cell_at(x, y)
-            if cell:
+            if cell and not cell.type == self.type:
+
                 if not cell.is_empty:
                     cell.store_state()
 
                 cell.type = self.type
                 cell.power = self.power
                 self._update_cell_colour(cell)
+
                 new_cells.append(cell)
+                # print(f"cell: {x}/{y}")
 
         """
         MUCH SLOWER implementation - but draws a full (no gaps) circle

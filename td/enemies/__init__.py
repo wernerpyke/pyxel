@@ -13,17 +13,17 @@ from .bat import Bat
 
 enemies: list[Enemy] = []
 
-def launch_skeleton(game: FieldGame):
+def _launch_skeleton(game: FieldGame):
     skeleton = Skeleton()
     skeleton.launch(game, _random_location())
     enemies.append(skeleton)
 
-def launch_orb(game: FieldGame):
+def _launch_orb(game: FieldGame):
     orb = Orb()
     orb.launch(game, _random_location())
     enemies.append(orb)
 
-def launch_mage(game: FieldGame):
+def _launch_mage(game: FieldGame):
     mage = Mage()
     mage.launch(game, _random_location())
     enemies.append(mage)
@@ -58,11 +58,11 @@ def update(game: FieldGame):
     if type:
         match type:
             case "skeleton":
-                launch_skeleton(game)
+                _launch_skeleton(game)
             case "orb":
-                launch_orb(game)
+                _launch_orb(game)
             case "mage":
-                launch_mage(game)
+                _launch_mage(game)
             case _:
                 log_error(f"enemies.update invalid enemy type:{type}")
         

@@ -7,7 +7,7 @@ from pyke_pyxel.sprite import Animation, Sprite
 
 
 class Enemy:
-    def __init__(self, name: str, from_frame: Coord, power: int, speed: int, animation_frame_count:int = 2) -> None:
+    def __init__(self, name: str, from_frame: Coord, power: float, speed: int, animation_frame_count:int = 2) -> None:
         sprite = Sprite(name, from_frame, 1, 1)
         
         sprite.add_animation("loop", Animation(from_frame, animation_frame_count))
@@ -17,7 +17,7 @@ class Enemy:
         sprite.add_animation("die", Animation(Coord(7,9), 2))
         self._sprite = sprite
 
-        self.power = power
+        self.power:float = power
 
         if speed > 10:
             log_error(f"Enemy({type}) speed > 10")
@@ -44,6 +44,7 @@ class Enemy:
             self._sprite.position.move_by(to[0], to[1])
         
         if len(field_cells) > 0:
+            #current_power = self.power
             for c in field_cells:
                 if self.power > c.power:
                     self.power -= c.power
@@ -54,11 +55,14 @@ class Enemy:
                 else:
                     c.power -= self.power
                     self.power = 0
-
+            #print(f"Enemy.update({self}) lost:{(current_power - self.power)} remaining:{self.power}")
         if self.power <= 0:
             return -1 # killed
         else:
             return self._calculate_win()
+    
+    def __str__(self):
+        return f"{self._sprite.name}{self._sprite._id}"
 
     def _move_towards_target(self) -> tuple[int, int]:
         return (0, 1) # straight down
