@@ -1,5 +1,5 @@
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.game import CellAutoGame
 from .enemy import Enemy
 
 class Bat(Enemy):
@@ -9,7 +9,7 @@ class Bat(Enemy):
                          power=100, 
                          speed=6)
         
-    def launch(self, game: FieldGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: Coord):
         self._from_x = position.x
         self._from_y = position.y
         self._to_x = game.map.center_x

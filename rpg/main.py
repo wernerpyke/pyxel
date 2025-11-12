@@ -1,7 +1,7 @@
 from pathlib import Path
 from pyke_pyxel.signals import Signals
-from pyke_pyxel.rpg_game import RPGGame
-from pyke_pyxel.game_settings import GameSettings, SizeSettings
+from pyke_pyxel.rpg.game import RPGGame
+from pyke_pyxel.settings import GameSettings, SizeSettings
 
 import game_load
 import game_loop

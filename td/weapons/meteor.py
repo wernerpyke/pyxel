@@ -3,7 +3,7 @@ import math
 
 from pyke_pyxel import COLOURS, log_error, log_debug
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.cell_field import Cell, CellField
+from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 
 from td.weapons.weapon import Weapon
 
@@ -29,11 +29,11 @@ class Meteor(Weapon):
         self._degrees_step = 4 # POWER-UP, reduce to 0.5. Generate one point for each step between 0 and 360
         # TODO - calc max_radius as a way of determining decay rate
 
-    def launch(self, field: CellField):
+    def launch(self, field: Matrix):
         self.line = field.cells_in_line(self._from, self._to)
         self.line_index = 0
 
-    def update(self, field: CellField):
+    def update(self, field: Matrix):
         if not self._has_landed:
             for c in self.cells:
                 c.reset()
@@ -57,7 +57,7 @@ class Meteor(Weapon):
         else:
             return len(self.cells) > 0
 
-    def _draw_star(self, center: Cell, field: CellField):
+    def _draw_star(self, center: Cell, field: Matrix):
         self.cells = []
 
         x, y = center.x, center.y
@@ -94,7 +94,7 @@ class Meteor(Weapon):
             c.power = self.power * 2
             self.cells.append(c)
 
-    def _update_expand(self, field: CellField):
+    def _update_expand(self, field: Matrix):
         self._radius += 1
 
         # POWER-UP: decay rate increases more slowly

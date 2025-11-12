@@ -2,7 +2,7 @@ import random
 
 from pyke_pyxel import log_debug, log_error
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
 from td.enemies.mage import Mage
 from td.state import STATE
@@ -13,27 +13,27 @@ from .bat import Bat
 
 enemies: list[Enemy] = []
 
-def _launch_skeleton(game: FieldGame):
+def _launch_skeleton(game: CellAutoGame):
     skeleton = Skeleton()
     skeleton.launch(game, _random_location())
     enemies.append(skeleton)
 
-def _launch_orb(game: FieldGame):
+def _launch_orb(game: CellAutoGame):
     orb = Orb()
     orb.launch(game, _random_location())
     enemies.append(orb)
 
-def _launch_mage(game: FieldGame):
+def _launch_mage(game: CellAutoGame):
     mage = Mage()
     mage.launch(game, _random_location())
     enemies.append(mage)
 
-def launch_bat(game: FieldGame, position: Coord):
+def launch_bat(game: CellAutoGame, position: Coord):
     bat = Bat()
     bat.launch(game, position)
     enemies.append(bat)
 
-def update(game: FieldGame):
+def update(game: CellAutoGame):
     def _remove_enemy_sprite(sprite_id: int):
         game.remove_sprite_by_id(sprite_id)
     

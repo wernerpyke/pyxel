@@ -2,7 +2,7 @@ import math
 import random
 
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel import GLOBAL_SETTINGS
 from .enemy import Enemy
 
@@ -14,7 +14,7 @@ class Orb(Enemy):
                          power=1000, 
                          speed=2)
 
-    def launch(self, game: FieldGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: Coord):
         start_x = position.x
         start_y = position.y
 

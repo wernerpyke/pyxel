@@ -1,10 +1,10 @@
 from typing import Optional
 
 from .actor import MovableActor
-from . import DIRECTION
-from .signals import Signals
-from .sprite import Sprite, OpenableSprite, MovableSprite
-from .map import Map, Coord
+from .. import DIRECTION
+from ..signals import Signals
+from ..sprite import Sprite, OpenableSprite, MovableSprite
+from ..map import Map, Coord
 
 class Player(MovableActor):
     def __init__(self, sprite: MovableSprite):

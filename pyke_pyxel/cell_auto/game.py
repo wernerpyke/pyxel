@@ -1,21 +1,17 @@
-from typing import Callable, Optional
+from pyke_pyxel.settings import GameSettings
 
-import pyxel
+from .. import GLOBAL_SETTINGS
+from ..game import Game
+from .matrix import Matrix
 
-from pyke_pyxel.game_settings import GameSettings
-
-from . import GLOBAL_SETTINGS
-from .game import Game
-from .cell_field import CellField
-
-class FieldGame(Game):
+class CellAutoGame(Game):
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
         super().__init__(settings, title, resources)
         
         # TODO - support non-square fields
         size = GLOBAL_SETTINGS.size
-        self._field = CellField(size.window, size.window)
+        self._field = Matrix(size.window, size.window)
 
     # Lifecycle methods
 
@@ -35,5 +31,5 @@ class FieldGame(Game):
     # Convenience accessors
 
     @property
-    def field(self) -> CellField:
+    def field(self) -> Matrix:
         return self._field

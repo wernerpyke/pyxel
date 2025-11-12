@@ -1,5 +1,5 @@
-from pyke_pyxel.room import Room
-from pyke_pyxel.player import Player
+from pyke_pyxel.rpg.room import Room
+from pyke_pyxel.rpg.player import Player
 from config import WALLS, DOOR
 
 

@@ -3,7 +3,7 @@ import pyxel
 
 from pyke_pyxel.base_types import Coord
 
-from . import GLOBAL_SETTINGS
+from .. import GLOBAL_SETTINGS
 from pyke_pyxel.signals import Signals
 
 """
@@ -82,7 +82,7 @@ class Cell:
     def __str__(self):
         return f"{self.x}/{self.y}"
 
-class CellField:
+class Matrix:
 
     def __init__(self, width: int = 0, height: int = 0):
         self._width = width

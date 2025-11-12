@@ -2,15 +2,15 @@ from typing import Callable, Optional
 
 import pyxel
 
-from pyke_pyxel.actor import Actor
-from pyke_pyxel.enemy import Enemy
+from pyke_pyxel.rpg.actor import Actor
+from pyke_pyxel.rpg.enemy import Enemy
 
-from . import DIRECTION, log_debug
-from .game_settings import GameSettings
-from .game import Game
+from .. import DIRECTION, log_debug
+from ..settings import GameSettings
+from ..game import Game
 from .player import Player
-from .signals import Signals
-from .sprite import Sprite, MovableSprite
+from ..signals import Signals
+from ..sprite import Sprite, MovableSprite
 from .room import Room
 
 class RPGGame(Game):

@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from typing import Optional, Callable
 
-from .signals import Signals
+from ..signals import Signals
 from .projectile import Projectile
-from .sprite import Sprite, MovableSprite
-from .map import Map, Coord
+from ..sprite import Sprite, MovableSprite
+from ..map import Map, Coord
 
-from . import DIRECTION, log_debug
+from .. import DIRECTION, log_debug
 
 class Actor:
 

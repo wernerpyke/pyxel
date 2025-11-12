@@ -6,7 +6,7 @@ from pyke_pyxel.fx import FX
 from . import GLOBAL_SETTINGS
 from .base_types import Coord, TileMap
 from . import draw, log_debug
-from .game_settings import GameSettings
+from .settings import GameSettings
 from .signals import Signals
 from .map import Map
 from .sprite import Sprite, CompoundSprite

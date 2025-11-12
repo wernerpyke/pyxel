@@ -1,6 +1,6 @@
 from pyke_pyxel import log_error
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.cell_field import Cell, CellField
+from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 
 
 class Weapon:
@@ -20,10 +20,10 @@ class Weapon:
         #self._updates_attempted_count = 0
         #self._updates_skipped_count = 0
 
-    def launch(self, field: CellField):
+    def launch(self, field: Matrix):
         print("Weapon.launch() implement in your class")
 
-    def update(self, field: CellField):
+    def update(self, field: Matrix):
         print("Weapon.update() implement in your class")
 
     def kill(self):

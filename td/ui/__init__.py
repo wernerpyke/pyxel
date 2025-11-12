@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from pyke_pyxel import DIRECTION, log_error
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.game import CellAutoGame
 
 from pyke_pyxel.sprite import Sprite
 from td.state import STATE
@@ -9,7 +9,7 @@ from td.state.weapons import WeaponLocation
 from . import title_screen
 from . import weapon_select
 
-def mouse_move(game: FieldGame, other: tuple[int, int]):
+def mouse_move(game: CellAutoGame, other: tuple[int, int]):
     # print(f"MOVE x:{other[0]} y:{other[1]}")
     x, y = other[0], other[1]
     UI = STATE.ui
@@ -40,7 +40,7 @@ def mouse_move(game: FieldGame, other: tuple[int, int]):
             weapon_select.mouse_move(x, y)
 
 
-def mouse_down(game: FieldGame, other: tuple[int, int]):
+def mouse_down(game: CellAutoGame, other: tuple[int, int]):
     x, y = other[0], other[1]
     UI = STATE.ui
     match UI.state:
@@ -54,7 +54,7 @@ def mouse_down(game: FieldGame, other: tuple[int, int]):
             if not weapon_select.mouse_down(x, y):
                 hide_weapons_ui(game)
 
-def mouse_up(game: FieldGame):
+def mouse_up(game: CellAutoGame):
     match STATE.ui.state:
         case "select_title_screen_option":
             title_screen.mouse_up()
@@ -63,19 +63,19 @@ def mouse_up(game: FieldGame):
         case "select_weapon":
             weapon_select.mouse_up()
 
-def show_title_screen(game: FieldGame):
+def show_title_screen(game: CellAutoGame):
     title_screen.display(game)
 
-def hide_title_screen(game: FieldGame):
+def hide_title_screen(game: CellAutoGame):
     title_screen.hide(game)
 
-def hide_weapons_ui(game: FieldGame):
+def hide_weapons_ui(game: CellAutoGame):
     weapon_select.hide(game)
     STATE.weapons.selected_location = None
     game.hud.remove_sprite(STATE.ui.marker_sprite)
     STATE.ui.state = "select_location"
 
-def set_weapon_marker(name: str, location: WeaponLocation, game: FieldGame):
+def set_weapon_marker(name: str, location: WeaponLocation, game: CellAutoGame):
     if location.marker:
         game.hud.remove_sprite(location.marker)
     

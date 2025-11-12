@@ -1,7 +1,7 @@
 from typing import Optional
 
 from pyke_pyxel import COLOURS, DIRECTION, log_error
-from pyke_pyxel.cell_field import CellField, Cell
+from pyke_pyxel.cell_auto.matrix import Matrix, Cell
 from pyke_pyxel.base_types import Coord
 
 from .weapon import Weapon
@@ -40,7 +40,7 @@ class Bolt(Weapon):
 
         self.default_propogate = self.propagate[0]
 
-    def launch(self, field: CellField):
+    def launch(self, field: Matrix):
         for i in range(self.cell_count):
             if self.orientation == "horizontal":
                 cell = field.cell_at(self.position.x + (i*2), self.position.y)
@@ -55,7 +55,7 @@ class Bolt(Weapon):
                 cell.power = self.power
                 self.cells.append(cell)
 
-    def update(self, field: CellField):
+    def update(self, field: Matrix):
         new_cells = []
 
         for cell in self.cells:
@@ -83,7 +83,7 @@ class Bolt(Weapon):
     def kill(self):
         pass # allow the existing instance to continue
     
-    def _select_next_cell(self, cell: Cell, field: CellField) -> Optional[Cell]:
+    def _select_next_cell(self, cell: Cell, field: Matrix) -> Optional[Cell]:
         to: Optional[Cell] = None
 
         next_d = self.propagate[random.randint(0, len(self.propagate)-1)]

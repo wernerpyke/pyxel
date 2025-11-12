@@ -1,6 +1,6 @@
 from pyke_pyxel.base_types import Image
 from pyke_pyxel.button import Button
-from pyke_pyxel.game_settings import GameSettings
+from pyke_pyxel.settings import GameSettings
 from .sprite import CompoundSprite, Sprite, TextSprite
 from . import draw
 

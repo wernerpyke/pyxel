@@ -2,7 +2,7 @@ import random
 
 from pyke_pyxel import COLOURS, log_error, log_debug
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.cell_field import CellField, Cell
+from pyke_pyxel.cell_auto.matrix import Matrix, Cell
 from .weapon import Weapon
 
 class Fungus(Weapon):
@@ -14,7 +14,7 @@ class Fungus(Weapon):
 
         self.regrow: list[Cell] = []
 
-    def launch(self, field: CellField):
+    def launch(self, field: Matrix):
         for i in range(5):
             if cell := field.cell_at(self.position.x + (i*2), self.position.y):
                 self.cells.append(self._prop(cell))
@@ -22,7 +22,7 @@ class Fungus(Weapon):
     def kill(self):
         self.cells = []
 
-    def update(self, field: CellField):
+    def update(self, field: Matrix):
 
         new_cells = []
 

@@ -1,12 +1,11 @@
 import time
 
 from pyinstrument import Profiler
-from pyinstrument.renderers import JSONRenderer
 
-from pyke_pyxel.field_game import FieldGame
-from pyke_pyxel.game_settings import GameSettings
+from pyke_pyxel.cell_auto.game import CellAutoGame
+from pyke_pyxel.settings import GameSettings
 
-class ProfileGame(FieldGame):
+class ProfileGame(CellAutoGame):
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
         super().__init__(settings, title, resources)

@@ -3,7 +3,7 @@ import pyxel
 from pyke_pyxel.button import Button
 
 from .base_types import Image, TileMap
-from .game_settings import GameSettings
+from .settings import GameSettings
 from .sprite import CompoundSprite, Sprite, TextSprite
 
 def background(colour: int):

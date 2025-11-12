@@ -1,8 +1,8 @@
 from typing import Callable
-from .base_types import Coord
-from .map import Map
-from .sprite import Sprite, OpenableSprite, MovableSprite
-from .signals import Signals
+from ..base_types import Coord
+from ..map import Map
+from ..sprite import Sprite, OpenableSprite, MovableSprite
+from ..signals import Signals
 from .enemy import Enemy
 
 class Room:

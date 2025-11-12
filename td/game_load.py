@@ -1,10 +1,10 @@
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite, TextSprite
 
 from td.state import STATE
 
-def load_level(game: FieldGame):
+def load_level(game: CellAutoGame):
     game.set_tilemap(Coord(1, 1), 8, 8)
 
     mountain = Sprite("mountain", Coord(1, 21), 32, 12)
@@ -17,7 +17,7 @@ def load_level(game: FieldGame):
     STATE.ui.score_text.set_position(Coord(2,2))
     game.hud.add_text(STATE.ui.score_text)
 
-def _add_plants(game: FieldGame):
+def _add_plants(game: CellAutoGame):
     s = CompoundSprite("plants", 40, 4)
     s.fill_row(1, 1, 40, tile_row=9, tile_cols=[1, 2, 3, 4])
     s.fill_row(2, 1, 40, tile_row=10, tile_cols=[1, 2, 3, 4])
@@ -33,7 +33,7 @@ def _add_base(game):
     base.activate_animation("loop")
     game.add_sprite(base)
 
-def vertical_bar(game: FieldGame, position: Coord):
+def vertical_bar(game: CellAutoGame, position: Coord):
     bar = CompoundSprite("bar", 3, 20)
     bar.set_position(position)
 

@@ -1,9 +1,8 @@
 from pathlib import Path
 from pyke_pyxel import COLOURS
-from pyke_pyxel.base_types import Coord
 from pyke_pyxel.signals import Signals
-from pyke_pyxel.field_game import FieldGame
-from pyke_pyxel.game_settings import GameSettings, SizeSettings
+from pyke_pyxel.cell_auto.game import CellAutoGame
+from pyke_pyxel.settings import GameSettings
 
 import game_loop
 import ui
@@ -22,7 +21,7 @@ settings.colours.sprite_transparency = COLOURS.BEIGE
 
 settings.mouse_enabled = True
 
-game = FieldGame(
+game = CellAutoGame(
         settings=settings,
         title="Pyke Tower", 
         resources=f"{Path(__file__).parent.resolve()}/assets/td_assets.pyxres"

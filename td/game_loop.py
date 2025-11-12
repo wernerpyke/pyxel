@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Any, Optional
 from pyke_pyxel import COLOURS, log_error
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.game import CellAutoGame
 
 from td.state import STATE
 from game_load import load_level
@@ -19,7 +19,7 @@ class UpdateQueueItem:
 
 update_queue: list[UpdateQueueItem] = []
 
-def game_started(game: FieldGame):
+def game_started(game: CellAutoGame):
     if DEBUG_SKIP_TITLE_SCREEN:
         load_level(game)
         STATE.ui.state = "select_location"
@@ -31,7 +31,7 @@ def game_started(game: FieldGame):
     if STATE.music_enabled:
         game.start_music(0)
 
-def game_update(game: FieldGame):
+def game_update(game: CellAutoGame):
     _process_update_queue(game)
 
     if STATE.ui.state == "select_title_screen_option" or STATE.ui.state == "wait":
@@ -41,7 +41,7 @@ def game_update(game: FieldGame):
     enemies.update(game)
     STATE.weapons.update(game.field)
 
-def _process_update_queue(game: FieldGame):
+def _process_update_queue(game: CellAutoGame):
     for u in update_queue:
         match u.type:
             case "ui_fade_from_title_to_game":
@@ -65,7 +65,7 @@ def _process_update_queue(game: FieldGame):
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()
 
-def _process_launch_weapon(type: str, game: FieldGame):
+def _process_launch_weapon(type: str, game: CellAutoGame):
     location = STATE.weapons.selected_location
     if not location:
         log_error("game_loop._process_launch_weapon no launch location")
@@ -84,7 +84,7 @@ def _process_launch_weapon(type: str, game: FieldGame):
         case _:
             log_error(f"game_loop._process_launch_weapon unrecognised name:{type}")
 
-def _process_launch_enemy(type: str, x: int, y: int, game: FieldGame):
+def _process_launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
     match type:
         case "bat":
             enemies.launch_bat(game, Coord.with_xy(x, y))
@@ -95,13 +95,13 @@ def _process_launch_enemy(type: str, x: int, y: int, game: FieldGame):
 # Signals
 #
 
-def enemy_killed(game: FieldGame):
+def enemy_killed(game: CellAutoGame):
     STATE.score += 1
     text = STATE.ui.score_text
     text.set_colour(COLOURS.GREEN_MINT)
     text.set_text(f"{STATE.score}")
 
-def enemy_attacks(game: FieldGame, other: int):
+def enemy_attacks(game: CellAutoGame, other: int):
     damage = other
     # print(f"ENEMY SCORES damage:{damage}")
     STATE.score -= damage

@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from typing import Optional
 from pyke_pyxel import GLOBAL_SETTINGS, log_debug
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.cell_field import CellField
+from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.sprite import Sprite
 from td.weapons.bolt import Bolt
 from td.weapons.fungus import Fungus
@@ -62,7 +62,7 @@ class GameWeapons:
 
         self.active: list[Weapon] = []
 
-    def update(self, field: CellField):
+    def update(self, field: Matrix):
         to_remove: list[Weapon] = []
         for w in self.active:
             if _should_skip_update(w):
@@ -88,7 +88,7 @@ class GameWeapons:
                     case "meteor":
                         self._launch_meteor(l, field)
     
-    def _launch_fungus(self, location: WeaponLocation, field: CellField):
+    def _launch_fungus(self, location: WeaponLocation, field: Matrix):
         active = location._active
         if active and active.type == "fungus" and active.is_alive:
             # log_debug(f"weapons.launch_fungus skipping launch - current fungus is still active")
@@ -103,7 +103,7 @@ class GameWeapons:
         location._active = fungus
         self.active.append(fungus)
 
-    def _launch_meteor(self, location: WeaponLocation, field: CellField):
+    def _launch_meteor(self, location: WeaponLocation, field: Matrix):
         log_debug("weapons._launch_meteor")
 
         meteor = Meteor(location.position)
@@ -113,7 +113,7 @@ class GameWeapons:
         location._active = meteor
         self.active.append(meteor)
 
-    def _launch_bolt(self, location: WeaponLocation, field: CellField):
+    def _launch_bolt(self, location: WeaponLocation, field: Matrix):
         log_debug("weapons._launch_bolt")
 
         bolt = Bolt(location.name, location.position, location.orientation)

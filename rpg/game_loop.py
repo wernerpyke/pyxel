@@ -1,10 +1,10 @@
 import random
 from pyke_pyxel import log_info
-from pyke_pyxel.rpg_game import RPGGame
+from pyke_pyxel.rpg.game import RPGGame
 from pyke_pyxel.sprite import Sprite, OpenableSprite
-from pyke_pyxel.room import Room
-from pyke_pyxel.player import Player
-from pyke_pyxel.enemy import Enemy
+from pyke_pyxel.rpg.room import Room
+from pyke_pyxel.rpg.player import Player
+from pyke_pyxel.rpg.enemy import Enemy
 from pyke_pyxel import DIRECTION
 from config import PROJECTILE, ENEMY
 

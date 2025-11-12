@@ -1,7 +1,7 @@
 from .actor import MovableActor
-from .signals import Signals
-from .sprite import MovableSprite
-from .map import Map
+from ..signals import Signals
+from ..sprite import MovableSprite
+from ..map import Map
 
 class Enemy(MovableActor):
 

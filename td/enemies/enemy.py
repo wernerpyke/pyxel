@@ -1,8 +1,8 @@
 import random
 from pyke_pyxel import GLOBAL_SETTINGS, log_debug, log_error
 from pyke_pyxel.base_types import Coord
-from pyke_pyxel.cell_field import Cell
-from pyke_pyxel.field_game import FieldGame
+from pyke_pyxel.cell_auto.matrix import Cell
+from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
 
 
@@ -33,7 +33,7 @@ class Enemy:
         self._base_left = win_base_w + 4
         self._base_right = game_w - win_base_w - 4
 
-    def launch(self, game: FieldGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: Coord):
         # log_debug(f"Enemy.launch() {self._sprite._id} x:{position.x} y:{position.y}")
         self._sprite.set_position(position)
         game.add_sprite(self._sprite)
