@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Optional
 import pyxel
 
@@ -11,8 +10,6 @@ from .game_settings import GameSettings
 from .signals import Signals
 from .map import Map
 from .sprite import Sprite, CompoundSprite
-from .actor import Actor
-from .enemy import Enemy
 from .hud import HUD
 
 class Game:
@@ -114,6 +111,7 @@ class Game:
 # ===== PYXEL =====
 
     def update(self):
+
         Signals.send(Signals.GAME.UPDATE, self)
 
         # mouse

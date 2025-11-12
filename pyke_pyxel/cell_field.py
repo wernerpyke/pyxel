@@ -17,22 +17,24 @@ from pyke_pyxel.signals import Signals
 class Cell:
     TYPE_EMPTY = "empty"
 
-    def __init__(self, x: int, y: int) -> None:
+    def __init__(self, x: int, y: int, img: pyxel.Image) -> None:
         self.x: int = x
         self.y: int = y
         self._neighbours: list[Cell] = []
 
+        self._img = img
+
         # state
         self.type: str = "empty"
-        self.colour: int = 0
+        self._colour: int = 0
         self.can_propogate: bool = False
-        self.power: int = 0
+        self.power: float = 0
         self.tag: Any = None
 
         self.stored_type: str = "empty"
         self.stored_colour: int = 0
         self.stored_can_propogate: bool = False
-        self.stored_power: int = 0
+        self.stored_power: float = 0
         self.stored_tag: Any = None
 
     def reset(self):
@@ -46,7 +48,7 @@ class Cell:
 
     def store_state(self):
         self.stored_type = self.type
-        self.stored_colour = self.colour
+        self.stored_colour = self._colour
         self.stored_can_propogate = self.can_propogate
         self.stored_power = self.power
         self.stored_tag = self.tag
@@ -63,6 +65,15 @@ class Cell:
         self.stored_can_propogate = False
         self.stored_power = 0
         self.stored_tag = None
+
+    @property
+    def colour(self) -> int:
+        return self._colour
+    
+    @colour.setter
+    def colour(self, value: int):
+        self._colour = value
+        self._img.pset(self.x, self.y, value)
     
     @property
     def is_empty(self):
@@ -79,30 +90,29 @@ class CellField:
 
         self._cells: list[ list[Cell] ] = []
 
+        self._img: pyxel.Image = pyxel.Image(width, height) # Use a pyxel.Image to optimise _draw()
         self.clear()
-
-        # convenient flat list of all cells
-        self._all_cells: list[Cell] = []
-        for row in self._cells:
-            for cell in row:
-                self._all_cells.append(cell)
 
     def clear(self):
         self._cells = []
         for y in range(0, self._height):
             row: list[Cell] = []
             for x in range(0, self._width):
-                row.append(Cell(x, y))
+                row.append(Cell(x, y, self._img))
             self._cells.append(row)
 
     # Lifecycle methods
 
     def _draw(self):
-        transparent = GLOBAL_SETTINGS.colours.sprite_transparency
+        pyxel.blt(0, 0, self._img, 0, 0, self._width, self._height, colkey=0)
 
+        """
+        Unoptimised: it consumes 19% of game.draw()
+        transparent = GLOBAL_SETTINGS.colours.sprite_transparency
         for cell in self._all_cells:
             if cell.colour != transparent:
                 pyxel.pset(cell.x, cell.y, cell.colour)
+        """
 
     # Convenience accessors
 
