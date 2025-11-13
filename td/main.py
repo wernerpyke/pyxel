@@ -19,6 +19,7 @@ settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
 
 settings.mouse_enabled = True
+settings.display_smoothing_enabled = True
 
 game = CellAutoGame(
         settings=settings,

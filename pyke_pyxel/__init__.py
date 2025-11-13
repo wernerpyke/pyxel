@@ -23,9 +23,10 @@ class GameSettings:
 
     def __init__(self) -> None:
         self.debug: bool = False
-        self.fps: FpsSettings = FpsSettings()
-        self.size: SizeSettings = SizeSettings()
-        self.colours: ColourSettings = ColourSettings()
+        self.fps = FpsSettings()
+        self.size = SizeSettings()
+        self.colours = ColourSettings()
+        self.display_smoothing_enabled: bool = False
         self.mouse_enabled: bool = False
 
     @classmethod

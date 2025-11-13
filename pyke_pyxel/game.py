@@ -42,6 +42,7 @@ class Game:
         _settings.size.tile = settings.size.tile
         _settings.fps.game = settings.fps.game
         _settings.fps.animation = settings.fps.animation
+        _settings.display_smoothing_enabled = settings.display_smoothing_enabled
 
         self._settings = settings
 
@@ -60,6 +61,8 @@ class Game:
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(resources)
+        if settings.display_smoothing_enabled:
+            pyxel.screen_mode(1)
         
         self._send_mouse_events = False
         self._mouse_at_x: int = 0
