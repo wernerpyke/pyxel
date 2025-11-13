@@ -219,15 +219,16 @@ class CompoundSprite:
         self._position: Coord
         self._resource_image_index = resource_image_index
 
-        self.cols: list[list[Coord]] = []
-        for c in range(0, cols):
-            row: list[Coord] = []
-            for r in range(0, rows):
-                row.append(Coord(c, r))
-            self.cols.append(row)
+        self.cols: list[list[Coord|None]] = [[None for r in range(rows)] for c in range(cols)]
+        
+        #for c in range(0, cols):
+        #    row: list[Coord|None] = []
+        #    for r in range(0, rows):
+        #        row.append(None)
+        #    self.cols.append(row)
 
     def __eq__(self, other):
-        return isinstance(other, Sprite) and self._id == other._id
+        return isinstance(other, CompoundSprite) and self._id == other._id
 
     def fill_tiles(self, tile: Coord):
         for c in range(0, len(self.cols)):

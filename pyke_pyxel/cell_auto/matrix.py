@@ -149,16 +149,15 @@ class Matrix:
 
     def clear(self):
         """Re-initialise internal cell grid to a fresh width-by-height matrix.
-
-        Each position is filled with a new :class:`Cell` instance that uses
-        the Matrix's internal pyxel Image for fast drawing.
         """
-        self._cells = []
-        for y in range(0, self._height):
-            row: list[Cell] = []
-            for x in range(0, self._width):
-                row.append(Cell(x, y, self._img))
-            self._cells.append(row)
+        self._cells = [[Cell(x, y, self._img) for x in range(self._width)] for y in range(self._height)]
+
+        # for y in range(0, self._height):
+        #    row: list[Cell] = []
+        #    for x in range(0, self._width):
+        #        row.append(Cell(x, y, self._img))
+        #    self._cells.append(row)
+
 
     # Lifecycle methods
 

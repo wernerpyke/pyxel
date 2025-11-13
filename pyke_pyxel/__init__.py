@@ -82,6 +82,18 @@ class Coord:
     """
 
     def __init__(self, col: int, row: int, size: Optional[int] = None):
+        """Create a Coord where col and row are 1-indexed
+        Parameters:
+        - col (int): column
+        - row (int): row
+        - size (int): optionally, the size in pixels of the tile
+        """
+
+        if col < 1:
+            raise ValueError("Coord() col values must be >= 1")
+        if row < 1:
+            raise ValueError("Coord() row values must be >= 1")
+
         self._col: int = col
         self._row: int = row
 
@@ -102,7 +114,7 @@ class Coord:
         calculated from the center position.
         """
 
-        c = Coord(0, 0, size)
+        c = Coord(1, 1, size)
         half = math.floor(c.size / 2)
         c._x = x - half
         c._y = y - half
@@ -120,7 +132,7 @@ class Coord:
         pixel coordinates and the grid column/row are computed from them.
         """
 
-        c = Coord(0, 0, size)
+        c = Coord(1, 1, size)
         c._x = x
         c._y = y
 
