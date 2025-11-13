@@ -1,9 +1,32 @@
 from dataclasses import dataclass
-
 from typing import Callable, Optional, Any
 from blinker import signal
 
 class Signals:
+    """
+    Signal management system for game events.
+    This class provides a centralized signal dispatching mechanism for various game events,
+    organizing signals into categories (GAME, MOUSE) and providing methods
+    to connect listeners and send signals with optional parameters.
+    
+    Attributes:
+        GAME: Dataclass containing game-level signal constants
+            - WILL_START: Signal emitted before game initialization
+            - UPDATE: Signal emitted on each game update cycle
+            - SPRITE_REMOVED: Signal emitted when a sprite is removed from the game
+        MOUSE: Dataclass containing mouse input signal constants
+            - DOWN: Signal emitted on mouse button down
+            - UP: Signal emitted on mouse button up
+            - MOVE: Signal emitted on mouse movement
+        
+    RPG-Specific Attributes:   
+        PLAYER: Dataclass containing player-related signal constants
+            - BLOCKED: Signal emitted when player movement is blocked
+            - INTERACT_OPENABLE: Signal emitted when player can interact with openable objects
+            - ATTACK: Signal emitted when player performs an attack action
+        ENEMY: Dataclass containing enemy-related signal constants
+            - BLOCKED: Signal emitted when enemy movement is blocked
+    """
     
     @dataclass
     class GAME:
@@ -11,6 +34,13 @@ class Signals:
         UPDATE = "game_update"
         SPRITE_REMOVED = "sprite_removed"
 
+    @dataclass
+    class MOUSE:
+        DOWN = "mouse_down"
+        UP = "mouse_up"
+        MOVE = "mouse_move"
+
+    # TODO - the below are RPG-specific signals, move them
     @dataclass
     class PLAYER:
         BLOCKED = "player_blocked"
@@ -21,22 +51,19 @@ class Signals:
     class ENEMY:
         BLOCKED = "enemy_blocked"
 
-    @dataclass
-    class MOUSE:
-        DOWN = "mouse_down"
-        UP = "mouse_up"
-        MOVE = "mouse_move"
-
     @staticmethod
     def connect(name: str, listener: Callable):
+        """Connect a listener callback to a named signal"""
         signal(name).connect(listener)
 
     @staticmethod
     def send(name: str, sender: Any|None):
+        """Send a signal with a sender object"""
         signal(name).send(sender)
 
     @staticmethod
     def send_with(name: str, sender: Any|None, other: Optional[Any] = None):
+        """Send a signal with additional optional data"""
         signal(name).send(sender, other=other)
 
     @staticmethod
@@ -47,6 +74,7 @@ class Signals:
     def _sprite_removed(sprite):
         signal("sprite_removed").send(sprite)
 
+    # TODO - the below are RPG-specific signals, move them
     @staticmethod
     def _enemy_added(sprite):
         signal("enemy_added").send(sprite)

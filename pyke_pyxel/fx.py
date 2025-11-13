@@ -1,14 +1,16 @@
 import math
-import random
-
 import pyxel
-
-from pyke_pyxel import COLOURS
-from pyke_pyxel import GameSettings
+from pyke_pyxel import GameSettings, COLOURS
 from pyke_pyxel.signals import Signals
 
 
 class FX:
+    """
+    FX class for managing visual effects in the game, specifically circular wipe transitions that can open or close,
+    transitioning between scenes or states.
+
+    This class should be accessed through the `game` instance via `game.fx`.
+    """
 
     def __init__(self, settings: GameSettings) -> None:
         self._completion_signal: str|None = None
@@ -27,6 +29,19 @@ class FX:
         self._current_radius = 0
 
     def circular_wipe(self, colour: int, wipe_closed: bool, completion_signal: str):
+        """
+        Initialize and configure a circular wipe animation.
+
+        Parameters
+        ----------
+        colour : int
+            Colour index/value to use when rendering the wipe.
+        wipe_closed : bool
+            If True, the wipe is configured to close (shrink) toward the centre.
+            If False, the wipe is configured to open (expand) outward.
+        completion_signal : str
+            Identifier of the signal/event to emit when the wipe animation finishes.
+        """
         self._colour = colour
         self._wipe_closed = wipe_closed
 

@@ -1,5 +1,5 @@
 import math
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Optional
 
 @dataclass
@@ -33,14 +33,6 @@ class GameSettings:
         if not cls._instance:
             cls._instance = GameSettings()
         return cls._instance
-
-# _settings: GameSettings|None = None
-
-#def SETTINGS() -> GameSettings:
-    #if not _settings:
-    #    _settings = GameSettings()
-    
-    #return _settings
 
 @dataclass
 class DIRECTION:

@@ -9,7 +9,7 @@ from game_load import load_level
 import enemies
 import ui
 
-DEBUG_SKIP_TITLE_SCREEN=False
+DEBUG_SKIP_TITLE_SCREEN=True
 
 @dataclass
 class UpdateQueueItem:

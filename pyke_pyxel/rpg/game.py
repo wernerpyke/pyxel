@@ -17,12 +17,11 @@ class RPGGame(Game):
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
         """
-        Specialised sub-class of pyke_pyxel.game which adds basic room- and actor-based RPG mechanics.
+        Specialised sub-class of `pyke_pyxel.Game` which adds basic room- and actor-based RPG mechanics.
         
         Attributes:
             player (Player): The player character. Use set_player() to assign the player instance.
             room (Room): The current room/map the player is in. Automatically initialized with the game map.
-            movement_tick (bool): Flag indicating whether movement input should be processed this frame.
 
         Args:
             settings (GameSettings): The game settings configuration.
@@ -34,7 +33,7 @@ class RPGGame(Game):
         self._player: Player
         self._room = Room(self._map)
 
-        self.movement_tick: bool = False
+        self._movement_tick: bool = False
         self._actors: list[Actor] = []
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
@@ -59,12 +58,12 @@ class RPGGame(Game):
             Signals.send(Signals.PLAYER.ATTACK, self._player)
         
         # movement
-        self.movement_tick = not self.movement_tick
+        self._movement_tick = not self._movement_tick
 
         for actor in self._actors:
-            actor._update(self._map, self.movement_tick)
+            actor._update(self._map, self._movement_tick)
 
-        if self.movement_tick:
+        if self._movement_tick:
             if pyxel.btn(pyxel.KEY_UP):
                 self._player.move(DIRECTION.UP, self._map)
             elif pyxel.btn(pyxel.KEY_DOWN):

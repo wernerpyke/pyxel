@@ -6,7 +6,7 @@ from .matrix import Matrix
 
 class CellAutoGame(Game):
     """
-    Specialised sub-class of pyke_pyxel.game which adds a cellular automaton matrix.
+    Specialised sub-class of `pyke_pyxel.Game` which adds a cellular automaton matrix.
         
         Attributes:
             matrix(Matrix): read-only access to the cellular automaton matrix

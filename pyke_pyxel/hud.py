@@ -7,7 +7,8 @@ from . import draw
 class HUD:
    """
    HUD manages on-screen heads-up display elements for a game.
-   - Removal methods are safe no-ops if the element is not present.
+   
+   This class should be accessed through the `game` instance via `game.hud`.
    """
    
    def __init__(self) -> None:

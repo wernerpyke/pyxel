@@ -12,6 +12,20 @@ from .sprite import Sprite, CompoundSprite
 from .hud import HUD
 
 class Game:
+    """
+    Game class that manages the core game loop, sprite management, and rendering.
+    This class serves as the main controller for a Pyxel-based game, handling initialization,
+    sprite lifecycle management, signal connections, and the update/draw loop. It manages
+    game settings, sprites, tile maps, HUD, and visual effects.
+    
+    Signals:
+        - `GAME.WILL_START`: Emitted before the game loop begins.
+        - `GAME.UPDATE`: Emitted on every update frame.
+        - `MOUSE.MOVE`: Sent when mouse position changes, enabled by `GameSettings.mouse_enabled`.
+        - `MOUSE.DOWN`: Sent on left mouse button press, enabled by `GameSettings.mouse_enabled`.
+        - `MOUSE.UP`: Sent on left mouse button release, enabled by `GameSettings.mouse_enabled`.
+    """
+
     def __init__(self, settings: GameSettings, title: str, resources: str):
         """
         Initialize the Game instance.
@@ -125,16 +139,19 @@ class Game:
 
     @property
     def map(self) -> Map:
+        """Returns the `Map` instance for this game"""
         return self._map
 
     @property
     def hud(self) -> HUD:
+        """Returns the `HUD` instance for this game"""
         if self._hud == None:
             self._hud = HUD()
         return self._hud
     
     @property
     def fx(self) -> FX:
+        """Returns the `FX` instance for this game"""
         if self._fx == None:
             self._fx = FX(self._settings)
         return self._fx
@@ -161,9 +178,9 @@ class Game:
 
         Signals:
             - GAME.UPDATE: Sent every update.
-            - MOUSE.MOVE: Sent when mouse position changes.
-            - MOUSE.DOWN: Sent on left mouse button press.
-            - MOUSE.UP: Sent on left mouse button release.
+            - MOUSE.MOVE: Emitted when mouse position changes (if mouse_enabled).
+            - MOUSE.DOWN: Emitted on left mouse button press (if mouse_enabled).
+            - MOUSE.UP: Emitted on left mouse button release (if mouse_enabled).
         """
 
         Signals.send(Signals.GAME.UPDATE, self)
