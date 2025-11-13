@@ -4,7 +4,7 @@ import time
 from pyinstrument import Profiler
 
 from pyke_pyxel.cell_auto.game import CellAutoGame
-from pyke_pyxel.settings import GameSettings
+from pyke_pyxel import GameSettings
 
 RUN_MINUTES = 0.5
 

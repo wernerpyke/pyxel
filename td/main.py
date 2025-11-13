@@ -1,8 +1,7 @@
 from pathlib import Path
-from pyke_pyxel import COLOURS
+from pyke_pyxel import COLOURS, GameSettings
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.cell_auto.game import CellAutoGame
-from pyke_pyxel.settings import GameSettings
 
 import game_loop
 import ui

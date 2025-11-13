@@ -1,4 +1,4 @@
-from pyke_pyxel.base_types import Coord, Image
+from pyke_pyxel import Coord, Image
 from pyke_pyxel.button import Button
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals

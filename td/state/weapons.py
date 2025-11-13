@@ -1,10 +1,8 @@
 import time
 import random
 
-from dataclasses import dataclass
 from typing import Optional
-from pyke_pyxel import GLOBAL_SETTINGS, log_debug
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import Coord, log_debug
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.sprite import Sprite
 from td.weapons.bolt import Bolt

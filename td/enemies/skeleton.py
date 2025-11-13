@@ -1,7 +1,7 @@
 import random
 
-from pyke_pyxel import GLOBAL_SETTINGS
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import GameSettings
+from pyke_pyxel import Coord
 from .enemy import Enemy
 
 class Skeleton(Enemy):
@@ -13,7 +13,7 @@ class Skeleton(Enemy):
 
         self._move_from_y = random.randint(80, 180)
 
-        self.max_x = self.max_y = GLOBAL_SETTINGS.size.window
+        self.max_x = self.max_y = GameSettings.get().size.window
         self.mid_x = self.max_x / 2
 
     def _move_towards_target(self) -> tuple[int, int]:

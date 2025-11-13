@@ -1,8 +1,7 @@
 from typing import Optional
 
-from pyke_pyxel import COLOURS, DIRECTION, log_error
+from pyke_pyxel import COLOURS, Coord, DIRECTION, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix, Cell
-from pyke_pyxel.base_types import Coord
 
 from .weapon import Weapon
 

@@ -25,11 +25,12 @@ A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel
 
 ---
 
-## 🔧 Technologies Used
+## 🔧 Tools
 
 - **ChatGPT Python by Nicholas Barker** - to teach me Python and it's tooling in VSCode
 - **Python 3.x**
 - **[Pyxel](https://github.com/kitao/pyxel)** — a retro game engine for Python
 - **[Aseprite](https://www.aseprite.org/)** — a wonderful pixel art sprite editor
 - **[Blinker](https://github.com/pallets-eco/blinker)** - a fast Python in-process signal/event dispatching system
+- **[pydocs-markdown]**(https://niklasrosenstein.github.io/pydoc-markdown/) - for docstrings documentation
 - VSCode for development

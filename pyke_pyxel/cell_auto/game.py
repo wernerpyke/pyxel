@@ -1,6 +1,6 @@
-from pyke_pyxel.settings import GameSettings
+from pyke_pyxel import GameSettings
 
-from .. import GLOBAL_SETTINGS
+from .. import GameSettings
 from ..game import Game
 from .matrix import Matrix
 
@@ -22,8 +22,8 @@ class CellAutoGame(Game):
         super().__init__(settings, title, resources)
         
         # TODO - support non-square fields
-        size = GLOBAL_SETTINGS.size
-        self._matrix = Matrix(size.window, size.window)
+        size = GameSettings.get().size.window
+        self._matrix = Matrix(size, size)
 
     # Lifecycle methods
 

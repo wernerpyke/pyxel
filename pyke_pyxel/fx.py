@@ -4,7 +4,7 @@ import random
 import pyxel
 
 from pyke_pyxel import COLOURS
-from pyke_pyxel.settings import GameSettings
+from pyke_pyxel import GameSettings
 from pyke_pyxel.signals import Signals
 
 

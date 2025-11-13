@@ -1,8 +1,7 @@
 import random
 import math
 
-from pyke_pyxel import COLOURS, log_error, log_debug
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import COLOURS, Coord, log_error, log_debug
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 
 from td.weapons.weapon import Weapon

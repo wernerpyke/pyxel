@@ -4,9 +4,9 @@ from typing import Optional, Callable
 from ..signals import Signals
 from .projectile import Projectile
 from ..sprite import Sprite, MovableSprite
-from ..map import Map, Coord
+from ..map import Map
 
-from .. import DIRECTION, log_debug
+from .. import DIRECTION, Coord, log_debug
 
 class Actor:
 

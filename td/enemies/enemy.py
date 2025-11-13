@@ -1,6 +1,6 @@
 import random
-from pyke_pyxel import GLOBAL_SETTINGS, log_debug, log_error
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import GameSettings, log_debug, log_error
+from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
@@ -25,7 +25,7 @@ class Enemy:
         self._speed = speed
 
         # Calculate the boundaries of the win condition
-        game_w = game_h = GLOBAL_SETTINGS.size.window
+        game_w = game_h = GameSettings.get().size.window
         self._plants_top_y = game_h - 24
         
         win_base_w = (game_w - 64) / 2

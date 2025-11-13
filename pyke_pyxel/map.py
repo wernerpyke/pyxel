@@ -5,10 +5,10 @@ from dataclasses import dataclass
 import math
 import random
 
-from pyke_pyxel.settings import GameSettings
+from pyke_pyxel import GameSettings
 
-from . import GLOBAL_SETTINGS, log_debug
-from .base_types import Coord
+from . import log_debug
+from . import Coord
 
 #if TYPE_CHECKING:
 from .sprite import Sprite, OpenableSprite

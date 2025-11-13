@@ -1,5 +1,5 @@
-from pyke_pyxel.base_types import Coord
-from pyke_pyxel import GLOBAL_SETTINGS
+from pyke_pyxel import Coord
+from pyke_pyxel import GameSettings
 
 class Button:
     def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0) -> None:
@@ -14,8 +14,9 @@ class Button:
 
         # TODO - this is only needed because Coord.contains() does not know how many tiles wide it is
         # Another possibility is to allow Coord() to be created with col_tile_count & row_tile_count
-        self.width = col_tile_count * GLOBAL_SETTINGS.size.tile 
-        self.height = row_tile_count * GLOBAL_SETTINGS.size.tile 
+        size = GameSettings.get().size.tile
+        self.width = col_tile_count * size 
+        self.height = row_tile_count * size
 
         self.is_down = False
     

@@ -1,7 +1,7 @@
 import pyxel
 
 from typing import Optional, Callable
-from .base_types import Coord
+from . import Coord
 
 class Animation:
     """Represents a sequence of frames for a sprite animation.

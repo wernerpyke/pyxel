@@ -1,9 +1,7 @@
 from typing import Any, Optional
 import pyxel
 
-from pyke_pyxel.base_types import Coord
-
-from .. import GLOBAL_SETTINGS
+from pyke_pyxel import Coord
 from pyke_pyxel.signals import Signals
 
 """

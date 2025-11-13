@@ -6,7 +6,7 @@ from pyke_pyxel.rpg.actor import Actor
 from pyke_pyxel.rpg.enemy import Enemy
 
 from .. import DIRECTION, log_debug
-from ..settings import GameSettings
+from .. import GameSettings
 from ..game import Game
 from .player import Player
 from ..signals import Signals

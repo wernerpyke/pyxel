@@ -3,10 +3,9 @@ import pyxel
 
 from pyke_pyxel.fx import FX
 
-from . import GLOBAL_SETTINGS
-from .base_types import Coord, TileMap
+from . import GameSettings, Coord, GameSettings
+from . import TileMap
 from . import draw, log_debug
-from .settings import GameSettings
 from .signals import Signals
 from .map import Map
 from .sprite import Sprite, CompoundSprite
@@ -23,11 +22,13 @@ class Game:
             resources (str): Path to a resources file that will be loaded with pyxel.load.
         """
 
-        GLOBAL_SETTINGS.debug = settings.debug
-        GLOBAL_SETTINGS.size.window = settings.size.window
-        GLOBAL_SETTINGS.size.tile = settings.size.tile
-        GLOBAL_SETTINGS.fps.game = settings.fps.game
-        GLOBAL_SETTINGS.fps.animation = settings.fps.animation
+        _settings = GameSettings.get()
+        _settings.debug = settings.debug
+        _settings.size.window = settings.size.window
+        _settings.size.tile = settings.size.tile
+        _settings.fps.game = settings.fps.game
+        _settings.fps.animation = settings.fps.animation
+
         self._settings = settings
 
         self._sprites: list[Sprite|CompoundSprite] = []

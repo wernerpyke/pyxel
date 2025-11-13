@@ -1,4 +1,4 @@
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite, TextSprite
 

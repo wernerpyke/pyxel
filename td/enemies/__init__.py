@@ -1,7 +1,7 @@
 import random
 
 from pyke_pyxel import log_debug, log_error
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
 from td.enemies.mage import Mage

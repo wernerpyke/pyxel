@@ -9,7 +9,6 @@ source .venv/bin/activate
 
 pip install -r requirements.txt
 
-
 3. To add packages
 pip install blinker
 pip freeze > requirements.txt

@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Optional
-from pyke_pyxel import COLOURS, log_error
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import COLOURS, Coord, log_error
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
 from td.state import STATE
@@ -10,7 +9,7 @@ from game_load import load_level
 import enemies
 import ui
 
-DEBUG_SKIP_TITLE_SCREEN=True
+DEBUG_SKIP_TITLE_SCREEN=False
 
 @dataclass
 class UpdateQueueItem:

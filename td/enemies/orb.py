@@ -1,9 +1,9 @@
 import math
 import random
 
-from pyke_pyxel.base_types import Coord
+from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
-from pyke_pyxel import GLOBAL_SETTINGS
+from pyke_pyxel import GameSettings
 from .enemy import Enemy
 
 class Orb(Enemy):
@@ -29,7 +29,7 @@ class Orb(Enemy):
         
         cycles = 3 # Number of full sine cycles over the height
         # Frequency factor (B in the formula: B = (Cycles * 2*pi) / Total_Height)
-        self._frequency_factor = (cycles * 2 * math.pi) / (GLOBAL_SETTINGS.size.window - start_y)
+        self._frequency_factor = (cycles * 2 * math.pi) / (GameSettings.get().size.window - start_y)
         
         return super().launch(game, position)
 
