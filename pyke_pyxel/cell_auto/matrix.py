@@ -163,12 +163,6 @@ class Matrix:
     # Lifecycle methods
 
     def _draw(self):
-        """Render the internal image to the screen using a single blit.
-
-        The matrix maintains a backing :class:`pyxel.Image` and draws it with
-        ``pyxel.blt`` for efficiency. This method is expected to be called
-        from the game's draw loop.
-        """
         pyxel.blt(0, 0, self._img, 0, 0, self._width, self._height, colkey=0)
 
         """

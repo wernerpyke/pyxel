@@ -64,6 +64,8 @@ def sprite(sprite: Sprite, settings: GameSettings):
               colkey=settings.colours.sprite_transparency)
     
 def compound_sprite(sprite: CompoundSprite, settings: GameSettings):
+    # TODO - PERFORMANCE: use an in-memory pyxel Image to cache the rendered sprite
+    # However, if we want to add animation to CompoundSprite does that mean that we need to store an Image per frame?
     for c in range(0, len(sprite.cols)):
         row = sprite.cols[c]
         for r in range(0, len(row)):
@@ -97,6 +99,7 @@ def tile_map(tile_map: TileMap, settings: GameSettings):
     tm_w = tile_map.tiles_wide * settings.size.tile
     tm_h = tile_map.tiles_high * settings.size.tile
 
+    # TODO - PERFORMANCE: use an in-memory pyxel Image to cache the rendered sprite
     for col in range(repeat_cols):
         for row in range(repeat_rows):
             x = col * tm_w

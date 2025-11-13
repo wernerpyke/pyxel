@@ -1,6 +1,6 @@
 # 🕹️ Pixel-art Games with Pyxel (and pixel art)
 
-A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel) with two example games.
+A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://github.com/kitao/pyxel) with two example games.
 
 ---
 
@@ -19,8 +19,10 @@ A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel
     - Cache image to avoid nested looping
 - In `pyke_pyxel.draw.compound_sprite`:
     - Support horizontal flipping
-- In `pyke_pyxel.sprite.CompoundSprite`:
     - Cache image to avoid nested looping
+- In `pyke_pyxel.draw.tile_map`:
+    - Cache image to avoid nested looping
+- In `pyke_pyxel.sprite.CompoundSprite`:
     - Support animations
 
 ---
