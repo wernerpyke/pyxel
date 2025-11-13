@@ -5,9 +5,9 @@ A very basic Python game engine on top of [Pyxel](https://github.com/kitao/pyxel
 ---
 
 ## 🎯 Project Structure
-- `pyke_pyxel`: a semi-reusable, highly primitive game engine on top of Pyxel
-- `td`: the beginnings of a type of tower defence game
-- `rpg`: prototype for a room-based RPG
+- [pyke_pyxel](pyke_pyxel/): a semi-reusable, highly primitive game engine on top of Pyxel
+- [td](td/): the beginnings of a type of tower defence game
+- [rpg](rpg/): prototype for a room-based RPG
 
 ---
 
