@@ -15,6 +15,21 @@ from pyke_pyxel.signals import Signals
 """
 
 class Cell:
+    """
+    A Cell represents a single unit in a cellular automaton grid.
+    Each cell has a position (x, y) in a 2D grid and maintains both current and stored state.
+    The cell can be rendered to a pyxel Image and tracks properties like type, color, propagation,
+    and power for use in cellular automaton simulations.
+    
+    Attributes:
+        x (int): The x-coordinate of the cell in the grid.
+        y (int): The y-coordinate of the cell in the grid.
+        type (str): The current type/state of the cell (default: "empty").
+        colour (int): The current color value of the cell (default: 0).
+        can_propogate (bool): Whether this cell can propagate its state (default: False).
+        power (float): A power or intensity value for the cell (default: 0).
+        tag (Any): An optional tag for custom data association (default: None).
+    """
     TYPE_EMPTY = "empty"
 
     def __init__(self, x: int, y: int, img: pyxel.Image) -> None:
@@ -31,13 +46,18 @@ class Cell:
         self.power: float = 0
         self.tag: Any = None
 
-        self.stored_type: str = "empty"
-        self.stored_colour: int = 0
-        self.stored_can_propogate: bool = False
-        self.stored_power: float = 0
-        self.stored_tag: Any = None
+        self._stored_type: str = "empty"
+        self._stored_colour: int = 0
+        self._stored_can_propogate: bool = False
+        self._stored_power: float = 0
+        self._stored_tag: Any = None
 
     def reset(self):
+        """Reset this Cell to the default empty state and store it.
+
+        This clears type, colour, propagation flag, power and tag, and
+        then calls :meth:`store_state` to snapshot the cleared state.
+        """
         self.type = "empty"
         self.colour = 0
         self.can_propogate = False
@@ -47,24 +67,34 @@ class Cell:
         self.store_state()
 
     def store_state(self):
-        self.stored_type = self.type
-        self.stored_colour = self._colour
-        self.stored_can_propogate = self.can_propogate
-        self.stored_power = self.power
-        self.stored_tag = self.tag
+        """Save the current live state into the cell's stored-state slots.
+
+        Stored values are used by :meth:`recall_state` to restore a
+        previously saved state.
+        """
+        self._stored_type = self.type
+        self._stored_colour = self._colour
+        self._stored_can_propogate = self.can_propogate
+        self._stored_power = self.power
+        self._stored_tag = self.tag
     
     def recall_state(self):
-        self.type = self.stored_type
-        self.colour = self.stored_colour
-        self.can_propogate = self.stored_can_propogate
-        self.power = self.stored_power
-        self.tag = self.stored_tag
+        """Restore the cell's live state from previously stored values.
 
-        self.stored_type = "empty"
-        self.stored_colour = 0
-        self.stored_can_propogate = False
-        self.stored_power = 0
-        self.stored_tag = None
+        After restoring, the stored slots are cleared to their default
+        'empty' values.
+        """
+        self.type = self._stored_type
+        self.colour = self._stored_colour
+        self.can_propogate = self._stored_can_propogate
+        self.power = self._stored_power
+        self.tag = self._stored_tag
+
+        self._stored_type = "empty"
+        self._stored_colour = 0
+        self._stored_can_propogate = False
+        self._stored_power = 0
+        self._stored_tag = None
 
     @property
     def colour(self) -> int:
@@ -72,6 +102,7 @@ class Cell:
     
     @colour.setter
     def colour(self, value: int):
+        # setter docstring intentionally shared with the getter
         self._colour = value
         self._img.pset(self.x, self.y, value)
     
@@ -83,7 +114,32 @@ class Cell:
         return f"{self.x}/{self.y}"
 
 class Matrix:
-
+    """
+    Matrix(width: int = 0, height: int = 0)
+    A rectangular grid container that manages Cell objects and provides
+    utility methods for neighbour lookup, region queries and line tracing.
+    
+    Parameters
+    ----------
+    width : int, optional
+        Number of columns in the matrix (x dimension). Defaults to 0.
+    height : int, optional
+        Number of rows in the matrix (y dimension). Defaults to 0.
+    
+    Threading / concurrency
+    -----------------------
+    - Not thread-safe: mutating methods (clear / direct Cell mutation) can
+      invalidate caches and should be synchronised in multithreaded
+      contexts.
+    
+    Examples
+    --------
+    - Typical usage:
+        m = Matrix(80, 60)
+        c = m.cell_at(10, 5)
+        neighs = m.neighbours(c)
+        line = m.cells_in_line(Coord(0, 0), Coord(10, 5))
+    """
     def __init__(self, width: int = 0, height: int = 0):
         self._width = width
         self._height = height
@@ -94,6 +150,11 @@ class Matrix:
         self.clear()
 
     def clear(self):
+        """Re-initialise internal cell grid to a fresh width-by-height matrix.
+
+        Each position is filled with a new :class:`Cell` instance that uses
+        the Matrix's internal pyxel Image for fast drawing.
+        """
         self._cells = []
         for y in range(0, self._height):
             row: list[Cell] = []
@@ -104,6 +165,12 @@ class Matrix:
     # Lifecycle methods
 
     def _draw(self):
+        """Render the internal image to the screen using a single blit.
+
+        The matrix maintains a backing :class:`pyxel.Image` and draws it with
+        ``pyxel.blt`` for efficiency. This method is expected to be called
+        from the game's draw loop.
+        """
         pyxel.blt(0, 0, self._img, 0, 0, self._width, self._height, colkey=0)
 
         """
@@ -117,46 +184,63 @@ class Matrix:
     # Convenience accessors
 
     def neighbour_N(self, cell: Cell) -> Cell|None:
+        """Return the northern neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.y > 0:
             return self._cells[cell.y - 1][cell.x]
         return None
     
     def neighbour_S(self, cell: Cell) -> Cell|None:
+        """Return the southern neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.y < self._height - 1:
             return self._cells[cell.y + 1][cell.x]
         return None
     
     def neighbour_E(self, cell: Cell) -> Cell|None:
+        """Return the eastern neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.x < self._width - 1:
             return self._cells[cell.y][cell.x + 1]
         return None
     
     def neighbour_W(self, cell: Cell) -> Cell|None:
+        """Return the western neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.x > 0:
             return self._cells[cell.y][cell.x - 1]
         return None
     
     def neighbour_NE(self, cell: Cell) -> Cell|None:
+        """Return the north-east neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.x < self._width - 1 and cell.y > 0:
             return self._cells[cell.y - 1][cell.x + 1]
         return None
     
     def neighbour_NW(self, cell: Cell) -> Cell|None:
+        """Return the north-west neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.x > 0 and cell.y > 0:
             return self._cells[cell.y - 1][cell.x - 1]
         return None
     
     def neighbour_SE(self, cell: Cell) -> Cell|None:
+        """Return the south-east neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.x < self._width - 1 and cell.y < self._height - 1:
             return self._cells[cell.y + 1][cell.x + 1]
         return None
     
     def neighbour_SW(self, cell: Cell) -> Cell|None:
+        """Return the south-west neighbour of ``cell`` or ``None`` if out of bounds."""
         if cell.x > 0 and cell.y < self._height - 1:
             return self._cells[cell.y + 1][cell.x - 1]
         return None
 
     def neighbours(self, cell: Cell, filter_for_type: Optional[str] = None) -> list[Cell]:
+        """Return the 8-connected neighbours of ``cell``.
+
+        The neighbour list is cached on the :class:`Cell` object as
+        ``cell._neighbours`` and is only populated once; subsequent calls
+        return a copy of that list so callers may mutate the result without
+        affecting the cache. If ``filter_for_type`` is provided the result
+        is filtered by each neighbour's ``type`` attribute.
+        """
+
         if len(cell._neighbours) == 0:
             x = cell.x
             y = cell.y
@@ -195,13 +279,17 @@ class Matrix:
                 neighbours.append(n)
         
         if filter_for_type == None:
-             return cell._neighbours.copy() # copy is to allow modification of the cached neighbours
+            return cell._neighbours.copy() # copy is to allow modification of the cached neighbours
         else:
             return [
                 n for n in cell._neighbours if n.type == filter_for_type
             ]
 
     def cell_at(self, x: int, y: int) -> Cell|None:
+        """Safe indexed access to the cell at grid coordinates (x, y).
+
+        Returns ``None`` if the coordinates are out of bounds.
+        """
         if y < 0 or y >= len(self._cells):
             return None
         if x < 0 or x >= len(self._cells[0]):
@@ -209,6 +297,14 @@ class Matrix:
         return self._cells[y][x]
     
     def cells_at(self, position: Coord, include_empty: bool = False) -> list[Cell]:
+        """Return cells within the rectangular region described by ``position``.
+
+        ``position`` is expected to expose ``min_x``, ``min_y``, ``max_x``
+        and ``max_y`` attributes. The method performs bounds-clipping so
+        the returned list contains only in-bounds cells. By default empty
+        cells (where ``c.is_empty`` is True) are excluded unless
+        ``include_empty`` is True.
+        """
         cells: list[Cell] = []
 
         min_y = position.min_y if position.min_y > 0 else 0
@@ -227,6 +323,12 @@ class Matrix:
         return cells
 
     def cells_in_line(self, from_position: Coord, to_position: Coord) -> list[Cell]:
+        """Return the sequence of cells forming a discrete line between two coords.
+
+        Implements a Bresenham-like integer algorithm that handles all octants.
+        Coordinates outside the matrix are ignored; only in-bounds cells are
+        appended to the result. Iteration includes both endpoints.
+        """
         cells: list[Cell] = []
 
         from_x = from_position.x

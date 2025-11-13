@@ -4,6 +4,15 @@ from typing import Optional
 from . import GLOBAL_SETTINGS
 
 class Coord:
+    """A grid-aware coordinate representing a tile and its pixel position.
+
+    Coord stores both a grid location (column and row, 1-indexed) and the
+    corresponding top-left pixel coordinates (x, y) for a square tile of
+    a given size. It provides helpers for creating coordinates from pixel
+    centers or raw x/y, testing containment/collision, cloning and moving
+    in pixel space, and deriving mid/min/max bounding values.
+    """
+
     def __init__(self, col: int, row: int, size: Optional[int] = None):
         self._col: int = col
         self._row: int = row
@@ -18,6 +27,13 @@ class Coord:
 
     @staticmethod
     def with_center(x: int, y: int, size: Optional[int] = None) -> "Coord":
+        """Create a Coord where (x, y) are treated as the visual center.
+
+        The returned Coord will have its internal pixel `x, y` set so that
+        the tile's center is at the given coordinates. Grid column/row are
+        calculated from the center position.
+        """
+
         c = Coord(0, 0, size)
         half = math.floor(c.size / 2)
         c._x = x - half
@@ -30,6 +46,12 @@ class Coord:
     
     @staticmethod
     def with_xy(x: int, y: int, size: Optional[int] = None) -> "Coord":
+        """Create a Coord with the provided top-left pixel coordinates.
+
+        The provided x and y are used directly as the tile's top-left
+        pixel coordinates and the grid column/row are computed from them.
+        """
+
         c = Coord(0, 0, size)
         c._x = x
         c._y = y
@@ -40,12 +62,25 @@ class Coord:
         return c
 
     def is_different_grid_location(self, coord: "Coord"):
+        """Return True when this Coord is on a different grid tile than `coord`.
+
+        Comparison is based on grid column and row (1-indexed), not pixel
+        offsets.
+        """
+
         return self._col != coord._col or self._row != coord._row
     
     def is_same_grid_location(self, coord: "Coord"):
+        """Return True when this Coord is on the same grid tile as `coord`."""
+
         return self._col == coord._col and self._row == coord._row
     
     def contains(self, x: int, y: int):
+        """Return True if the pixel (x, y) is within this tile's bounding box.
+
+        The bounding box is inclusive on both edges (min <= value <= max).
+        """
+
         min_x = self._x
         max_x = self._x + self.size
         if x < min_x or x > max_x:
@@ -59,15 +94,31 @@ class Coord:
         return True
 
     def move_by(self, x: int, y: int):
+        """Move this Coord by (x, y) pixels and update the grid location.
+
+        This mutates the Coord in-place. Grid column/row are recalculated
+        from the new pixel position.
+        """
+
         self._x += x
         self._y += y
         self._col = math.floor(self.mid_x / self.size) + 1
         self._row = math.floor(self.y / self.size) + 1
 
     def clone(self):
+        """Return a shallow copy of this Coord (same grid location and size)."""
+
         return Coord(self._col, self._row, self.size)
 
     def clone_by(self, x: int, y: int, direction: Optional[str] = None):
+        """Return a new Coord offset by (x, y) pixels from this one.
+
+        When a `direction` is provided ("up", "down", "left", "right")
+        the resulting grid column/row are adjusted so the cloned tile maps
+        appropriately to the direction of movement. Without a direction the
+        grid location is computed from the cloned midpoint.
+        """
+
         cloned = Coord(self._col, self._row)
         cloned._x = self._x + x
         cloned._y = self._y + y
@@ -93,6 +144,13 @@ class Coord:
         return cloned
     
     def collides_with(self, coord: "Coord"):
+
+        """Return True if this tile collides with another tile using AABB.
+
+        This uses an axis-aligned bounding box (AABB) test with a small
+        tolerance to reduce false positives on exact-edge overlaps.
+        """
+
         # AABB detection
         #    if self.pos_x < obj.pos_x+obj.width and self.pos_x+self.width > obj.pos_x:
         #        if self.pos_y < obj.pos_y+obj.height and self.pos_y+self.height > obj.pos_y:
@@ -114,34 +172,42 @@ class Coord:
 
     @property
     def x(self) -> int:
+        """Top-left pixel x coordinate for this tile."""
         return self._x
     
     @property
     def y(self) -> int:
+        """Top-left pixel y coordinate for this tile."""
         return self._y
     
     @property
     def mid_x(self) -> int:
+        """Integer x coordinate of the visual center (midpoint) of the tile."""
         return math.floor(self._x + (self.size / 2))
     
     @property
     def mid_y(self) -> int:
+        """Integer y coordinate of the visual center (midpoint) of the tile."""
         return math.floor(self._y + (self.size / 2))
     
     @property
     def min_x(self) -> int:
+        """Alias for the minimum x (top-left) of the tile bounding box."""
         return self._x
     
     @property
     def min_y(self) -> int:
+        """Alias for the minimum y (top-left) of the tile bounding box."""
         return self._y
     
     @property
     def max_x(self) -> int:
+        """Maximum x (bottom-right) of the tile bounding box."""
         return self._x + self.size
     
     @property
     def max_y(self) -> int:
+        """Maximum y (bottom-right) of the tile bounding box."""
         return self._y + self.size
     
     def __str__(self):

@@ -1,0 +1,45 @@
+loaders:
+  - type: python
+    search_path: # Search from the repository root so the pyke_pyxel package is found.
+      - .
+    packages:
+      - pyke_pyxel # Document the whole package recursively
+
+processors:
+  - type: filter
+    documented_only: true # Only include documented members (NOTE: Setting this to false makes the output super ugly)
+    skip_empty_modules: true # Skip modules without any documented members
+  - type: smart # Process docstrings for various formatting improvements
+  - type: crossref # Enable cross-referencing between API objects
+
+renderer:
+  type: markdown
+  
+  # Render a page title and a table of contents.
+  render_page_title: true
+  render_toc: true
+  render_toc_title: "API Reference"
+  toc_maxdepth: 2
+
+  # Improve readability; disable YAPF code formatting to avoid an extra
+  # dependency in environments where yapf isn't installed.
+  format_code: false
+  code_lang: true
+
+  # Header and module formatting options
+  insert_header_anchors: true
+  add_module_prefix: false
+  add_member_class_prefix: false
+  descriptive_class_title: true
+
+  # Make sure signatures are rendered even if a docstring is missing
+  # (the renderer will always emit a signature; docstrings are optional).
+  signature_code_block: true
+  signature_with_def: true
+
+  # Render docstrings verbatim rather than as blockquotes
+  docstrings_as_blockquote: false
+
+  # Behavioural preferences
+  render_module_header: true
+  render_typehint_in_data_header: false

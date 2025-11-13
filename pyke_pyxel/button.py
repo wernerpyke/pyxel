@@ -29,21 +29,20 @@ class Button:
         max_y = self.position._y + self.height
         if y < min_y or y > max_y:
             return False
-        
         return True
-
-    def __eq__(self, other):
-        return isinstance(other, Button) and self._id == other._id
-    
-    def set_position(self, position: Coord):
-        self._position = position
-
-    @property
-    def position(self) -> Coord:
-        return self._position
 
     def push_down(self):
         self.is_down = True
     
     def pop_up(self):
         self.is_down = False
+
+    def set_position(self, position: Coord):
+        self._position = position
+
+    def __eq__(self, other):
+        return isinstance(other, Button) and self._id == other._id
+
+    @property
+    def position(self) -> Coord:
+        return self._position

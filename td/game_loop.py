@@ -19,7 +19,7 @@ class UpdateQueueItem:
 
 update_queue: list[UpdateQueueItem] = []
 
-def game_started(game: CellAutoGame):
+def start(game: CellAutoGame):
     if DEBUG_SKIP_TITLE_SCREEN:
         load_level(game)
         STATE.ui.state = "select_location"
@@ -31,7 +31,7 @@ def game_started(game: CellAutoGame):
     if STATE.music_enabled:
         game.start_music(0)
 
-def game_update(game: CellAutoGame):
+def update(game: CellAutoGame):
     _process_update_queue(game)
 
     if STATE.ui.state == "select_title_screen_option" or STATE.ui.state == "wait":
@@ -39,7 +39,7 @@ def game_update(game: CellAutoGame):
     
     STATE.update()
     enemies.update(game)
-    STATE.weapons.update(game.field)
+    STATE.weapons.update(game.matrix)
 
 def _process_update_queue(game: CellAutoGame):
     for u in update_queue:
@@ -55,17 +55,17 @@ def _process_update_queue(game: CellAutoGame):
             case "hide_weapon_ui":
                 ui.hide_weapons_ui(game)
             case "launch_weapon":
-                _process_launch_weapon(u.params, game) # type: ignore
+                _launch_weapon(u.params, game) # type: ignore
             case "launch_enemy":
                 type: str = u.params[0] # type: ignore
                 x: int = u.params[1] # type: ignore
                 y: int = u.params[2] # type: ignore
-                _process_launch_enemy(type, x, y, game)
+                _launch_enemy(type, x, y, game)
             case _:
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()
 
-def _process_launch_weapon(type: str, game: CellAutoGame):
+def _launch_weapon(type: str, game: CellAutoGame):
     location = STATE.weapons.selected_location
     if not location:
         log_error("game_loop._process_launch_weapon no launch location")
@@ -84,7 +84,7 @@ def _process_launch_weapon(type: str, game: CellAutoGame):
         case _:
             log_error(f"game_loop._process_launch_weapon unrecognised name:{type}")
 
-def _process_launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
+def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
     match type:
         case "bat":
             enemies.launch_bat(game, Coord.with_xy(x, y))

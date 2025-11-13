@@ -1,9 +1,12 @@
+import sys
 import time
 
 from pyinstrument import Profiler
 
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.settings import GameSettings
+
+RUN_MINUTES = 0.5
 
 class ProfileGame(CellAutoGame):
 
@@ -26,6 +29,7 @@ class ProfileGame(CellAutoGame):
         
     def _profile(self):
         self._count += 1
-        if self._profiler.is_running and self._count >= 360: # 3600:
+        if self._profiler.is_running and self._count >= (RUN_MINUTES * 60 * 60): # Assumes 60 FPS
             self._profiler.stop()
             self._profiler.print(time='percent_of_total')
+            sys.exit(0)

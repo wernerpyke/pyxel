@@ -7,7 +7,7 @@ class Signals:
     
     @dataclass
     class GAME:
-        STARTED = "game_started"
+        WILL_START = "game_will_start"
         UPDATE = "game_update"
         SPRITE_REMOVED = "sprite_removed"
 

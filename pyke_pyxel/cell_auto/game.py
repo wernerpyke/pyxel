@@ -5,20 +5,32 @@ from ..game import Game
 from .matrix import Matrix
 
 class CellAutoGame(Game):
+    """
+    Specialised sub-class of pyke_pyxel.game which adds a cellular automaton matrix.
+        
+        Attributes:
+            matrix(Matrix): read-only access to the cellular automaton matrix
+    """
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
+        """
+        Args:
+            settings (GameSettings): The game settings configuration.
+            title (str): The title of the game window.
+            resources (str): The path to the resources directory.
+        """
         super().__init__(settings, title, resources)
         
         # TODO - support non-square fields
         size = GLOBAL_SETTINGS.size
-        self._field = Matrix(size.window, size.window)
+        self._matrix = Matrix(size.window, size.window)
 
     # Lifecycle methods
 
     def draw(self):
         super()._draw_background()
 
-        self._field._draw()
+        self._matrix._draw()
 
         super()._draw_sprites()
 
@@ -31,5 +43,5 @@ class CellAutoGame(Game):
     # Convenience accessors
 
     @property
-    def field(self) -> Matrix:
-        return self._field
+    def matrix(self) -> Matrix:
+        return self._matrix

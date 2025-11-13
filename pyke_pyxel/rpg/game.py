@@ -16,6 +16,19 @@ from .room import Room
 class RPGGame(Game):
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
+        """
+        Specialised sub-class of pyke_pyxel.game which adds basic room- and actor-based RPG mechanics.
+        
+        Attributes:
+            player (Player): The player character. Use set_player() to assign the player instance.
+            room (Room): The current room/map the player is in. Automatically initialized with the game map.
+            movement_tick (bool): Flag indicating whether movement input should be processed this frame.
+
+        Args:
+            settings (GameSettings): The game settings configuration.
+            title (str): The title of the game window.
+            resources (str): The path to the resources directory.
+        """
         super().__init__(settings, title, resources)
 
         self._player: Player
@@ -26,7 +39,7 @@ class RPGGame(Game):
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
 
-    def add_player(self, sprite: Callable[[], MovableSprite]) -> Player:
+    def set_player(self, sprite: Callable[[], MovableSprite]) -> Player:
         _sprite = sprite()
 
         self._player = Player(_sprite)

@@ -5,6 +5,8 @@ from dataclasses import dataclass
 import math
 import random
 
+from pyke_pyxel.settings import GameSettings
+
 from . import GLOBAL_SETTINGS, log_debug
 from .base_types import Coord
 
@@ -25,8 +27,8 @@ class MapLocation:
 
 class Map:
 
-    def __init__(self):
-        size = GLOBAL_SETTINGS.size
+    def __init__(self, settings: GameSettings):
+        size = settings.size
 
         self._grid: list[ list[MapLocation] ] = []
         self._edgeLocation = MapLocation(LOCATION_STATUS.BLOCKED)

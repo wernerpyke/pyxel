@@ -14,6 +14,15 @@ from .hud import HUD
 
 class Game:
     def __init__(self, settings: GameSettings, title: str, resources: str):
+        """
+        Initialize the Game instance.
+        Parameters:
+            settings (GameSettings): Configuration object containing debug flag, window and tile sizes,
+                and FPS settings (game and animation). Also used to determine whether mouse input is enabled.
+            title (str): Window title passed to pyxel.init.
+            resources (str): Path to a resources file that will be loaded with pyxel.load.
+        """
+
         GLOBAL_SETTINGS.debug = settings.debug
         GLOBAL_SETTINGS.size.window = settings.size.window
         GLOBAL_SETTINGS.size.tile = settings.size.tile
@@ -24,7 +33,7 @@ class Game:
         self._sprites: list[Sprite|CompoundSprite] = []
         self._animation_tick = 0
 
-        self._map = Map()
+        self._map = Map(settings)
 
         self._tile_map: Optional[TileMap] = None
 
@@ -47,15 +56,40 @@ class Game:
         self._sprite_id = 0 # TODO is it ok for this to just increment?
     
     def start(self):
-        Signals.send(Signals.GAME.STARTED, self)
+        """
+        Initializes and starts the game loop.
+
+        Sends a signal indicating the game is about to start, then begins the main
+        update and draw loop using Pyxel's run function.
+
+        Signals:
+            Signals.GAME.WILL_START: Sent before the game loop starts.
+        """
+        Signals.send(Signals.GAME.WILL_START, self)
         pyxel.run(self.update, self.draw)
 
     def add_sprite(self, sprite: Sprite|CompoundSprite):
+        """
+        Add a sprite to the game's sprite collection.
+
+        Parameters:
+            sprite (Sprite | CompoundSprite): The sprite object to add to the game.
+                Can be either a single Sprite or a CompoundSprite containing multiple sprites.
+        """
         self._sprite_id += 1
         sprite._id = self._sprite_id # self._sprites.__len__()
         self._sprites.append(sprite)
 
     def remove_sprite(self, sprite: Sprite|CompoundSprite):
+        """
+        Remove a sprite from the game's active sprite collection.
+        
+        Parameters:
+        sprite : Sprite | CompoundSprite
+            The sprite (or compound sprite) instance to remove from the game's internal
+            sprite list.
+        """
+        
         # TODO
         # for both here, in remove_sprite_by_id and _sprite_removed
         # it might be cleaner to mark sprite._to_be_removed = True
@@ -66,6 +100,12 @@ class Game:
             # log_debug(f"GAME.remove_sprite() {sprite._id}")
 
     def remove_sprite_by_id(self, sprite_id: int):
+        """Remove the first sprite with the specified identifier from the game's sprite list.
+
+        Parameters:
+        sprite_id : int
+            The identifier of the sprite to remove.
+        """
         for s in self._sprites:
             if s._id == sprite_id:
                 # log_debug(f"GAME.remove_sprite_by_id() {sprite_id}")
@@ -98,6 +138,10 @@ class Game:
             self._fx = FX(self._settings)
         return self._fx
 
+    #
+    # Signals
+    #
+
     def _sprite_added(self, sprite: Sprite|CompoundSprite):
         sprite._id = self._sprites.__len__()
         log_debug(f"GAME.sprite_added() {sprite._id}")
@@ -111,6 +155,15 @@ class Game:
 # ===== PYXEL =====
 
     def update(self):
+        """
+        Pyxel lifecycle handler. Updates the game state for each frame.
+
+        Signals:
+            - GAME.UPDATE: Sent every update.
+            - MOUSE.MOVE: Sent when mouse position changes.
+            - MOUSE.DOWN: Sent on left mouse button press.
+            - MOUSE.UP: Sent on left mouse button release.
+        """
 
         Signals.send(Signals.GAME.UPDATE, self)
 
@@ -139,6 +192,10 @@ class Game:
                 # TODO support CompoundSprite animations?
 
     def draw(self):    
+        """
+        Pyxel lifecycle handler. Render the current frame by drawing all visual components in order.
+        Draws the background, sprites, HUD, and active visual effects.
+        """
         self._draw_background()
         
         self._draw_sprites()

@@ -27,8 +27,8 @@ game = CellAutoGame(
         resources=f"{Path(__file__).parent.resolve()}/assets/td_assets.pyxres"
         )
 
-Signals.connect(Signals.GAME.STARTED, game_loop.game_started)
-Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
+Signals.connect(Signals.GAME.WILL_START, game_loop.start)
+Signals.connect(Signals.GAME.UPDATE, game_loop.update)
 Signals.connect(Signals.MOUSE.MOVE, ui.mouse_move)
 Signals.connect(Signals.MOUSE.DOWN, ui.mouse_down)
 Signals.connect(Signals.MOUSE.UP, ui.mouse_up)

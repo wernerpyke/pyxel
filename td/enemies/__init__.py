@@ -37,7 +37,7 @@ def update(game: CellAutoGame):
     def _remove_enemy_sprite(sprite_id: int):
         game.remove_sprite_by_id(sprite_id)
     
-    field = game.field
+    field = game.matrix
     for e in enemies:
         cells = field.cells_at(e._sprite.position, include_empty=False)
         result = e.update(cells)
