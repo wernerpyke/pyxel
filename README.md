@@ -15,15 +15,12 @@ A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://gith
 
 - In `Game.remove_sprite`:
     - Consider moving to an approach in which a Sprite is flagged for deletion and then deleted in `update()` rather than removed from the array immediately. The current approach might be a cause for weird callback-type bugs.
-- In `pyke_pyxel.draw.tile_map`:
-    - Cache image to avoid nested looping
-- In `pyke_pyxel.draw.compound_sprite`:
-    - Support horizontal flipping
-    - Cache image to avoid nested looping
-- In `pyke_pyxel.draw.tile_map`:
-    - Cache image to avoid nested looping
 - In `pyke_pyxel.sprite.CompoundSprite`:
     - Support animations
+- In `pyke_pyxel.draw.compound_sprite`:
+    - Support horizontal flipping
+    - Cache image to avoid nested looping, note adding animations to CompoundSprite would mean caching multiple images
+
 
 ---
 

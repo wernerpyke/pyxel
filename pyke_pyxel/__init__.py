@@ -2,6 +2,8 @@ import math
 from dataclasses import dataclass
 from typing import Optional
 
+import pyxel
+
 @dataclass
 class FpsSettings:
     game: int = 30
@@ -301,6 +303,7 @@ class TileMap:
     tiles_wide: int
     tiles_high: int
     resource_index: int=0
+    _img: pyxel.Image|None = None
 
 
 @dataclass

@@ -89,25 +89,39 @@ def compound_sprite(sprite: CompoundSprite, settings: GameSettings):
 def tile_map(tile_map: TileMap, settings: GameSettings):
     screen_width = settings.size.window
     screen_height = settings.size.window
+    
+    if not tile_map._img:
+        # Cache the rendered map into an image once-off
+        repeat_cols = (screen_width // (tile_map.tiles_wide * settings.size.tile)) + 1
+        repeat_rows = (screen_height // (tile_map.tiles_high * settings.size.tile)) + 1
 
-    repeat_cols = (screen_width // (tile_map.tiles_wide * 8)) + 1
-    repeat_rows = (screen_height // (tile_map.tiles_high * 8)) + 1
+        tm = pyxel.tilemaps[tile_map.resource_index]
+        tm_x = tile_map.resource_position.x
+        tm_y = tile_map.resource_position.y
+        tm_w = tile_map.tiles_wide * settings.size.tile
+        tm_h = tile_map.tiles_high * settings.size.tile
 
-    tm = pyxel.tilemaps[tile_map.resource_index]
-    tm_x = tile_map.resource_position.x
-    tm_y = tile_map.resource_position.y
-    tm_w = tile_map.tiles_wide * settings.size.tile
-    tm_h = tile_map.tiles_high * settings.size.tile
+        tile_map._img = pyxel.Image(screen_width, screen_height)
+        for col in range(repeat_cols):
+            for row in range(repeat_rows):
+                x = col * tm_w
+                y = row * tm_h
+
+                tile_map._img.bltm(x, y, tm, tm_x, tm_y, tm_w, tm_h, settings.colours.sprite_transparency)
+
+    pyxel.blt(0, 0, tile_map._img, 0, 0, screen_width, screen_height, settings.colours.sprite_transparency)
 
     # TODO - PERFORMANCE: use an in-memory pyxel Image to cache the rendered sprite
-    for col in range(repeat_cols):
-        for row in range(repeat_rows):
-            x = col * tm_w
-            y = row * tm_h
+    # for col in range(repeat_cols):
+    #    for row in range(repeat_rows):
+    #        x = col * tm_w
+    #        y = row * tm_h
 
+    """
             pyxel.bltm(
                 x, y,
                 tm,
                 tm_x, tm_y,
                 tm_w, tm_h,
                 colkey=settings.colours.sprite_transparency)
+    """

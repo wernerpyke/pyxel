@@ -131,13 +131,32 @@ class Game:
                 return
 
     def set_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
+        """
+        Set a simplified version of standard Pyxel tilemaps as a background layer.
+        The tilemap is horizontally and vertically repeated to fill up the screen width/height.
+
+        For example:
+            `game.set_tilemap(Coord(10, 8), 4, 6)`
+            will fetch a tilemap starting at column 10 and row 8 of the resource sheet and 
+            load 4 columns and 6 rows which will then be repeated to fill the screen.
+            
+        Parameters:
+        resource_position : Coord
+            The col/row position of the tilemap in the loaded resource sheet
+        tiles_wide : int
+            The width of the tilemap on the resource sheet
+        tiles_high : int
+            The height of the tilemap on the resource sheet
+        """
         self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
         # log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
 
     def start_music(self, number: int):
+        """Starts the music identified by the provided number. Music loops until `stop_music` is called."""
         pyxel.playm(number, loop=True)
 
     def stop_music(self):
+        """Stops the currently playing music"""
         pyxel.stop()
 
     @property
