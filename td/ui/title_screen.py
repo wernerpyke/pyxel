@@ -1,17 +1,17 @@
 from pyke_pyxel import Coord, Image
 from pyke_pyxel.button import Button
-from pyke_pyxel.cell_auto.game import CellAutoGame
+from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
 image = Image(Coord(1, 1), Coord(8, 10), col_tile_count=24, row_tile_count=10, resource_image_index=1)
 play_button = Button("play_button", Coord(1, 11), Coord(17, 11), col_tile_count=16, row_tile_count=4, resource_image_index=1)
 
-def display(game: CellAutoGame):
+def display(game: Game):
     game.hud.add_image(image)
     play_button.set_position(Coord(12, 24))
     game.hud.add_button(play_button)
 
-def hide(game: CellAutoGame):
+def hide(game: Game):
     game.hud.remove_image(image)
     game.hud.remove_button(play_button)
 

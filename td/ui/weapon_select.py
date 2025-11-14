@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from pyke_pyxel import Coord
 from pyke_pyxel.button import Button
-from pyke_pyxel.cell_auto.game import CellAutoGame
+from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
 @dataclass
@@ -25,7 +25,7 @@ class buttons:
 
 BUTTONS = buttons()
 
-def display(game: CellAutoGame):  
+def display(game: Game):  
     BUTTONS.bolt.set_position(Coord(12, 36))
     BUTTONS.fungus.set_position(Coord(17, 36))
     BUTTONS.meteor.set_position(Coord(22, 36))
@@ -34,7 +34,7 @@ def display(game: CellAutoGame):
     game.hud.add_button(BUTTONS.fungus)
     game.hud.add_button(BUTTONS.meteor)
 
-def hide(game: CellAutoGame):
+def hide(game: Game):
     game.hud.remove_button(BUTTONS.bolt)
     game.hud.remove_button(BUTTONS.fungus)
     game.hud.remove_button(BUTTONS.meteor)

@@ -3,10 +3,10 @@ from pyke_pyxel import COLOURS, GameSettings
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
-import game_loop
-import ui
-
 from td.profiler import ProfileGame
+
+import game_loop
+import ui # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
 settings = GameSettings()
 

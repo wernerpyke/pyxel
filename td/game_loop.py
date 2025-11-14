@@ -7,7 +7,7 @@ from td.state import STATE
 from game_load import load_level
 
 import enemies
-import ui
+from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
 DEBUG_SKIP_TITLE_SCREEN=True
 
@@ -21,11 +21,10 @@ update_queue: list[UpdateQueueItem] = []
 def start(game: CellAutoGame):
     if DEBUG_SKIP_TITLE_SCREEN:
         load_level(game)
-        STATE.ui.state = "select_location"
+        UI.get().state = "select_location"
         STATE.start()
     else:
-        ui.show_title_screen(game)
-        STATE.ui.state = "select_title_screen_option"
+        UI.get().show_title_screen(game)
 
     if STATE.music_enabled:
         game.start_music(0)
@@ -33,11 +32,12 @@ def start(game: CellAutoGame):
 def update(game: CellAutoGame):
     _process_update_queue(game)
 
-    if STATE.ui.state == "select_title_screen_option" or STATE.ui.state == "wait":
+    state = UI.get().state
+    if state == "select_title_screen_option" or state == "wait":
         return # TODO - this is not super robust
     
     STATE.update()
-    enemies.update(game)
+    STATE.enemies.update(game)
     STATE.weapons.update(game.matrix)
 
 def _process_update_queue(game: CellAutoGame):
@@ -45,14 +45,14 @@ def _process_update_queue(game: CellAutoGame):
         match u.type:
             case "ui_fade_from_title_to_game":
                 game.fx.circular_wipe(COLOURS.BLUE_DARK, True, "ui_title_screen_fade_out_complete")
-                STATE.ui.state = "wait"
+                UI.get().state = "wait"
             case "load_level":
-                ui.hide_title_screen(game)
+                UI.get().hide_title_screen(game)
                 load_level(game)
                 game.fx.circular_wipe(COLOURS.BLUE_DARK, False, "ui_game_screen_fade_in_complete")
-                STATE.ui.state = "wait"
+                UI.get().state = "wait"
             case "hide_weapon_ui":
-                ui.hide_weapons_ui(game)
+                UI.get().hide_weapons_ui(game)
             case "launch_weapon":
                 _launch_weapon(u.params, game) # type: ignore
             case "launch_enemy":
@@ -72,13 +72,13 @@ def _launch_weapon(type: str, game: CellAutoGame):
 
     match type:
         case "bolt":
-            ui.set_weapon_marker(type, location, game)
+            UI.get().set_weapon_marker(type, location, game)
             location.activate(type)
         case "fungus":
-            ui.set_weapon_marker(type, location, game)
+            UI.get().set_weapon_marker(type, location, game)
             location.activate(type)
         case "meteor":
-            ui.set_weapon_marker(type, location, game)
+            UI.get().set_weapon_marker(type, location, game)
             location.activate(type)
         case _:
             log_error(f"game_loop._process_launch_weapon unrecognised name:{type}")
@@ -86,7 +86,7 @@ def _launch_weapon(type: str, game: CellAutoGame):
 def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
     match type:
         case "bat":
-            enemies.launch_bat(game, Coord.with_xy(x, y))
+            STATE.enemies.launch_bat(game, Coord.with_xy(x, y))
         case _:
             log_error(f"game_loop._process_launch_enemy unrecognised name {type}")
 
@@ -96,7 +96,7 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 
 def enemy_killed(game: CellAutoGame):
     STATE.score += 1
-    text = STATE.ui.score_text
+    text = UI.get().score_text
     text.set_colour(COLOURS.GREEN_MINT)
     text.set_text(f"{STATE.score}")
 
@@ -104,7 +104,7 @@ def enemy_attacks(game: CellAutoGame, other: int):
     damage = other
     # print(f"ENEMY SCORES damage:{damage}")
     STATE.score -= damage
-    text = STATE.ui.score_text
+    text = UI.get().score_text
     text.set_colour(COLOURS.RED)
     text.set_text(f"{STATE.score}")
 
@@ -122,7 +122,7 @@ def ui_title_screen_fade_out_complete(sender):
 
 def ui_game_screen_fade_in_complete(sender):
     STATE.start()
-    STATE.ui.state = "select_location"
+    UI.get().state = "select_location"
 
 def ui_weapon_selected(name: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location

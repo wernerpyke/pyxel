@@ -8,6 +8,7 @@
     * [background](#pyke_pyxel.ColourSettings.background)
     * [hud\_text](#pyke_pyxel.ColourSettings.hud_text)
   * [Coord](#pyke_pyxel.Coord)
+    * [\_\_init\_\_](#pyke_pyxel.Coord.__init__)
     * [with\_center](#pyke_pyxel.Coord.with_center)
     * [with\_xy](#pyke_pyxel.Coord.with_xy)
     * [is\_different\_grid\_location](#pyke_pyxel.Coord.is_different_grid_location)
@@ -37,6 +38,9 @@
     * [add\_sprite](#pyke_pyxel.game.Game.add_sprite)
     * [remove\_sprite](#pyke_pyxel.game.Game.remove_sprite)
     * [remove\_sprite\_by\_id](#pyke_pyxel.game.Game.remove_sprite_by_id)
+    * [set\_tilemap](#pyke_pyxel.game.Game.set_tilemap)
+    * [start\_music](#pyke_pyxel.game.Game.start_music)
+    * [stop\_music](#pyke_pyxel.game.Game.stop_music)
     * [map](#pyke_pyxel.game.Game.map)
     * [hud](#pyke_pyxel.game.Game.hud)
     * [fx](#pyke_pyxel.game.Game.fx)
@@ -169,6 +173,22 @@ corresponding top-left pixel coordinates (x, y) for a square tile of
 a given size. It provides helpers for creating coordinates from pixel
 centers or raw x/y, testing containment/collision, cloning and moving
 in pixel space, and deriving mid/min/max bounding values.
+
+<a id="pyke_pyxel.Coord.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(col: int, row: int, size: Optional[int] = None)
+```
+
+Create a Coord where col and row are 1-indexed
+
+**Arguments**:
+
+  - col (int): column
+  - row (int): row
+  - size (int): optionally, the size in pixels of the tile
 
 <a id="pyke_pyxel.Coord.with_center"></a>
 
@@ -544,6 +564,51 @@ Remove the first sprite with the specified identifier from the game's sprite lis
 
   sprite_id : int
   The identifier of the sprite to remove.
+
+<a id="pyke_pyxel.game.Game.set_tilemap"></a>
+
+#### set\_tilemap
+
+```python
+def set_tilemap(resource_position: Coord, tiles_wide: int, tiles_high: int)
+```
+
+Set a simplified version of standard Pyxel tilemaps as a background layer.
+The tilemap is horizontally and vertically repeated to fill up the screen width/height.
+
+For example:
+`game.set_tilemap(Coord(10, 8), 4, 6)`
+will fetch a tilemap starting at column 10 and row 8 of the resource sheet and
+load 4 columns and 6 rows which will then be repeated to fill the screen.
+
+**Arguments**:
+
+  resource_position : Coord
+  The col/row position of the tilemap in the loaded resource sheet
+  tiles_wide : int
+  The width of the tilemap on the resource sheet
+  tiles_high : int
+  The height of the tilemap on the resource sheet
+
+<a id="pyke_pyxel.game.Game.start_music"></a>
+
+#### start\_music
+
+```python
+def start_music(number: int)
+```
+
+Starts the music identified by the provided number. Music loops until `stop_music` is called.
+
+<a id="pyke_pyxel.game.Game.stop_music"></a>
+
+#### stop\_music
+
+```python
+def stop_music()
+```
+
+Stops the currently playing music
 
 <a id="pyke_pyxel.game.Game.map"></a>
 
@@ -1236,9 +1301,6 @@ def clear()
 ```
 
 Re-initialise internal cell grid to a fresh width-by-height matrix.
-
-Each position is filled with a new :class:`Cell` instance that uses
-the Matrix's internal pyxel Image for fast drawing.
 
 <a id="pyke_pyxel.cell_auto.matrix.Matrix.neighbour_N"></a>
 

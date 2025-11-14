@@ -1,12 +1,10 @@
 import time
 
-from .ui import GameUI
 from .weapons import GameWeapons
 from .enemies import GameEnemies
 
 class GameState:
     def __init__(self) -> None:
-        self.ui = GameUI()
         self.weapons = GameWeapons()
         self.enemies = GameEnemies()
         # Sound

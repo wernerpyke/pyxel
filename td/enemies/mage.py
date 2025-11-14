@@ -5,7 +5,6 @@ from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
-from td.state import STATE
 from .enemy import Enemy
 
 class Mage(Enemy):

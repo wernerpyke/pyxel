@@ -20,6 +20,8 @@ class HUD:
 
    def add_text(self, text: TextSprite):
       """ Add a TextSprite to the HUD."""
+      self._sprite_id += 1
+      text._id = self._sprite_id
       self._text.append(text)
 
    def add_sprite(self, sprite: Sprite|CompoundSprite):

@@ -1,8 +1,9 @@
 from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
+from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite, TextSprite
 
-from td.state import STATE
+from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
 def load_level(game: CellAutoGame):
     game.set_tilemap(Coord(1, 1), 8, 8)
@@ -14,10 +15,14 @@ def load_level(game: CellAutoGame):
     _add_plants(game)
 
     _add_base(game)
-    STATE.ui.score_text.set_position(Coord(2,2))
-    game.hud.add_text(STATE.ui.score_text)
 
-def _add_plants(game: CellAutoGame):
+    text = UI.get().score_text
+    text.set_position(Coord(2,2))
+    game.hud.add_text(text)
+
+    UI.get().show_life_meter(game)
+
+def _add_plants(game: Game):
     s = CompoundSprite("plants", 40, 4)
     s.fill_row(1, 1, 40, tile_row=9, tile_cols=[1, 2, 3, 4])
     s.fill_row(2, 1, 40, tile_row=10, tile_cols=[1, 2, 3, 4])

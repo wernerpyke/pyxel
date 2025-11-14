@@ -271,6 +271,8 @@ class TextSprite:
         self._colour = colour
         self._font = pyxel.Font(font_file)
 
+        self._id = 0
+
     def set_position(self, position: Coord):
         self._position = position
 
