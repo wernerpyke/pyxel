@@ -54,7 +54,7 @@ def log_error(message):
     print(f"\x1b[31m{message}\x1b[0m")
 
 @dataclass
-class Colours:
+class COLOURS:
     BLACK = 0
     BLUE_DARK = 1
     PURPLE = 2
@@ -71,8 +71,6 @@ class Colours:
     GREY = 13
     PINK = 14
     BEIGE = 15
-
-COLOURS = Colours()
 
 class Coord:
     """A grid-aware coordinate representing a tile and its pixel position.
@@ -295,15 +293,6 @@ class Coord:
 
     def __str__(self):
         return f"{self._col}/{self._row}"
-
-
-@dataclass
-class TileMap:
-    resource_position: Coord
-    tiles_wide: int
-    tiles_high: int
-    resource_index: int=0
-    _img: pyxel.Image|None = None
 
 
 @dataclass

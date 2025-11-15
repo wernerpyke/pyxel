@@ -6,7 +6,6 @@ from pyke_pyxel.cell_auto.game import CellAutoGame
 from td.state import STATE
 from game_load import load_level
 
-import enemies
 from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
 DEBUG_SKIP_TITLE_SCREEN=True
@@ -19,12 +18,14 @@ class UpdateQueueItem:
 update_queue: list[UpdateQueueItem] = []
 
 def start(game: CellAutoGame):
+    ui = UI.get()
     if DEBUG_SKIP_TITLE_SCREEN:
         load_level(game)
-        UI.get().state = "select_location"
+        ui.state = "select_location"
+        ui.life_meter.set_percentage(STATE.health_percentage)
         STATE.start()
     else:
-        UI.get().show_title_screen(game)
+        ui.show_title_screen(game)
 
     if STATE.music_enabled:
         game.start_music(0)
@@ -96,17 +97,21 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 
 def enemy_killed(game: CellAutoGame):
     STATE.score += 1
-    text = UI.get().score_text
+    ui = UI.get()
+    text = ui.score_text
     text.set_colour(COLOURS.GREEN_MINT)
     text.set_text(f"{STATE.score}")
+    ui.life_meter.set_percentage(STATE.health_percentage)
 
 def enemy_attacks(game: CellAutoGame, other: int):
     damage = other
     # print(f"ENEMY SCORES damage:{damage}")
     STATE.score -= damage
-    text = UI.get().score_text
+    ui = UI.get()
+    text = ui.score_text
     text.set_colour(COLOURS.RED)
     text.set_text(f"{STATE.score}")
+    ui.life_meter.set_percentage(STATE.health_percentage)
 
 def enemy_spawns_enemy(sender, other):
     name: str = sender

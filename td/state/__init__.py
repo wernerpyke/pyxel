@@ -18,6 +18,8 @@ class GameState:
         self.score = 0
         self.level = 1
 
+        self._max_health = 10
+
     def start(self):
         self._start_time = time.time()
         self._running_time = 0
@@ -28,5 +30,12 @@ class GameState:
     def update(self):
         self._running_time = time.time() - self._start_time
         # TODO: progress level based on running time etc
+
+    @property
+    def health_percentage(self) -> float:
+        health = (self._max_health / 2) + self.score # where score can be negative
+        percentage = health / self._max_health
+        print(f"GameState.health_percentage {percentage}")
+        return percentage
 
 STATE = GameState()

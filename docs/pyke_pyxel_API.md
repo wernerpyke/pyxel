@@ -90,8 +90,15 @@
     * [set\_position](#pyke_pyxel.sprite.Sprite.set_position)
   * [OpenableSprite](#pyke_pyxel.sprite.OpenableSprite)
   * [MovableSprite](#pyke_pyxel.sprite.MovableSprite)
-  * [CompoundSprite](#pyke_pyxel.sprite.CompoundSprite)
   * [TextSprite](#pyke_pyxel.sprite.TextSprite)
+  * [CompoundSprite](#pyke_pyxel.sprite.CompoundSprite)
+    * [fill\_tiles](#pyke_pyxel.sprite.CompoundSprite.fill_tiles)
+    * [fill\_col](#pyke_pyxel.sprite.CompoundSprite.fill_col)
+    * [fill\_row](#pyke_pyxel.sprite.CompoundSprite.fill_row)
+    * [set\_tile](#pyke_pyxel.sprite.CompoundSprite.set_tile)
+    * [clear\_graphics](#pyke_pyxel.sprite.CompoundSprite.clear_graphics)
+    * [graph\_rect](#pyke_pyxel.sprite.CompoundSprite.graph_rect)
+    * [graph\_triangle](#pyke_pyxel.sprite.CompoundSprite.graph_triangle)
 * [matrix](#pyke_pyxel.cell_auto.matrix)
   * [Cell](#pyke_pyxel.cell_auto.matrix.Cell)
     * [reset](#pyke_pyxel.cell_auto.matrix.Cell.reset)
@@ -570,7 +577,7 @@ Remove the first sprite with the specified identifier from the game's sprite lis
 #### set\_tilemap
 
 ```python
-def set_tilemap(resource_position: Coord, tiles_wide: int, tiles_high: int)
+def set_tilemap(resource_position: Coord, tiles_wide: int, tiles_high: int, resource_tilemap_index: int = 0)
 ```
 
 Set a simplified version of standard Pyxel tilemaps as a background layer.
@@ -589,6 +596,8 @@ load 4 columns and 6 rows which will then be repeated to fill the screen.
   The width of the tilemap on the resource sheet
   tiles_high : int
   The height of the tilemap on the resource sheet
+  resource_tilemap_index : int
+  The index of the tilemap in the resource bundle
 
 <a id="pyke_pyxel.game.Game.start_music"></a>
 
@@ -1169,20 +1178,6 @@ Sprite with movement-related configuration and convenience setters.
 MovableSprite stores a movement speed and provides helper methods to
 create simple directional animations (up/down/left/right).
 
-<a id="pyke_pyxel.sprite.CompoundSprite"></a>
-
-## CompoundSprite Objects
-
-```python
-class CompoundSprite()
-```
-
-A multi-tile sprite composed of a grid of `Coord` tiles.
-
-CompoundSprite manages a matrix of tile coordinates (cols x rows)
-and provides helpers to fill tiles or set individual tiles. Useful for
-larger objects built from multiple sprite tiles.
-
 <a id="pyke_pyxel.sprite.TextSprite"></a>
 
 ## TextSprite Objects
@@ -1192,6 +1187,92 @@ class TextSprite()
 ```
 
 A simple text sprite for rendering text using a pyxel font.
+
+<a id="pyke_pyxel.sprite.CompoundSprite"></a>
+
+## CompoundSprite Objects
+
+```python
+class CompoundSprite()
+```
+
+A multi-tile sprite composed of a grid of `Coord` tiles with optional overlay graphics.
+
+CompoundSprite manages a matrix of tile coordinates (cols x rows)
+and provides helpers to fill tiles or set individual tiles. Useful for
+larger objects built from multiple sprite tiles.
+
+The class also provides a graphics buffer allowing geometric shapes to be drawn over the sprite tiles
+
+<a id="pyke_pyxel.sprite.CompoundSprite.fill_tiles"></a>
+
+#### fill\_tiles
+
+```python
+def fill_tiles(tile: Coord)
+```
+
+Fill the sprite with a tile
+
+<a id="pyke_pyxel.sprite.CompoundSprite.fill_col"></a>
+
+#### fill\_col
+
+```python
+def fill_col(col: int, from_row: int, to_row: int, tile_col: int, tile_rows: list[int])
+```
+
+Fill one column (all rows) of a sprite with a sequence of tiles
+
+<a id="pyke_pyxel.sprite.CompoundSprite.fill_row"></a>
+
+#### fill\_row
+
+```python
+def fill_row(row: int, from_col: int, to_col: int, tile_row: int, tile_cols: list[int])
+```
+
+Fill one row (all columns) of a sprite with a sequence of tiles
+
+<a id="pyke_pyxel.sprite.CompoundSprite.set_tile"></a>
+
+#### set\_tile
+
+```python
+def set_tile(col: int, row: int, tile: Coord)
+```
+
+Set one tile in the sprite
+
+<a id="pyke_pyxel.sprite.CompoundSprite.clear_graphics"></a>
+
+#### clear\_graphics
+
+```python
+def clear_graphics()
+```
+
+Clear the graphics buffer
+
+<a id="pyke_pyxel.sprite.CompoundSprite.graph_rect"></a>
+
+#### graph\_rect
+
+```python
+def graph_rect(x: int, y: int, width_px: int, height_px: int, colour: int)
+```
+
+Draw a rectangle to the graphics buffer
+
+<a id="pyke_pyxel.sprite.CompoundSprite.graph_triangle"></a>
+
+#### graph\_triangle
+
+```python
+def graph_triangle(x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, colour: int)
+```
+
+Draw a triangle to the graphics buffer
 
 <a id="pyke_pyxel.cell_auto.matrix"></a>
 

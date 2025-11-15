@@ -2,9 +2,35 @@ import pyxel
 
 from pyke_pyxel.button import Button
 
-from . import Image
-from . import GameSettings, TileMap
+from . import Coord, Image
+from . import GameSettings
 from .sprite import CompoundSprite, Sprite, TextSprite
+
+class _TileMap:
+
+    def __init__(self, resource_position: Coord, tiles_wide: int, tiles_high: int, resource_index: int, settings: GameSettings):
+        screen_width = settings.size.window
+        screen_height = settings.size.window
+        
+        # Cache the rendered map into an image once-off
+        repeat_cols = (screen_width // (tiles_wide * settings.size.tile)) + 1
+        repeat_rows = (screen_height // (tiles_high * settings.size.tile)) + 1
+
+        tm = pyxel.tilemaps[resource_index]
+        tm_x = resource_position.x
+        tm_y = resource_position.y
+        tm_w = tiles_wide * settings.size.tile
+        tm_h = tiles_high * settings.size.tile
+
+        self._img = pyxel.Image(screen_width, screen_height)
+        for col in range(repeat_cols):
+            for row in range(repeat_rows):
+                x = col * tm_w
+                y = row * tm_h
+
+                self._img.bltm(x, y, tm, tm_x, tm_y, tm_w, tm_h, settings.colours.sprite_transparency)
+
+
 
 def background(colour: int):
     pyxel.cls(colour)
@@ -45,7 +71,11 @@ def button(button: Button, settings: GameSettings):
               h=height,
               colkey=settings.colours.sprite_transparency)
 
-def sprite(sprite: Sprite, settings: GameSettings):
+def sprite(sprite: Sprite|CompoundSprite, settings: GameSettings):
+    if isinstance(sprite, CompoundSprite):
+        sprite._draw(settings)
+        return
+
     frame = sprite.active_frame
     position = sprite._position
 
@@ -63,65 +93,8 @@ def sprite(sprite: Sprite, settings: GameSettings):
               h=height,
               colkey=settings.colours.sprite_transparency)
     
-def compound_sprite(sprite: CompoundSprite, settings: GameSettings):
-    # TODO - PERFORMANCE: use an in-memory pyxel Image to cache the rendered sprite
-    # However, if we want to add animation to CompoundSprite does that mean that we need to store an Image per frame?
-    for c in range(0, len(sprite.cols)):
-        row = sprite.cols[c]
-        for r in range(0, len(row)):
-            tile = row[r]
-            if tile:
-
-                width = settings.size.tile
-                height = settings.size.tile
-                # if tile.is_flipped: TODO sprite.is_flipped
-                #    width *= -1
-
-                pyxel.blt(x=sprite.position.x + (c * settings.size.tile),
-                          y=sprite.position.y + (r * settings.size.tile),
-                          img=sprite._resource_image_index,
-                          u=tile.x,
-                          v=tile.y,
-                          w=width,
-                          h=height,
-                          colkey=settings.colours.sprite_transparency)
-    
-def tile_map(tile_map: TileMap, settings: GameSettings):
+def tile_map(tile_map: _TileMap, settings: GameSettings):
     screen_width = settings.size.window
     screen_height = settings.size.window
     
-    if not tile_map._img:
-        # Cache the rendered map into an image once-off
-        repeat_cols = (screen_width // (tile_map.tiles_wide * settings.size.tile)) + 1
-        repeat_rows = (screen_height // (tile_map.tiles_high * settings.size.tile)) + 1
-
-        tm = pyxel.tilemaps[tile_map.resource_index]
-        tm_x = tile_map.resource_position.x
-        tm_y = tile_map.resource_position.y
-        tm_w = tile_map.tiles_wide * settings.size.tile
-        tm_h = tile_map.tiles_high * settings.size.tile
-
-        tile_map._img = pyxel.Image(screen_width, screen_height)
-        for col in range(repeat_cols):
-            for row in range(repeat_rows):
-                x = col * tm_w
-                y = row * tm_h
-
-                tile_map._img.bltm(x, y, tm, tm_x, tm_y, tm_w, tm_h, settings.colours.sprite_transparency)
-
     pyxel.blt(0, 0, tile_map._img, 0, 0, screen_width, screen_height, settings.colours.sprite_transparency)
-
-    # TODO - PERFORMANCE: use an in-memory pyxel Image to cache the rendered sprite
-    # for col in range(repeat_cols):
-    #    for row in range(repeat_rows):
-    #        x = col * tm_w
-    #        y = row * tm_h
-
-    """
-            pyxel.bltm(
-                x, y,
-                tm,
-                tm_x, tm_y,
-                tm_w, tm_h,
-                colkey=settings.colours.sprite_transparency)
-    """

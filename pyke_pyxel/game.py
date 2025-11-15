@@ -4,8 +4,8 @@ import pyxel
 from pyke_pyxel.fx import FX
 
 from . import GameSettings, Coord, GameSettings
-from . import TileMap
 from . import draw, log_debug
+from .draw import _TileMap
 from .signals import Signals
 from .map import Map
 from .sprite import Sprite, CompoundSprite
@@ -51,7 +51,7 @@ class Game:
 
         self._map = Map(settings)
 
-        self._tile_map: Optional[TileMap] = None
+        self._tile_map: Optional[_TileMap] = None
 
         self._hud: Optional[HUD] = None
         self._fx: Optional[FX] = None
@@ -130,7 +130,7 @@ class Game:
                 self._sprites.remove(s)
                 return
 
-    def set_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int):
+    def set_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int, resource_tilemap_index: int = 0):
         """
         Set a simplified version of standard Pyxel tilemaps as a background layer.
         The tilemap is horizontally and vertically repeated to fill up the screen width/height.
@@ -147,8 +147,10 @@ class Game:
             The width of the tilemap on the resource sheet
         tiles_high : int
             The height of the tilemap on the resource sheet
+        resource_tilemap_index : int
+            The index of the tilemap in the resource bundle
         """
-        self._tile_map = TileMap(resource_position, tiles_wide, tiles_high)
+        self._tile_map = _TileMap(resource_position, tiles_wide, tiles_high, resource_tilemap_index, self._settings)
         # log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
 
     def start_music(self, number: int):
@@ -256,8 +258,5 @@ class Game:
 
     def _draw_sprites(self):
         for sprite in self._sprites:
-            if isinstance(sprite, Sprite):
-                draw.sprite(sprite, self._settings)
-            elif isinstance(sprite, CompoundSprite):
-                draw.compound_sprite(sprite, self._settings)
+            draw.sprite(sprite, self._settings)
         

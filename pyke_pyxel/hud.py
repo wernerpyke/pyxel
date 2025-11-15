@@ -81,10 +81,7 @@ class HUD:
           draw.image(i, settings)
 
       for s in self._sprites:
-         if isinstance(s, Sprite):
-            draw.sprite(s, settings)
-         else:
-            draw.compound_sprite(s, settings)
+         draw.sprite(s, settings)
 
       for b in self._buttons:
          draw.button(b, settings)
