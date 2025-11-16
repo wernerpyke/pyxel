@@ -24,7 +24,7 @@ settings.full_screen_enabled = False
 
 game = CellAutoGame(
         settings=settings,
-        title="Pyke Tower", 
+        title="Maw: Gate of Hell", 
         resources=f"{Path(__file__).parent.resolve()}/assets/td_assets.pyxres"
         )
 

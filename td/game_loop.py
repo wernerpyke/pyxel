@@ -8,7 +8,8 @@ from game_load import load_level
 
 from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
-DEBUG_SKIP_TITLE_SCREEN=False
+DEBUG_START_GAME_LEVEL=False
+DEBUG_START_GAME_OVER=False
 
 @dataclass
 class UpdateQueueItem:
@@ -19,9 +20,11 @@ update_queue: list[UpdateQueueItem] = []
 
 def start(game: CellAutoGame):
     ui = UI.get()
-    if DEBUG_SKIP_TITLE_SCREEN:
+    if DEBUG_START_GAME_LEVEL:
         load_level(game)
         ui_game_screen_fade_in_complete(None)
+    elif DEBUG_START_GAME_OVER:
+        UI.get().show_game_over_screen(game)
     else:
         ui.show_title_screen(game)
 
