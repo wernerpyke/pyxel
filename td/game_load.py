@@ -17,6 +17,7 @@ def load_level(game: CellAutoGame):
     _add_base(game)
 
     text = UI.get().score_text
+    text.set_text("")
     text.set_position(Coord(2,2))
     game.hud.add_text(text)
 

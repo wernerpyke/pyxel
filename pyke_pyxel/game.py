@@ -43,6 +43,7 @@ class Game:
         _settings.fps.game = settings.fps.game
         _settings.fps.animation = settings.fps.animation
         _settings.display_smoothing_enabled = settings.display_smoothing_enabled
+        _settings.full_screen_enabled = settings.full_screen_enabled
 
         self._settings = settings
 
@@ -63,6 +64,8 @@ class Game:
         pyxel.load(resources)
         if settings.display_smoothing_enabled:
             pyxel.screen_mode(1)
+        if settings.full_screen_enabled:
+            pyxel.fullscreen(True)
         
         self._send_mouse_events = False
         self._mouse_at_x: int = 0
@@ -85,6 +88,18 @@ class Game:
         """
         Signals.send(Signals.GAME.WILL_START, self)
         pyxel.run(self.update, self.draw)
+
+    def clear_all(self):
+        self._sprites.clear()
+        self._sprite_id =0
+
+        self._tile_map = None
+
+        if self._hud:
+            self._hud._clear_all()
+
+        if self._fx and self._fx._is_active:
+            self._fx._clear_all()
 
     def add_sprite(self, sprite: Sprite|CompoundSprite):
         """

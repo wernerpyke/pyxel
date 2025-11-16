@@ -28,8 +28,9 @@ class GameSettings:
         self.fps = FpsSettings()
         self.size = SizeSettings()
         self.colours = ColourSettings()
-        self.display_smoothing_enabled: bool = False
-        self.mouse_enabled: bool = False
+        self.display_smoothing_enabled = False
+        self.full_screen_enabled = False
+        self.mouse_enabled = False
 
     @classmethod
     def get(cls) -> "GameSettings":

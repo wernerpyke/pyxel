@@ -25,6 +25,11 @@ class CellAutoGame(Game):
         size = GameSettings.get().size.window
         self._matrix = Matrix(size, size)
 
+    def clear_all(self):
+        super().clear_all()
+        size = GameSettings.get().size.window
+        self._matrix = Matrix(size, size)
+
     # Lifecycle methods
 
     def draw(self):

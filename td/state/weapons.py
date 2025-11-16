@@ -86,6 +86,9 @@ class GameWeapons:
                     case "meteor":
                         self._launch_meteor(l, field)
     
+    def clear_all(self):
+        self.active.clear()
+
     def _launch_fungus(self, location: WeaponLocation, field: Matrix):
         active = location._active
         if active and active.type == "fungus" and active.is_alive:

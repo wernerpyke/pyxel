@@ -84,6 +84,9 @@ class GameEnemies:
                 case _:
                     log_error(f"enemies.update invalid enemy type:{type}")
 
+    def clear_all(self):
+        self._enemies.clear()
+
     def _set_level(self, level: int):
         match level:
             case 1:

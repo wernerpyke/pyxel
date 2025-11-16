@@ -76,6 +76,13 @@ class HUD:
       if image in self._images:
             self._images.remove(image)
 
+   def _clear_all(self):
+       self._sprites.clear()
+       self._text.clear()
+       self._buttons.clear()
+       self._images.clear()
+       self._sprite_id = 0
+
    def _draw(self, settings: GameSettings):
       for i in self._images:
           draw.image(i, settings)

@@ -20,6 +20,7 @@ settings.colours.sprite_transparency = COLOURS.BEIGE
 
 settings.mouse_enabled = True
 settings.display_smoothing_enabled = True
+settings.full_screen_enabled = False
 
 game = CellAutoGame(
         settings=settings,
@@ -37,9 +38,12 @@ Signals.connect("enemy_dies", game_loop.enemy_killed)
 Signals.connect("enemy_attacks", game_loop.enemy_attacks)
 Signals.connect("enemy_spawns_enemy", game_loop.enemy_spawns_enemy)
 
+Signals.connect("ui_title_screen_selected", game_loop.ui_title_screen_selected)
 Signals.connect("ui_title_screen_fade_out_complete", game_loop.ui_title_screen_fade_out_complete)
 Signals.connect("ui_game_screen_fade_in_complete", game_loop.ui_game_screen_fade_in_complete)
 Signals.connect("ui_game_start_selected", game_loop.ui_game_start_selected)
 Signals.connect("ui_weapon_selected", game_loop.ui_weapon_selected)
+Signals.connect("ui_game_over_fade_out_complete", game_loop.ui_game_over_fade_out_complete)
+Signals.connect("ui_game_over_restart_selected", game_loop.ui_game_over_restart_selected)
 
 game.start()

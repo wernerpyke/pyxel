@@ -10,15 +10,16 @@ from td.state.weapons import WeaponLocation
 from .life_meter import LifeMeter
 from . import title_screen
 from . import weapon_select
+from . import game_over_screen
 
 class UI:
     _instance = None
 
     def __init__(self):
-        self.state: str = ""
+        self._state: str = ""
         self.marker_sprite = Sprite("location_marker", Coord(5, 10), col_tile_count=2, row_tile_count=2)
         self.life_meter = LifeMeter()
-        self.score_text = TextSprite("*", 
+        self.score_text = TextSprite("", 
                             GameSettings.get().colours.hud_text,
                             f"{Path(__file__).parent.resolve()}/../assets/t0-14b-uni.bdf")
 
@@ -31,7 +32,7 @@ class UI:
     
     def show_title_screen(self, game: Game):
         title_screen.display(game)
-        self.state = "select_title_screen_option"
+        self.state_to( "select_title_option")
 
     def hide_title_screen(self, game: Game):
         title_screen.hide(game)
@@ -43,7 +44,14 @@ class UI:
         weapon_select.hide(game)
         STATE.weapons.selected_location = None
         game.hud.remove_sprite(self.marker_sprite)
-        self.state = "select_location"
+        self.state_to("select_location")
+
+    def show_game_over_screen(self, game: Game):
+        game_over_screen.display(game)
+        self.state_to("select_game_over_option")
+    
+    def hide_game_over_screen(self, game: Game):
+        game_over_screen.hide(game)
 
     def set_weapon_marker(self, name: str, location: WeaponLocation, game: Game):
         if location.marker:
@@ -63,6 +71,15 @@ class UI:
         location.marker = Sprite(f"{name}_marker", frame)
         location.marker.set_position(location.position) # .clone_by(0, -8))
         game.hud.add_sprite(location.marker)
+
+    def state_to(self, state):
+        self._state = state
+
+    def state_to_waiting(self):
+        self._state = "wait"
+
+    def state_is_waiting(self):
+        return self._state == "wait" or self._state == "select_title_option" or self._state == "select_game_over_option"
         
 # _global_ui_instance = UI()
 
@@ -72,8 +89,8 @@ def mouse_move(game: Game, other: tuple[int, int]):
     # print(f"MOVE x:{other[0]} y:{other[1]}")
     x, y = other[0], other[1]
     ui = UI.get()
-    match ui.state:
-        case "select_title_screen_option":
+    match ui._state:
+        case "select_title_option":
             title_screen.mouse_move(x, y)
         case "select_location":
             weapons = STATE.weapons
@@ -97,27 +114,33 @@ def mouse_move(game: Game, other: tuple[int, int]):
                 game.hud.remove_sprite(ui.marker_sprite)
         case "select_weapon":
             weapon_select.mouse_move(x, y)
+        case "select_game_over_option":
+            game_over_screen.mouse_move(x, y)
 
 
 def mouse_down(game: Game, other: tuple[int, int]):
     x, y = other[0], other[1]
     ui = UI.get()
-    match ui.state:
-        case "select_title_screen_option":
+    match ui._state:
+        case "select_title_option":
             title_screen.mouse_down(x, y)
         case "select_location":
             if STATE.weapons.selected_location:
                 weapon_select.display(game)
-                ui.state = "select_weapon"
+                ui.state_to("select_weapon")
         case "select_weapon":
             if not weapon_select.mouse_down(x, y):
                 ui.hide_weapons_ui(game)
+        case "select_game_over_option":
+            game_over_screen.mouse_down(x, y)
 
 def mouse_up(game: Game):
-    match UI.get().state:
-        case "select_title_screen_option":
+    match UI.get()._state:
+        case "select_title_option":
             title_screen.mouse_up()
         case "select_location":
             pass
         case "select_weapon":
             weapon_select.mouse_up()
+        case "select_game_over_option":
+            game_over_screen.mouse_up()

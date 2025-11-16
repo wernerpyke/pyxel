@@ -10,18 +10,18 @@ class LifeMeter:
     def __init__(self) -> None:
         sprite = CompoundSprite("life_meter", 14, 2, resource_image_index=1)
 
-        sprite.fill_row(row=1, from_col=1, to_col=12, tile_row=15,tile_cols=[3]) # middle
-        sprite.fill_row(row=2, from_col=1, to_col=12, tile_row=16,tile_cols=[3])
+        sprite.fill_row(row=1, from_col=1, to_col=12, tile_row=1,tile_cols=[27]) # middle
+        sprite.fill_row(row=2, from_col=1, to_col=12, tile_row=2,tile_cols=[27])
 
-        sprite.set_tile(1, 1, Coord(1,15)) # left cap
-        sprite.set_tile(1, 2, Coord(1,16))
-        sprite.set_tile(2, 1, Coord(2,15))
-        sprite.set_tile(2, 2, Coord(2,16))
+        sprite.set_tile(1, 1, Coord(25,1)) # left cap
+        sprite.set_tile(1, 2, Coord(25,2))
+        sprite.set_tile(2, 1, Coord(26,1))
+        sprite.set_tile(2, 2, Coord(26,2))
 
-        sprite.set_tile(13, 1, Coord(4,15)) # right cap
-        sprite.set_tile(13, 2, Coord(4,16))
-        sprite.set_tile(14, 1, Coord(5,15)) 
-        sprite.set_tile(14, 2, Coord(5,16))
+        sprite.set_tile(13, 1, Coord(28,1)) # right cap
+        sprite.set_tile(13, 2, Coord(28,2))
+        sprite.set_tile(14, 1, Coord(29,1)) 
+        sprite.set_tile(14, 2, Coord(29,2))
 
         sprite.set_position(Coord(12, 1))
 

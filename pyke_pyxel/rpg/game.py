@@ -77,6 +77,11 @@ class RPGGame(Game):
 
         super().update()
 
+    def clear_all(self):
+        super().clear_all()
+        self._actors.clear()
+        self.player = None # type: ignore
+
     def _enemy_added(self, enemy: Enemy):
         self._actors.append(enemy)
 

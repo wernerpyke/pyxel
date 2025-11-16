@@ -56,6 +56,9 @@ class FX:
     def _is_active(self):
         return not self._completion_signal == None
 
+    def _clear_all(self):
+        pass
+
     def _draw(self):
         # Iterate through every pixel (y=row, x=column)
         for y in range(0, self._height):
