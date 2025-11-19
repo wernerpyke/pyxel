@@ -1,11 +1,10 @@
 from typing import Optional
+import random
 
 from pyke_pyxel import COLOURS, Coord, DIRECTION, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix, Cell
 
 from .weapon import Weapon
-
-import random
 
 class Bolt(Weapon):
 

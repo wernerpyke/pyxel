@@ -3,8 +3,9 @@ import pyxel
 
 from pyke_pyxel.fx import FX
 
-from . import GameSettings, Coord, GameSettings
-from . import draw, log_debug
+from ._base_types import GameSettings, Coord, GameSettings
+from ._log import log_debug
+from . import draw
 from .draw import _TileMap
 from .signals import Signals
 from .map import Map

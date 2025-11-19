@@ -1,7 +1,7 @@
 import math
 import pyxel
-from pyke_pyxel import GameSettings, COLOURS
-from pyke_pyxel.signals import Signals
+from ._base_types import GameSettings, COLOURS
+from .signals import Signals
 
 
 class FX:

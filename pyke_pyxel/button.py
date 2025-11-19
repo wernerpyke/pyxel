@@ -1,5 +1,4 @@
-from pyke_pyxel import Coord
-from pyke_pyxel import GameSettings
+from ._base_types import GameSettings, Coord
 
 class Button:
     def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0) -> None:

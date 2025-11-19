@@ -2,7 +2,7 @@ import pyxel
 
 from pyke_pyxel.button import Button
 
-from . import Coord, Image
+from ._base_types import Coord, Image
 from . import GameSettings
 from .sprite import CompoundSprite, Sprite, TextSprite
 

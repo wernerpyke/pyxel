@@ -1,7 +1,8 @@
 from typing import Optional, Callable
 import pyxel
 
-from pyke_pyxel import Coord, GameSettings, log_error
+from ._log import log_error
+from ._base_types import Coord, GameSettings
 
 class Animation:
     """Represents a sequence of frames for a sprite animation.

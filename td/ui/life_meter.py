@@ -1,5 +1,3 @@
-import math
-
 from pyke_pyxel import Coord, COLOURS
 from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import CompoundSprite

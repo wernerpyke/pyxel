@@ -5,7 +5,8 @@ from dataclasses import dataclass
 import math
 import random
 
-from pyke_pyxel import GameSettings, Coord, log_debug
+from ._log import log_debug
+from ._base_types import GameSettings, Coord
 from .sprite import Sprite, OpenableSprite
     
 @dataclass
