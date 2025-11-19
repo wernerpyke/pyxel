@@ -89,18 +89,26 @@ class GameEnemies:
 
     def _set_level(self, level: int):
         match level:
+            case 0:
+                self._launch_frequency = 2
+                self._max_count = 2
+                self._available_enemies = ["skeleton"]
             case 1:
                 self._launch_frequency = 2
                 self._max_count = 3
-                self._available_enemies = ["skeleton"]
-            case 2:
-                self._launch_frequency = 2
-                self._max_count = 3
                 self._available_enemies = ["skeleton", "skeleton", "orb"]
+            case 2:
+                self._launch_frequency = 1.8
+                self._max_count = 4
+                self._available_enemies = ["skeleton", "skeleton", "orb", "mage"]
             case 3:
-                self._launch_frequency = 2
-                self._max_count = 3
-                self._available_enemies = ["skeleton", "skeleton", "orb", "mage"]    
+                self._launch_frequency = 1.5
+                self._max_count = 6
+                self._available_enemies = ["skeleton", "skeleton", "skeleton", "orb", "orb", "mage", "mage"]
+            case _:
+                self._launch_frequency = 1.2
+                self._max_count = 8
+                self._available_enemies = ["skeleton", "skeleton", "skeleton", "orb", "orb", "mage", "mage"]
 
     def _random_location(self) -> Coord:
         pos = launch_locations[random.randint(0, (len(launch_locations)-1))]

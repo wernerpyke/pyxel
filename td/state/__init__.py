@@ -17,21 +17,22 @@ class GameState:
         self._running_time: float = 0
         
         # Progression
-        self.score = 0
-        self.level = 1
-
-        self._max_health = 10
+        self.level = 0
+        self.score_counter = 0
+        self._max_health = 14
 
     def start(self):
-        print("STATE.start()")
-        self.score = 0
-        self._max_health = 10
+        self.level = 0
+        self.score_counter = 0
+        self._max_health = 14
 
         self._timestamp = time.time()
         self._running_time = 0
         
-        self.level = 1
         self.enemies._set_level(self.level)
+
+        self.weapons.clear_all()
+        self.enemies.clear_all()
 
     def pause(self):
         pass
@@ -43,16 +44,35 @@ class GameState:
         now = time.time()
         self._running_time += now - self._timestamp
         self._timestamp = now
-        # TODO: progress level based on running time etc
+
+        # Progress level based on running time etc
+        minutes = self.running_time_minutes
+        if self.level < minutes:
+            self.level = minutes
+            print(f"STATE.update() PROGRESS level:{self.level}")
+            self.enemies._set_level(self.level)
 
         self.enemies.update(game)
         self.weapons.update(game.matrix)
 
+    def acquire_weapon(self, type: str) -> bool:
+        cost = self.weapons.cost_of(type)
+        # if cost > self.score_counter:
+        #    return False
+        self.score_counter -= cost
+        print(f"STATE.acquire_weapon() cost:{cost} score:{self.score_counter}")
+        return True
+
     @property
     def health_percentage(self) -> float:
-        health = (self._max_health / 2) + self.score # where score can be negative
+        health = (self._max_health / 2) + self.score_counter # where self.score can be negative
         return health / self._max_health
     
+    @property
+    def running_time_minutes(self) -> int:
+        seconds = round(self._running_time)
+        return seconds // 60
+
     @property
     def running_time_text(self) -> str:
         seconds = round(self._running_time)

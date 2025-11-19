@@ -2,7 +2,7 @@ import time
 import random
 
 from typing import Optional
-from pyke_pyxel import Coord, log_debug
+from pyke_pyxel import Coord, log_debug, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.sprite import Sprite
 from td.weapons.bolt import Bolt
@@ -60,6 +60,18 @@ class GameWeapons:
 
         self.active: list[Weapon] = []
 
+    def cost_of(self, type: str) -> int:
+        match type:
+            case "bolt":
+                return 1
+            case "fungus":
+                return 3
+            case "meteor":
+                return 2
+            case _:
+                log_error(f"weapons.cost_of() invalid type {type}")
+                return 10
+
     def update(self, field: Matrix):
         to_remove: list[Weapon] = []
         for w in self.active:
@@ -72,6 +84,9 @@ class GameWeapons:
                     to_remove.append(w)
         
         for w in to_remove:
+            #
+            # TODO - when fungus dies, remove it from its location
+            #
             self.active.remove(w)
 
         now = time.time()
@@ -95,6 +110,8 @@ class GameWeapons:
             # log_debug(f"weapons.launch_fungus skipping launch - current fungus is still active")
             return active
         
+        # TODO - see update() - when fungus dies, remove it from its location
+
         log_debug("weapons.launch_fungus")
 
         fungus = Fungus(location.position)

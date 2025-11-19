@@ -8,7 +8,7 @@ from game_load import load_level
 
 from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
-DEBUG_START_GAME_LEVEL=False
+DEBUG_START_GAME_LEVEL=True
 DEBUG_START_GAME_OVER=False
 
 @dataclass
@@ -84,18 +84,11 @@ def _launch_weapon(type: str, game: CellAutoGame):
         log_error("game_loop._process_launch_weapon no launch location")
         return
 
-    match type:
-        case "bolt":
-            UI.get().set_weapon_marker(type, location, game)
-            location.activate(type)
-        case "fungus":
-            UI.get().set_weapon_marker(type, location, game)
-            location.activate(type)
-        case "meteor":
-            UI.get().set_weapon_marker(type, location, game)
-            location.activate(type)
-        case _:
-            log_error(f"game_loop._process_launch_weapon unrecognised name:{type}")
+    if STATE.acquire_weapon(type):
+        ui = UI.get()
+        ui.life_meter.set_percentage(STATE.health_percentage)
+        ui.set_weapon_marker(type, location, game)
+        location.activate(type)
 
 def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
     match type:
@@ -109,7 +102,7 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 #
 
 def enemy_killed(game: CellAutoGame):
-    STATE.score += 1
+    STATE.score_counter += 1
     ui = UI.get()
     ui.life_meter.set_percentage(STATE.health_percentage)
 
@@ -125,7 +118,7 @@ def enemy_attacks(game: CellAutoGame, other: int):
     
     damage = other
     # print(f"ENEMY SCORES damage:{damage}")
-    STATE.score -= damage
+    STATE.score_counter -= damage
 
     ui = UI.get()
     ui.life_meter.set_percentage(STATE.health_percentage)
