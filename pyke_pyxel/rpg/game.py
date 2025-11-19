@@ -18,6 +18,11 @@ class RPGGame(Game):
     def __init__(self, settings: GameSettings, title: str, resources: str):
         """
         Specialised sub-class of `pyke_pyxel.Game` which adds basic room- and actor-based RPG mechanics.
+
+        Keyboard:
+        - Direction arrows: movement up, down, left, right
+        - Z-key: player attack (e.g. projectile)
+        - X-key: player interaction (e.g. open door)
         
         Attributes:
             player (Player): The player character. Use set_player() to assign the player instance.
@@ -51,6 +56,10 @@ class RPGGame(Game):
         return self._player
     
     def update(self):
+        if self._paused:
+            super().update()
+            return
+
         # Keyboard
         if pyxel.btnp(pyxel.KEY_X):
             self._player.interact(self._map)

@@ -21,14 +21,9 @@ class LifeMeter:
         sprite.set_tile(14, 1, Coord(29,1)) 
         sprite.set_tile(14, 2, Coord(29,2))
 
-        sprite.set_position(Coord(12, 1))
-
         self._sprite = sprite
 
         self._current_percentage: float = 0.5
-
-    def show(self, game: Game):
-        game.hud.add_sprite(self._sprite)
 
     def set_percentage(self, percentage: float):
         x, y = 16, 3

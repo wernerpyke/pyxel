@@ -34,10 +34,13 @@ def start(game: CellAutoGame):
 def update(game: CellAutoGame):
     _process_update_queue(game)
 
-    if UI.get().state_is_waiting():
+    ui = UI.get()
+    if ui.state_is_waiting():
         return
     
     STATE.update(game)
+    text = ui.timer_text
+    text.set_text(STATE.running_time_text)
 
 def _process_update_queue(game: CellAutoGame):
     for u in update_queue:
@@ -108,9 +111,6 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 def enemy_killed(game: CellAutoGame):
     STATE.score += 1
     ui = UI.get()
-    text = ui.score_text
-    text.set_colour(COLOURS.GREEN_MINT)
-    text.set_text(f"{STATE.score}")
     ui.life_meter.set_percentage(STATE.health_percentage)
 
 def enemy_attacks(game: CellAutoGame, other: int):
@@ -128,9 +128,6 @@ def enemy_attacks(game: CellAutoGame, other: int):
     STATE.score -= damage
 
     ui = UI.get()
-    text = ui.score_text
-    text.set_colour(COLOURS.RED)
-    text.set_text(f"{STATE.score}")
     ui.life_meter.set_percentage(STATE.health_percentage)
 
 def enemy_spawns_enemy(sender, other):

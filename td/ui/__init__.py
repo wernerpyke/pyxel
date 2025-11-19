@@ -3,6 +3,7 @@ from pathlib import Path
 from pyke_pyxel import Coord, GameSettings, log_error
 from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Sprite, TextSprite
+from pyke_pyxel.button import Button
 
 from td.state import STATE
 from td.state.weapons import WeaponLocation
@@ -19,9 +20,16 @@ class UI:
         self._state: str = ""
         self.marker_sprite = Sprite("location_marker", Coord(5, 10), col_tile_count=2, row_tile_count=2)
         self.life_meter = LifeMeter()
-        self.score_text = TextSprite("", 
+        self.timer_text = TextSprite("", 
                             GameSettings.get().colours.hud_text,
                             f"{Path(__file__).parent.resolve()}/../assets/t0-14b-uni.bdf")
+        
+        self.pause_button = Button("pause", 
+                                   up_frame=Coord(27, 3), 
+                                   down_frame=Coord(25, 3), 
+                                   col_tile_count=2, 
+                                   row_tile_count=2, 
+                                   resource_image_index=1)
 
     @classmethod
     def get(cls) -> "UI":
@@ -37,8 +45,18 @@ class UI:
     def hide_title_screen(self, game: Game):
         title_screen.hide(game)
 
-    def show_life_meter(self, game: Game):
-        self.life_meter.show(game)
+    def load_hud(self, game: Game):
+        text = self.timer_text
+        text.set_text("00:00")
+        text.set_position(Coord(2,2))
+        game.hud.add_text(text)
+
+        pause = self.pause_button
+        pause.set_position(Coord(38, 2))
+        game.hud.add_button(pause)
+        
+        self.life_meter._sprite.set_position(Coord(12, 1))
+        game.hud.add_sprite(self.life_meter._sprite)
 
     def hide_weapons_ui(self, game: Game):
         weapon_select.hide(game)
@@ -93,6 +111,9 @@ def mouse_move(game: Game, other: tuple[int, int]):
         case "select_title_option":
             title_screen.mouse_move(x, y)
         case "select_location":
+            if game.is_paused:
+                return
+
             weapons = STATE.weapons
             location = weapons.location_at(x, y)
             if location:
@@ -112,6 +133,7 @@ def mouse_move(game: Game, other: tuple[int, int]):
             else:
                 weapons.selected_location = None # Clear the location
                 game.hud.remove_sprite(ui.marker_sprite)
+
         case "select_weapon":
             weapon_select.mouse_move(x, y)
         case "select_game_over_option":
@@ -125,7 +147,17 @@ def mouse_down(game: Game, other: tuple[int, int]):
         case "select_title_option":
             title_screen.mouse_down(x, y)
         case "select_location":
-            if STATE.weapons.selected_location:
+            pause = ui.pause_button
+            if pause.contains(x, y):
+                if pause.is_down:
+                    pause.pop_up()
+                    game.unpause()
+                    STATE.unpause()
+                else:
+                    pause.push_down()
+                    game.pause()
+                    STATE.pause()
+            elif not game.is_paused and STATE.weapons.selected_location:
                 weapon_select.display(game)
                 ui.state_to("select_weapon")
         case "select_weapon":

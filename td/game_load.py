@@ -16,12 +16,7 @@ def load_level(game: CellAutoGame):
 
     _add_base(game)
 
-    text = UI.get().score_text
-    text.set_text("")
-    text.set_position(Coord(2,2))
-    game.hud.add_text(text)
-
-    UI.get().show_life_meter(game)
+    UI.get().load_hud(game)
 
 def _add_plants(game: Game):
     s = CompoundSprite("plants", 40, 4)

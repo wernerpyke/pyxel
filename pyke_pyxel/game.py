@@ -76,6 +76,8 @@ class Game:
             self._send_mouse_events = True
 
         self._sprite_id = 0 # TODO is it ok for this to just increment?
+
+        self._paused = False
     
     def start(self):
         """
@@ -91,6 +93,7 @@ class Game:
         pyxel.run(self.update, self.draw)
 
     def clear_all(self):
+        """Clear all sprites, TileMap, HUD and FX"""
         self._sprites.clear()
         self._sprite_id =0
 
@@ -169,6 +172,27 @@ class Game:
         self._tile_map = _TileMap(resource_position, tiles_wide, tiles_high, resource_tilemap_index, self._settings)
         # log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
 
+    def pause(self):
+        """Pause the game loop. 
+        This will pause:
+        - Game logic update signals
+        - Sprite animation
+        
+        But will not halt:
+        - Keyboard and mouse input signals
+        - Screen draw
+        - Music
+        """
+        self._paused = True
+    
+    def unpause(self):
+        """Unpause the game loop."""
+        self._paused = False
+
+    @property
+    def is_paused(self):
+        return self._paused
+
     def start_music(self, number: int):
         """Starts the music identified by the provided number. Music loops until `stop_music` is called."""
         pyxel.playm(number, loop=True)
@@ -223,7 +247,8 @@ class Game:
             - MOUSE.UP: Emitted on left mouse button release (if mouse_enabled).
         """
 
-        Signals.send(Signals.GAME.UPDATE, self)
+        if not self._paused:
+            Signals.send(Signals.GAME.UPDATE, self)
 
         # mouse
         if self._send_mouse_events:
@@ -238,6 +263,9 @@ class Game:
                 Signals.send_with(Signals.MOUSE.DOWN, self, (self._mouse_at_x, self._mouse_at_y))
             if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
                 Signals.send(Signals.MOUSE.UP, self)
+
+        if self._paused:
+            return
 
         # Sprite Animations
         if self._animation_tick < (self._settings.fps.game / self._settings.fps.animation):
