@@ -59,6 +59,8 @@ def _process_update_queue(game: CellAutoGame):
                 UI.get().hide_weapons_ui(game)
             case "launch_weapon":
                 _launch_weapon(u.params, game) # type: ignore
+            case "deactivate_weapon":
+                _deactivate_weapon(u.params, game) # type: ignore
             case "launch_enemy":
                 type: str = u.params[0] # type: ignore
                 x: int = u.params[1] # type: ignore
@@ -90,6 +92,14 @@ def _launch_weapon(type: str, game: CellAutoGame):
         ui.set_weapon_marker(type, location, game)
         location.activate(type)
 
+def _deactivate_weapon(location_id: str, game: CellAutoGame):
+    location = STATE.weapons.location_by_id(location_id)
+    if location:
+        location.deactivate()
+        UI.get().remove_weapon_marker(location, game)
+    else:
+        log_error(f"game_loop._deactivate_weapon() invalid location_id:{location_id}")
+
 def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
     match type:
         case "bat":
@@ -106,7 +116,7 @@ def enemy_killed(game: CellAutoGame):
     ui = UI.get()
     ui.life_meter.set_percentage(STATE.health_percentage)
 
-def enemy_attacks(game: CellAutoGame, other: int):
+def enemy_attacks(game: CellAutoGame, other: float):
     percentage = STATE.health_percentage
     if percentage <= 0:
         # Important: we don't trigger game over as soon as the health % == 0
@@ -117,8 +127,8 @@ def enemy_attacks(game: CellAutoGame, other: int):
         return
     
     damage = other
-    # print(f"ENEMY SCORES damage:{damage}")
     STATE.score_counter -= damage
+    print(f"game_loop.enemy_attacks() damage:{damage} score:{STATE.score_counter}")
 
     ui = UI.get()
     ui.life_meter.set_percentage(STATE.health_percentage)
@@ -128,6 +138,10 @@ def enemy_spawns_enemy(sender, other):
     x: int = other[0]
     y: int = other[1]
     update_queue.append(UpdateQueueItem("launch_enemy", (name, x, y)))
+
+def weapon_deactivate_at_location(sender):
+    location_id = sender
+    update_queue.append(UpdateQueueItem("deactivate_weapon", location_id))
 
 def ui_title_screen_selected(sender):
     update_queue.append(UpdateQueueItem("ui_display_title_screen"))
@@ -144,10 +158,10 @@ def ui_game_screen_fade_in_complete(sender):
     ui.state_to("select_location")
     ui.life_meter.set_percentage(STATE.health_percentage)
 
-def ui_weapon_selected(name: str):
+def ui_weapon_selected(type: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location
     # which is required by launch_weapon
-    update_queue.append(UpdateQueueItem(f"launch_weapon", name))
+    update_queue.append(UpdateQueueItem("launch_weapon", type))
     update_queue.append(UpdateQueueItem("hide_weapon_ui"))
 
 def ui_game_over_fade_out_complete(sender):

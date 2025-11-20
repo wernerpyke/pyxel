@@ -18,7 +18,7 @@ class GameState:
         
         # Progression
         self.level = 0
-        self.score_counter = 0
+        self.score_counter: float = 0
         self._max_health = 14
 
     def start(self):

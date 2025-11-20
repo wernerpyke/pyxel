@@ -90,6 +90,11 @@ class UI:
         location.marker.set_position(location.position) # .clone_by(0, -8))
         game.hud.add_sprite(location.marker)
 
+    def remove_weapon_marker(self, location: WeaponLocation, game: Game):
+        if location.marker:
+            game.hud.remove_sprite(location.marker)
+            location.marker = None
+
     def state_to(self, state):
         self._state = state
 
@@ -117,7 +122,7 @@ def mouse_move(game: Game, other: tuple[int, int]):
             weapons = STATE.weapons
             location = weapons.location_at(x, y)
             if location:
-                if weapons.selected_location and weapons.selected_location.name == location.name:
+                if weapons.selected_location and weapons.selected_location.id == location.id:
                     return # Current location
                 
                 weapons.selected_location = location 

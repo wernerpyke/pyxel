@@ -3,15 +3,20 @@ from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 
 
 class Weapon:
-    def __init__(self, type: str, position: Coord, power: float, speed: int) -> None:
+    def __init__(self, type: str, location_id: str, position: Coord, power: float, speed: float, cooldown: float) -> None:
         self.type = type
+        self._location_id = location_id
         self.position = position
         self.power = power
 
         if speed > 10:
             log_error(f"Weapon({type}) speed > 10")
             speed = 10
-        self._speed = speed
+        self._speed: float= speed
+
+        self._cooldown: float = cooldown
+
+        self._deactivate_upon_death = False
 
         self.cells: list[Cell] = []
 

@@ -12,7 +12,8 @@ class Orb(Enemy):
         super().__init__("orb", Coord(11,8), 
                          animation_frame_count=4,
                          power=1200, 
-                         speed=2)
+                         speed=2,
+                         damage=1)
 
     def launch(self, game: CellAutoGame, position: Coord):
         start_x = position.x

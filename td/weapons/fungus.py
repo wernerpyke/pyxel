@@ -6,10 +6,12 @@ from .weapon import Weapon
 
 class Fungus(Weapon):
 
-    def __init__(self, position: Coord) -> None:
-        super().__init__("fungus", position, power=3, speed=4)
+    def __init__(self, location_id: str, position: Coord) -> None:
+        super().__init__("fungus", location_id, position, power=2, speed=4, cooldown=40)
 
         self.colour = COLOURS.GREEN_MINT
+        
+        self._deactivate_upon_death = True # When fungus dies it is removed from the WeaponLocation
 
         self.regrow: list[Cell] = []
 

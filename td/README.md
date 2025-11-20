@@ -1,10 +1,11 @@
 ## 🧩 TODO
 
+- **Balance**
+    - Enemies should not all apply the same cost/damage to the score_counter, e.g. Bats should damage less than Mage
 - **Weapons**
     - **Wind**: pushback to enemies
     - **Mountain** / **Crack**: prevent ground-level enemies from crossing
 - **Enemies**
-    - **Mage**: walks randomly down/left/right but throws projectiles
     - **Blob**: ??
     - **Ghost**: floats over fungus
 

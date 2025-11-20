@@ -8,8 +8,8 @@ from .weapon import Weapon
 
 class Bolt(Weapon):
 
-    def __init__(self, location_name: str, position: Coord, orientation: str) -> None:
-        super().__init__("bolt", position, power=random.randint(100, 200), speed=10)
+    def __init__(self, location_id: str, position: Coord, orientation: str) -> None:
+        super().__init__("bolt", location_id, position, power=random.randint(100, 200), speed=10, cooldown=6)
 
         self.cell_count = 5
 
@@ -17,7 +17,7 @@ class Bolt(Weapon):
         self.orientation = orientation
         
         self.propagate = []
-        match location_name:
+        match location_id:
             case "1":
                 self.propagate = [ DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.LEFT, DIRECTION.UP, DIRECTION.DOWN]
 

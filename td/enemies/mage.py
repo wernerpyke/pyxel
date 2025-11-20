@@ -13,7 +13,8 @@ class Mage(Enemy):
         super().__init__("mage", Coord(19,8), 
                          animation_frame_count=2,
                          power=1000, 
-                         speed=3)
+                         speed=3,\
+                         damage=2)
         
         self._to_x = 0
         self._to_y = 0

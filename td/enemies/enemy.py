@@ -7,7 +7,7 @@ from pyke_pyxel.sprite import Animation, Sprite
 
 
 class Enemy:
-    def __init__(self, name: str, from_frame: Coord, power: float, speed: int, animation_frame_count:int = 2) -> None:
+    def __init__(self, name: str, from_frame: Coord, power: float, speed: int, damage: float, animation_frame_count:int = 2) -> None:
         sprite = Sprite(name, from_frame, 1, 1)
         
         sprite.add_animation("loop", Animation(from_frame, animation_frame_count))
@@ -23,6 +23,8 @@ class Enemy:
             log_error(f"Enemy({type}) speed > 10")
             speed = 10
         self._speed = speed
+
+        self.damage: float = damage
 
         # Calculate the boundaries of the win condition
         game_w = game_h = GameSettings.get().size.window

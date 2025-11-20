@@ -61,10 +61,11 @@ class GameEnemies:
                     self._enemies.remove(e)
                     e._sprite.activate_animation("die", loop=False, on_animation_end=_remove_enemy_sprite)
                     Signals.send("enemy_dies", game)
-                case _: # win with damage
+                case _: # win with potential multiplier
+                    damage = e.damage * result
                     self._enemies.remove(e)
                     e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
-                    Signals.send_with("enemy_attacks", game, result)
+                    Signals.send_with("enemy_attacks", game, damage)
 
         type = self.launch_enemy_type(len(self._enemies))
         if type:
@@ -105,10 +106,14 @@ class GameEnemies:
                 self._launch_frequency = 1.5
                 self._max_count = 6
                 self._available_enemies = ["skeleton", "skeleton", "skeleton", "orb", "orb", "mage", "mage"]
-            case _:
+            case 4:
                 self._launch_frequency = 1.2
                 self._max_count = 8
                 self._available_enemies = ["skeleton", "skeleton", "skeleton", "orb", "orb", "mage", "mage"]
+            case _:
+                self._launch_frequency = 1.2
+                self._max_count = 10
+                self._available_enemies = ["skeleton", "orb", "mage"]
 
     def _random_location(self) -> Coord:
         pos = launch_locations[random.randint(0, (len(launch_locations)-1))]
