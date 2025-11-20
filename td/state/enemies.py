@@ -9,6 +9,7 @@ from td.enemies.bat import Bat
 from td.enemies.mage import Mage
 from td.enemies.orb import Orb
 from td.enemies.skeleton import Skeleton
+from td.state._levels import EnemyLevel
 
 launch_locations = [
     Coord(2, 4), Coord(3, 2), Coord(4, 4), Coord(5, 6), Coord(7, 11), Coord(8, 8), Coord(9, 11), 
@@ -20,25 +21,23 @@ launch_locations = [
 
 class GameEnemies:
     def __init__(self) -> None:
-        
-        self._max_count = 3 # count
-        self._available_enemies = ["skeleton", "orb", "mage"]
-
-        self._launch_frequency = 2 # seconds
-        self._previous_launch_time = 0
-
         self._enemies: list[Enemy] = []
 
+        self._level = EnemyLevel()
+        self._level.activate(0)
+        self._previous_launch_time = 0
+
     def launch_enemy_type(self, current_enemy_count: int) -> str|None:
-        if current_enemy_count >= self._max_count:
+        level = self._level
+        if current_enemy_count >= level.max_count:
             return None
         
         t = time.time()
-        if (t - self._previous_launch_time) < self._launch_frequency:
+        if (t - self._previous_launch_time) < level.frequency:
             return None
 
         self._previous_launch_time = t
-        return self._available_enemies[random.randint(0, len(self._available_enemies)-1)]
+        return level.random_type()
 
     def launch_bat(self, game: CellAutoGame, position: Coord):
         bat = Bat()
@@ -88,32 +87,8 @@ class GameEnemies:
     def clear_all(self):
         self._enemies.clear()
 
-    def _set_level(self, level: int):
-        match level:
-            case 0:
-                self._launch_frequency = 2
-                self._max_count = 2
-                self._available_enemies = ["skeleton"]
-            case 1:
-                self._launch_frequency = 2
-                self._max_count = 3
-                self._available_enemies = ["skeleton", "skeleton", "orb"]
-            case 2:
-                self._launch_frequency = 1.8
-                self._max_count = 4
-                self._available_enemies = ["skeleton", "skeleton", "orb", "mage"]
-            case 3:
-                self._launch_frequency = 1.5
-                self._max_count = 6
-                self._available_enemies = ["skeleton", "skeleton", "skeleton", "orb", "orb", "mage", "mage"]
-            case 4:
-                self._launch_frequency = 1.2
-                self._max_count = 8
-                self._available_enemies = ["skeleton", "skeleton", "skeleton", "orb", "orb", "mage", "mage"]
-            case _:
-                self._launch_frequency = 1.2
-                self._max_count = 10
-                self._available_enemies = ["skeleton", "orb", "mage"]
+    def _set_level(self, id: int):
+        self._level.activate(id)
 
     def _random_location(self) -> Coord:
         pos = launch_locations[random.randint(0, (len(launch_locations)-1))]
