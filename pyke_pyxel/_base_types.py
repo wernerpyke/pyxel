@@ -241,6 +241,15 @@ class Coord:
             collide_y + h > (sprite_y + tolerance)
         )
 
+    def distance_to(self, coord: "Coord") -> float:
+        """Return the distance between this Coord and the provided Coord"""
+        delta_x = self._x - coord._x
+        delta_y = self._y - coord._y
+        
+        # Apply the distance formula
+        distance = math.sqrt(delta_x**2 + delta_y**2)
+        return distance
+
     @property
     def x(self) -> int:
         """Top-left pixel x coordinate for this tile."""

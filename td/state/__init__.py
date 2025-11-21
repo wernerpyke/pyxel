@@ -29,7 +29,7 @@ class GameState:
         self._timestamp = time.time()
         self._running_time = 0
         
-        self.enemies._set_level(self.level)
+        self.enemies.set_level(self.level)
 
         self.weapons.clear_all()
         self.enemies.clear_all()
@@ -50,10 +50,10 @@ class GameState:
         if self.level < minutes:
             self.level = minutes
             print(f"STATE.update() PROGRESS level:{self.level}")
-            self.enemies._set_level(self.level)
+            self.enemies.set_level(self.level)
 
         self.enemies.update(game)
-        self.weapons.update(game.matrix)
+        self.weapons.update(game.matrix, self.enemies)
 
     def acquire_weapon(self, type: str) -> bool:
         cost = self.weapons.cost_of(type)

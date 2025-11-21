@@ -84,10 +84,17 @@ class GameEnemies:
                 case _:
                     log_error(f"enemies.update invalid enemy type:{type}")
 
+    def closest_to(self, position: Coord) -> Enemy|None:
+        if len(self._enemies) == 0:
+            return None
+
+        closest = min(self._enemies, key=lambda enemy: enemy._sprite.position.distance_to(position))
+        return closest
+
     def clear_all(self):
         self._enemies.clear()
 
-    def _set_level(self, id: int):
+    def set_level(self, id: int):
         self._level.activate(id)
 
     def _random_location(self) -> Coord:

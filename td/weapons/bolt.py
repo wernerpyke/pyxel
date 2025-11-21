@@ -9,9 +9,9 @@ from .weapon import Weapon
 class Bolt(Weapon):
 
     def __init__(self, location_id: str, position: Coord, orientation: str) -> None:
-        super().__init__("bolt", location_id, position, power=random.randint(100, 200), speed=10, cooldown=6)
+        super().__init__("bolt", location_id, position, power=150, speed=10, cooldown=6)
 
-        self.cell_count = 5
+        self.cell_count = 5 # POWER UP - increase width of bolt
 
         self.colour: int = COLOURS.WHITE
         self.orientation = orientation

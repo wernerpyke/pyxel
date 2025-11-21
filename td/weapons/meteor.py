@@ -89,6 +89,7 @@ class Meteor(Weapon):
 
     def _add_star_cell(self, c:  Cell|None):
         if c:
+            c.type = self.type
             c.colour = COLOURS.RED
             c.power = self.power * 2
             self.cells.append(c)

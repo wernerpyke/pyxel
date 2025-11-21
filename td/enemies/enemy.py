@@ -46,7 +46,7 @@ class Enemy:
             self._sprite.position.move_by(to[0], to[1])
         
         if len(field_cells) > 0:
-            #current_power = self.power
+            # current_power = self.power
             for c in field_cells:
                 if self.power > c.power:
                     self.power -= c.power
@@ -57,7 +57,8 @@ class Enemy:
                 else:
                     c.power -= self.power
                     self.power = 0
-            #print(f"Enemy.update({self}) lost:{(current_power - self.power)} remaining:{self.power}")
+            # if not self.power == current_power:
+            #    print(f"Enemy.update({self}) lost:{(current_power - self.power)} remaining:{self.power}")
         if self.power <= 0:
             return -1 # killed
         else:

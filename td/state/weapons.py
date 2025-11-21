@@ -6,10 +6,14 @@ from pyke_pyxel import Coord, log_debug, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
+from td.enemies.enemy import Enemy
 from td.weapons.bolt import Bolt
+from td.weapons.star import Star
 from td.weapons.fungus import Fungus
 from td.weapons.meteor import Meteor
 from td.weapons.weapon import Weapon
+
+from .enemies import GameEnemies
 
 class WeaponLocation:
     def __init__(self, id: str, position: Coord, orientation: str) -> None:
@@ -75,8 +79,10 @@ class GameWeapons:
 
         self.active: list[Weapon] = []
 
-    def cost_of(self, type: str) -> int:
+    def cost_of(self, type: str) -> float:
         match type:
+            case "star":
+                return 1
             case "bolt":
                 return 1
             case "fungus":
@@ -87,7 +93,7 @@ class GameWeapons:
                 log_error(f"weapons.cost_of() invalid type {type}")
                 return 10
 
-    def update(self, field: Matrix):
+    def update(self, field: Matrix, enemies: GameEnemies):
         to_remove: list[Weapon] = []
         for w in self.active:
             if _should_skip_update(w):
@@ -109,6 +115,8 @@ class GameWeapons:
         for l in self._locations:
             if l._type and ((now - l._previous_launch_time) > l.cooldown):
                 match l._type:
+                    case "star":
+                        self._launch_star(l, field, enemies)
                     case "bolt":
                         self._launch_bolt(l, field)
                     case "fungus":
@@ -129,7 +137,7 @@ class GameWeapons:
             return active
         
         log_debug("weapons.launch_fungus")
-        
+
         fungus = Fungus(location.id, location.position)
         fungus.launch(field)
 
@@ -146,6 +154,31 @@ class GameWeapons:
         location._previous_launch_time = time.time()
         location._active = meteor
         self.active.append(meteor)
+
+    def _launch_star(self, location: WeaponLocation, field: Matrix, enemies: GameEnemies):
+        position = location.position
+        to_enemy = enemies.closest_to(position)
+        
+        if to_enemy:
+            to = to_enemy._sprite.position
+            to = to.clone_by(0, 20) # TODO - this is not great, just guessing 20 px below
+            log_debug(f"weapons._launch_star at {to_enemy._sprite.name} {to}")
+        else:
+            to_x = 0
+            if position.x >= 160: # right
+                to_x = position.x + random.randint(10, 80)
+            else:
+                to_x = position.x - random.randint(10, 80)
+            to_y = position.y - random.randint(80, 120)
+            to = Coord.with_xy(to_x, to_y)
+            log_debug(f"weapons._launch_star random {to}")
+
+        star = Star(location.id, location.position, to)
+        star.launch(field)
+
+        location._previous_launch_time = time.time()
+        location._active = star
+        self.active.append(star)
 
     def _launch_bolt(self, location: WeaponLocation, field: Matrix):
         log_debug("weapons._launch_bolt")

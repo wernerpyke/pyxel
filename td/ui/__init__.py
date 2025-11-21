@@ -76,6 +76,8 @@ class UI:
             game.hud.remove_sprite(location.marker)
 
         match name:
+            case "star":
+                frame = Coord(8, 11)
             case "bolt":
                 frame = Coord(7, 10)
             case "fungus":
