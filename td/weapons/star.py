@@ -15,12 +15,25 @@ class Star(Weapon):
         self._to = to
 
     def launch(self, field: Matrix):
-        self.line = field.cells_in_line(self._from, self._to)
+        self.line = field.cells_in_line(self._from, self._to, extend_to_matrix_end=True)
         self.line_index = 0
 
     def update(self, field: Matrix):
+        check_aliveness = len(self.cells) > 0 
+        still_living = 0
+        total_power = 0
         for c in self.cells:
-                c.reset()
+            if not c.is_empty:
+                still_living += 1
+                total_power += c.power
+            c.reset()
+
+        if check_aliveness:
+            if still_living < 4: # Half died, kill the star
+                self.cells = []
+                return
+            else:
+                self.power = total_power / 8 # Each star is made up of 8 cells
 
         if self.line_index < (len(self.line)-1):
             center = self.line[self.line_index]
@@ -28,7 +41,7 @@ class Star(Weapon):
             self.line_index += 1
         else:
             self.cells = []
-            # print(f"STAR REACHED END AT {self._to}")
+            # print(f"STAR REACHED END")
 
     def _draw_star(self, center: Cell, field: Matrix):
         self.cells = []

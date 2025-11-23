@@ -313,12 +313,10 @@ class Matrix:
             ]
         return cells
 
-    def cells_in_line(self, from_position: Coord, to_position: Coord) -> list[Cell]:
+    def cells_in_line(self, from_position: Coord, to_position: Coord, extend_to_matrix_end: bool = False) -> list[Cell]:
         """Return the sequence of cells forming a discrete line between two coords.
 
-        Implements a Bresenham-like integer algorithm that handles all octants.
-        Coordinates outside the matrix are ignored; only in-bounds cells are
-        appended to the result. The result includes both endpoints.
+        The result includes both endpoints.
         """
         cells: list[Cell] = []
 
@@ -350,10 +348,11 @@ class Matrix:
             if 0 <= current_y < len(self._cells) and 0 <= current_x < len(self._cells[0]):
                 # print(f"Draw x:{current_x} y:{current_y}")
                 cells.append(self._cells[current_y][current_x])
+            elif extend_to_matrix_end:
+                break # Exit condition: the end of the matrix
 
-            # Exit condition: if we've reached the end point
-            if current_x == to_x and current_y == to_y:
-                break
+            if (not extend_to_matrix_end) and (current_x == to_x) and (current_y == to_y):
+                break # Exit condition: if we've reached the end point
 
             # Calculate the next step
             e2 = 2 * err

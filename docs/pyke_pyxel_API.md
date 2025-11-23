@@ -1293,14 +1293,12 @@ cells (where ``c.is_empty`` is True) are excluded unless
 #### cells\_in\_line
 
 ```python
-def cells_in_line(from_position: Coord, to_position: Coord) -> list[Cell]
+def cells_in_line(from_position: Coord, to_position: Coord, extend_to_matrix_end: bool = False) -> list[Cell]
 ```
 
 Return the sequence of cells forming a discrete line between two coords.
 
-Implements a Bresenham-like integer algorithm that handles all octants.
-Coordinates outside the matrix are ignored; only in-bounds cells are
-appended to the result. Iteration includes both endpoints.
+The result includes both endpoints.
 
 <a id="pyke_pyxel.cell_auto.game"></a>
 
