@@ -34,7 +34,7 @@ Signals.connect(Signals.MOUSE.MOVE, ui.mouse_move)
 Signals.connect(Signals.MOUSE.DOWN, ui.mouse_down)
 Signals.connect(Signals.MOUSE.UP, ui.mouse_up)
 
-Signals.connect("enemy_dies", game_loop.enemy_killed)
+Signals.connect("enemy_killed", game_loop.enemy_killed)
 Signals.connect("enemy_attacks", game_loop.enemy_attacks)
 Signals.connect("enemy_spawns_enemy", game_loop.enemy_spawns_enemy)
 

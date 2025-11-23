@@ -2,6 +2,7 @@ import time
 
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
+from td.stats import STATS
 from .weapons import GameWeapons
 from .enemies import GameEnemies
 
@@ -19,12 +20,12 @@ class GameState:
         # Progression
         self.level = 0
         self.score_counter: float = 0
-        self._max_health = 14
+        self._max_health = STATS.PLAYER_HEALTH
 
     def start(self):
         self.level = 0
         self.score_counter = 0
-        self._max_health = 14
+        self._max_health = STATS.PLAYER_HEALTH
 
         self._timestamp = time.time()
         self._running_time = 0

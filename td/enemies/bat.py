@@ -5,10 +5,7 @@ from .enemy import Enemy
 class Bat(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("bat", Coord(21,8), 
-                         power=100, 
-                         speed=6,
-                         damage=0.5)
+        super().__init__("bat", Coord(21,8))
         
     def launch(self, game: CellAutoGame, position: Coord):
         self._from_x = position.x

@@ -59,7 +59,7 @@ class GameEnemies:
                     # log_debug(f"enemies.update() remove {e._sprite._id}")
                     self._enemies.remove(e)
                     e._sprite.activate_animation("die", loop=False, on_animation_end=_remove_enemy_sprite)
-                    Signals.send("enemy_dies", game)
+                    Signals.send_with("enemy_killed", game, e.bounty)
                 case _: # win with potential multiplier
                     damage = e.damage * result
                     self._enemies.remove(e)

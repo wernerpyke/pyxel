@@ -10,11 +10,7 @@ from .enemy import Enemy
 class Mage(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("mage", Coord(19,8), 
-                         animation_frame_count=2,
-                         power=1000, 
-                         speed=3,\
-                         damage=2)
+        super().__init__("mage", Coord(19,8))
         
         self._to_x = 0
         self._to_y = 0

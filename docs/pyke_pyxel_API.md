@@ -128,6 +128,7 @@
     * [clone](#pyke_pyxel._base_types.Coord.clone)
     * [clone\_by](#pyke_pyxel._base_types.Coord.clone_by)
     * [collides\_with](#pyke_pyxel._base_types.Coord.collides_with)
+    * [distance\_to](#pyke_pyxel._base_types.Coord.distance_to)
     * [x](#pyke_pyxel._base_types.Coord.x)
     * [y](#pyke_pyxel._base_types.Coord.y)
     * [mid\_x](#pyke_pyxel._base_types.Coord.mid_x)
@@ -1643,6 +1644,16 @@ Return True if this tile collides with another tile using AABB.
 
 This uses an axis-aligned bounding box (AABB) test with a small
 tolerance to reduce false positives on exact-edge overlaps.
+
+<a id="pyke_pyxel._base_types.Coord.distance_to"></a>
+
+#### distance\_to
+
+```python
+def distance_to(coord: "Coord") -> float
+```
+
+Return the distance between this Coord and the provided Coord
 
 <a id="pyke_pyxel._base_types.Coord.x"></a>
 

@@ -111,8 +111,9 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 # Signals
 #
 
-def enemy_killed(game: CellAutoGame):
-    STATE.score_counter += 1
+def enemy_killed(game: CellAutoGame, other: float):
+    bounty = other
+    STATE.score_counter += bounty
     ui = UI.get()
     ui.life_meter.set_percentage(STATE.health_percentage)
 

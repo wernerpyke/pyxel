@@ -9,11 +9,7 @@ from .enemy import Enemy
 class Orb(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("orb", Coord(11,8), 
-                         animation_frame_count=4,
-                         power=1200, 
-                         speed=2,
-                         damage=1)
+        super().__init__("orb", Coord(11,8), animation_frame_count=4)
 
     def launch(self, game: CellAutoGame, position: Coord):
         start_x = position.x

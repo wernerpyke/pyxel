@@ -4,11 +4,17 @@ from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
+from td.stats import STATS
 
 
 class Enemy:
-    def __init__(self, name: str, from_frame: Coord, power: float, speed: int, damage: float, animation_frame_count:int = 2) -> None:
-        sprite = Sprite(name, from_frame, 1, 1)
+    def __init__(self, type: str, from_frame: Coord, animation_frame_count:int = 2) -> None:
+        self.type = type
+        stats = STATS.ENEMIES[type]
+        if not stats:
+            log_error(f"Enemy() invalid type:{type}")
+
+        sprite = Sprite(type, from_frame, 1, 1)
         
         sprite.add_animation("loop", Animation(from_frame, animation_frame_count))
         sprite.activate_animation("loop")
@@ -17,14 +23,15 @@ class Enemy:
         sprite.add_animation("die", Animation(Coord(7,9), 2))
         self._sprite = sprite
 
-        self.power:float = power
+        self.power:float = stats.power
 
-        if speed > 10:
+        if stats.speed > 10:
             log_error(f"Enemy({type}) speed > 10")
-            speed = 10
-        self._speed = speed
+            stats.speed = 10
+        self._speed = stats.speed
 
-        self.damage: float = damage
+        self.damage: float = stats.damage
+        self.bounty: float = stats.bounty
 
         # Calculate the boundaries of the win condition
         game_w = game_h = GameSettings.get().size.window
@@ -65,7 +72,7 @@ class Enemy:
             return self._calculate_win()
     
     def __str__(self):
-        return f"{self._sprite.name}{self._sprite._id}"
+        return f"{self.type}{self._sprite._id}"
 
     def _move_towards_target(self) -> tuple[int, int]:
         return (0, 1) # straight down

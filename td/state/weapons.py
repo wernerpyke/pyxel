@@ -162,7 +162,7 @@ class GameWeapons:
         if to_enemy:
             to = to_enemy._sprite.position
             to = to.clone_by(0, 20) # TODO - this is not great, just guessing 20 px below
-            log_debug(f"weapons._launch_star at {to_enemy._sprite.name} {to}")
+            log_debug(f"weapons._launch_star at {to_enemy.type} {to}")
         else:
             to_x = 0
             if position.x >= 160: # right

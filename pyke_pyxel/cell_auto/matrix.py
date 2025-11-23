@@ -318,7 +318,7 @@ class Matrix:
 
         Implements a Bresenham-like integer algorithm that handles all octants.
         Coordinates outside the matrix are ignored; only in-bounds cells are
-        appended to the result. Iteration includes both endpoints.
+        appended to the result. The result includes both endpoints.
         """
         cells: list[Cell] = []
 
@@ -345,11 +345,8 @@ class Matrix:
         current_x, current_y = from_x, from_y
 
         # Main loop iterates until the end point is reached
-        # The loop condition ensures the drawing stops at (x1, y1)
         while True:
             # Draw the pixel at the current coordinates (y is row, x is column)
-            # Note: In a list-of-lists matrix, the first index is the row (y-coordinate)
-            # and the second index is the column (x-coordinate).
             if 0 <= current_y < len(self._cells) and 0 <= current_x < len(self._cells[0]):
                 # print(f"Draw x:{current_x} y:{current_y}")
                 cells.append(self._cells[current_y][current_x])
