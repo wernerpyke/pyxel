@@ -1,20 +1,22 @@
 from pyke_pyxel import Coord, log_error
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
+from td.state import STATE
 
 
 class Weapon:
-    def __init__(self, type: str, location_id: str, position: Coord, power: float, speed: float, cooldown: float) -> None:
+    def __init__(self, type: str, location_id: str, position: Coord) -> None:
         self.type = type
         self._location_id = location_id
         self.position = position
-        self.power = power
 
-        if speed > 10:
-            log_error(f"Weapon({type}) speed > 10")
-            speed = 10
-        self._speed: float= speed
+        stats = STATE.weapon_stats(type)
+        if not stats:
+            log_error(f"Weapon() invalid type {type}")
+            return
 
-        self._cooldown: float = cooldown
+        self.power = stats.power
+        self._speed = stats.speed
+        self._cooldown = stats.cooldown
 
         self._deactivate_upon_death = False
 

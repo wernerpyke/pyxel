@@ -9,7 +9,7 @@ from .weapon import Weapon
 class Star(Weapon):
 
     def __init__(self, location_id: str, position: Coord, to: Coord) -> None:
-        super().__init__("star", location_id, position, power=10, speed=10, cooldown=0.5)
+        super().__init__("star", location_id, position)
 
         self._from = position
         self._to = to

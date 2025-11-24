@@ -4,15 +4,16 @@ from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
-from td.stats import STATS
+from td.state import STATE
 
 
 class Enemy:
     def __init__(self, type: str, from_frame: Coord, animation_frame_count:int = 2) -> None:
         self.type = type
-        stats = STATS.ENEMIES[type]
+        stats = STATE.enemy_stats(type)
         if not stats:
             log_error(f"Enemy() invalid type:{type}")
+            return
 
         sprite = Sprite(type, from_frame, 1, 1)
         
@@ -23,15 +24,10 @@ class Enemy:
         sprite.add_animation("die", Animation(Coord(7,9), 2))
         self._sprite = sprite
 
-        self.power:float = stats.power
-
-        if stats.speed > 10:
-            log_error(f"Enemy({type}) speed > 10")
-            stats.speed = 10
+        self.power = stats.power
         self._speed = stats.speed
-
-        self.damage: float = stats.damage
-        self.bounty: float = stats.bounty
+        self.damage  = stats.damage
+        self.bounty  = stats.bounty
 
         # Calculate the boundaries of the win condition
         game_w = game_h = GameSettings.get().size.window
