@@ -1,11 +1,12 @@
 ## 🧩 TODO
 
 - **Balance**
-    - Enemies should not all apply the same cost/damage to the score_counter, e.g. Bats should damage less than Mage
+    - **Weapon Power-Ups**
 - **Weapons**
     - **Wind**: pushback to enemies
     - **Mountain** / **Crack**: prevent ground-level enemies from crossing
 - **Enemies**
+    - **Fungus interaction**: Fix resetting a cell which may be in a weapon's active cells
     - **Blob**: ??
     - **Ghost**: floats over fungus
 

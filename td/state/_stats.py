@@ -19,14 +19,14 @@ class _stats:
     ENEMIES: dict[str, EnemyStats] = field(default_factory=dict)
     WEAPONS: dict[str, WeaponStats] = field(default_factory=dict)
 
-_STATS = _stats()
+STATS = _stats()
 
-_STATS.ENEMIES["skeleton"] = EnemyStats( power=600,     speed=2,    damage=2,   bounty=1 )
-_STATS.ENEMIES["orb"] =      EnemyStats( power=1200,    speed=2,    damage=1.5, bounty=2 )
-_STATS.ENEMIES["mage"] =     EnemyStats( power=1000,    speed=3,    damage=4,   bounty=3 )
-_STATS.ENEMIES["bat"] =      EnemyStats( power=100,     speed=6,    damage=0.5, bounty=0.5 )
+STATS.ENEMIES["skeleton"] = EnemyStats( power=600,     speed=2,    damage=2,   bounty=1 )
+STATS.ENEMIES["orb"] =      EnemyStats( power=1200,    speed=2,    damage=1.5, bounty=2 )
+STATS.ENEMIES["mage"] =     EnemyStats( power=1000,    speed=3,    damage=4,   bounty=3 )
+STATS.ENEMIES["bat"] =      EnemyStats( power=100,     speed=6,    damage=0.5, bounty=0.5 )
 
-_STATS.WEAPONS["bolt"] =     WeaponStats( power=150,     speed=10,   cooldown=6 )
-_STATS.WEAPONS["fungus"] =   WeaponStats( power=2,       speed=4,    cooldown=40 )
-_STATS.WEAPONS["meteor"] =   WeaponStats( power=20,      speed=10,   cooldown=10 )
-_STATS.WEAPONS["star"] =     WeaponStats( power=10,      speed=10,   cooldown=0.5 )
+STATS.WEAPONS["bolt"] =     WeaponStats( power=150,     speed=10,   cooldown=6 )
+STATS.WEAPONS["fungus"] =   WeaponStats( power=2,       speed=4,    cooldown=40 )
+STATS.WEAPONS["meteor"] =   WeaponStats( power=20,      speed=10,   cooldown=10 )
+STATS.WEAPONS["star"] =     WeaponStats( power=10,      speed=10,   cooldown=0.5 )

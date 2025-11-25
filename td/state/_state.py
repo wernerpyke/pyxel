@@ -2,7 +2,7 @@ import time
 
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
-from ._stats import _STATS, EnemyStats, WeaponStats
+from ._stats import STATS, EnemyStats, WeaponStats
 from .weapons import GameWeapons
 from .enemies import GameEnemies
 
@@ -20,12 +20,12 @@ class GameState:
         # Progression
         self.level = 0
         self.score_counter: float = 0
-        self._max_health = _STATS.PLAYER_HEALTH
+        self._max_health = STATS.PLAYER_HEALTH
 
     def start(self):
         self.level = 0
         self.score_counter = 0
-        self._max_health = _STATS.PLAYER_HEALTH
+        self._max_health = STATS.PLAYER_HEALTH
 
         self._timestamp = time.time()
         self._running_time = 0
@@ -81,8 +81,9 @@ class GameState:
         seconds = seconds % 60
         return f"{minutes:02d}:{seconds:02d}"
     
-    def enemy_stats(self, type: str) -> EnemyStats|None:
-        return _STATS.ENEMIES.get(type)
+    # TODO the below causes a circular import in Enemy() and Weapon()
+    # def enemy_stats(self, type: str) -> EnemyStats|None:
+    #    return _STATS.ENEMIES.get(type)
     
-    def weapon_stats(self, type: str) -> WeaponStats|None:
-        return _STATS.WEAPONS.get(type) # TODO apply POWER UP effects here
+    # def weapon_stats(self, type: str) -> WeaponStats|None:
+    #    return _STATS.WEAPONS.get(type) # TODO apply POWER UP effects here

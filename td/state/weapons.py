@@ -6,7 +6,6 @@ from pyke_pyxel import Coord, log_debug, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
-from td.enemies.enemy import Enemy
 from td.weapons.bolt import Bolt
 from td.weapons.star import Star
 from td.weapons.fungus import Fungus

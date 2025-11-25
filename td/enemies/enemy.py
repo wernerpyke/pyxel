@@ -4,13 +4,13 @@ from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
-from td.state import STATE
+from td.state._stats import STATS
 
 
 class Enemy:
     def __init__(self, type: str, from_frame: Coord, animation_frame_count:int = 2) -> None:
         self.type = type
-        stats = STATE.enemy_stats(type)
+        stats = STATS.ENEMIES.get(type)
         if not stats:
             log_error(f"Enemy() invalid type:{type}")
             return

@@ -1,6 +1,6 @@
 from pyke_pyxel import Coord, log_error
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
-from td.state import STATE
+from td.state._stats import STATS
 
 
 class Weapon:
@@ -9,7 +9,7 @@ class Weapon:
         self._location_id = location_id
         self.position = position
 
-        stats = STATE.weapon_stats(type)
+        stats = STATS.WEAPONS.get(type)
         if not stats:
             log_error(f"Weapon() invalid type {type}")
             return
@@ -34,3 +34,6 @@ class Weapon:
     @property
     def is_alive(self) -> bool:
         return len(self.cells) > 0
+    
+    def __str__(self) -> str:
+        return f"Weapon({self.type}{self._location_id})"
