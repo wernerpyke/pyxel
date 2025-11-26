@@ -78,20 +78,6 @@ class GameWeapons:
 
         self.active: list[Weapon] = []
 
-    def cost_of(self, type: str) -> float:
-        match type:
-            case "star":
-                return 1
-            case "bolt":
-                return 1
-            case "fungus":
-                return 3
-            case "meteor":
-                return 2
-            case _:
-                log_error(f"weapons.cost_of() invalid type {type}")
-                return 10
-
     def update(self, field: Matrix, enemies: GameEnemies):
         to_remove: list[Weapon] = []
         for w in self.active:

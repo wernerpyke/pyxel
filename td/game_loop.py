@@ -19,14 +19,13 @@ class UpdateQueueItem:
 update_queue: list[UpdateQueueItem] = []
 
 def start(game: CellAutoGame):
-    ui = UI.get()
     if DEBUG_START_GAME_LEVEL:
         load_level(game)
         ui_game_screen_fade_in_complete(None)
     elif DEBUG_START_GAME_OVER:
-        UI.get().show_game_over_screen(game)
+        UI.show_game_over_screen(game)
     else:
-        ui.show_title_screen(game)
+        UI.show_title_screen(game)
 
     if STATE.music_enabled:
         game.start_music(0)
@@ -34,29 +33,28 @@ def start(game: CellAutoGame):
 def update(game: CellAutoGame):
     _process_update_queue(game)
 
-    ui = UI.get()
-    if ui.state_is_waiting():
+    if UI.state_is_waiting():
         return
     
     STATE.update(game)
-    text = ui.timer_text
+    text = UI.timer_text
     text.set_text(STATE.running_time_text)
 
 def _process_update_queue(game: CellAutoGame):
     for u in update_queue:
         match u.type:
             case "ui_display_title_screen":
-                UI.get().show_title_screen(game)
+                UI.show_title_screen(game)
             case "ui_fade_from_title_to_game":
                 game.fx.circular_wipe(COLOURS.BLUE_DARK, True, "ui_title_screen_fade_out_complete")
-                UI.get().state_to_waiting()
+                UI.state_to_waiting()
             case "load_level":
-                UI.get().hide_title_screen(game)
+                UI.hide_title_screen(game)
                 load_level(game)
                 game.fx.circular_wipe(COLOURS.BLUE_DARK, False, "ui_game_screen_fade_in_complete")
-                UI.get().state_to_waiting()
+                UI.state_to_waiting()
             case "hide_weapon_ui":
-                UI.get().hide_weapons_ui(game)
+                UI.hide_weapons_ui(game)
             case "launch_weapon":
                 _launch_weapon(u.params, game) # type: ignore
             case "deactivate_weapon":
@@ -69,13 +67,13 @@ def _process_update_queue(game: CellAutoGame):
             case "game_over":
                 STATE.enemies.clear_all()
                 STATE.weapons.clear_all()
-                UI.get().state_to_waiting()
+                UI.state_to_waiting()
                 game.fx.circular_wipe(COLOURS.PURPLE, True, "ui_game_over_fade_out_complete")
             case "ui_display_game_over_screen":
                 game.clear_all() # Required to clear out any sprites from the previous game after game-over
-                UI.get().show_game_over_screen(game)
+                UI.show_game_over_screen(game)
             case "ui_hide_game_over_screen":
-                UI.get().hide_game_over_screen(game)
+                UI.hide_game_over_screen(game)
             case _:
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()
@@ -87,16 +85,15 @@ def _launch_weapon(type: str, game: CellAutoGame):
         return
 
     if STATE.acquire_weapon(type):
-        ui = UI.get()
-        ui.life_meter.set_percentage(STATE.health_percentage)
-        ui.set_weapon_marker(type, location, game)
+        UI.life_meter.set_percentage(STATE.health_percentage)
+        UI.set_weapon_marker(type, location, game)
         location.activate(type)
 
 def _deactivate_weapon(location_id: str, game: CellAutoGame):
     location = STATE.weapons.location_by_id(location_id)
     if location:
         location.deactivate()
-        UI.get().remove_weapon_marker(location, game)
+        UI.remove_weapon_marker(location, game)
     else:
         log_error(f"game_loop._deactivate_weapon() invalid location_id:{location_id}")
 
@@ -114,8 +111,7 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 def enemy_killed(game: CellAutoGame, other: float):
     bounty = other
     STATE.score_counter += bounty
-    ui = UI.get()
-    ui.life_meter.set_percentage(STATE.health_percentage)
+    UI.life_meter.set_percentage(STATE.health_percentage)
 
 def enemy_attacks(game: CellAutoGame, other: float):
     percentage = STATE.health_percentage
@@ -123,7 +119,6 @@ def enemy_attacks(game: CellAutoGame, other: float):
         # Important: we don't trigger game over as soon as the health % == 0
         # Once it hits zero the player still has one more chance to survive.
         # It is only the first attack below zero that causes game over
-        print("GAME OVER")
         update_queue.append(UpdateQueueItem("game_over"))
         return
     
@@ -131,8 +126,7 @@ def enemy_attacks(game: CellAutoGame, other: float):
     STATE.score_counter -= damage
     print(f"game_loop.enemy_attacks() damage:{damage} score:{STATE.score_counter}")
 
-    ui = UI.get()
-    ui.life_meter.set_percentage(STATE.health_percentage)
+    UI.life_meter.set_percentage(STATE.health_percentage)
 
 def enemy_spawns_enemy(sender, other):
     name: str = sender
@@ -155,9 +149,8 @@ def ui_title_screen_fade_out_complete(sender):
 
 def ui_game_screen_fade_in_complete(sender):
     STATE.start()
-    ui = UI.get()
-    ui.state_to("select_location")
-    ui.life_meter.set_percentage(STATE.health_percentage)
+    UI.state_to("select_location")
+    UI.life_meter.set_percentage(STATE.health_percentage)
 
 def ui_weapon_selected(type: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location

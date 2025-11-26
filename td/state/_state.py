@@ -2,7 +2,7 @@ import time
 
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
-from ._stats import STATS, EnemyStats, WeaponStats
+from .stats import STATS
 from .weapons import GameWeapons
 from .enemies import GameEnemies
 
@@ -57,7 +57,7 @@ class GameState:
         self.weapons.update(game.matrix, self.enemies)
 
     def acquire_weapon(self, type: str) -> bool:
-        cost = self.weapons.cost_of(type)
+        cost = STATS.WEAPONS[type].cost
         # if cost > self.score_counter:
         #    return False
         self.score_counter -= cost

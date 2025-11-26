@@ -16,7 +16,7 @@ def load_level(game: CellAutoGame):
 
     _add_base(game)
 
-    UI.get().load_hud(game)
+    UI.load_hud(game)
 
 def _add_plants(game: Game):
     s = CompoundSprite("plants", 40, 4)

@@ -9,7 +9,7 @@ from td.enemies.bat import Bat
 from td.enemies.mage import Mage
 from td.enemies.orb import Orb
 from td.enemies.skeleton import Skeleton
-from td.state._levels import EnemyLevel
+from ._levels import EnemyLevel
 
 launch_locations = [
     Coord(2, 4), Coord(3, 2), Coord(4, 4), Coord(5, 6), Coord(7, 11), Coord(8, 8), Coord(9, 11), 

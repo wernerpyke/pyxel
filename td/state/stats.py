@@ -9,6 +9,7 @@ class EnemyStats:
 
 @dataclass
 class WeaponStats:
+    cost: float
     power: float
     speed: float
     cooldown: float
@@ -26,7 +27,7 @@ STATS.ENEMIES["orb"] =      EnemyStats( power=1200,    speed=2,    damage=1.5, b
 STATS.ENEMIES["mage"] =     EnemyStats( power=1000,    speed=3,    damage=4,   bounty=3 )
 STATS.ENEMIES["bat"] =      EnemyStats( power=100,     speed=6,    damage=0.5, bounty=0.5 )
 
-STATS.WEAPONS["bolt"] =     WeaponStats( power=150,     speed=10,   cooldown=6 )
-STATS.WEAPONS["fungus"] =   WeaponStats( power=2,       speed=4,    cooldown=40 )
-STATS.WEAPONS["meteor"] =   WeaponStats( power=20,      speed=10,   cooldown=10 )
-STATS.WEAPONS["star"] =     WeaponStats( power=10,      speed=10,   cooldown=0.5 )
+STATS.WEAPONS["bolt"] =     WeaponStats( cost=1,       power=150,   speed=10,  cooldown=6 )
+STATS.WEAPONS["fungus"] =   WeaponStats( cost=3,       power=2,     speed=4,   cooldown=40 )
+STATS.WEAPONS["meteor"] =   WeaponStats( cost=2,       power=20,    speed=10,  cooldown=10 )
+STATS.WEAPONS["star"] =     WeaponStats( cost=1,       power=10,    speed=10,  cooldown=0.5 )
