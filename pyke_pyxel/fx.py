@@ -1,8 +1,95 @@
 import math
 import pyxel
-from ._base_types import GameSettings, COLOURS
+from ._base_types import Coord, GameSettings, COLOURS
 from .signals import Signals
 
+class _Effect:    
+    def __init__(self, completion_signal: str|None):
+        self._completion_signal: str | None = completion_signal
+        self._active = True
+
+    def _complete(self):
+        self._active = False
+        if signal := self._completion_signal:
+            Signals.send(signal, self)
+            self._completion_signal = None
+
+    def _draw(self):
+        raise NotImplementedError("Effect._draw() not implemented")
+
+class _CircularWipe(_Effect):
+    def __init__(self, colour: int, wipe_closed: bool, completion_signal: str|None, settings: GameSettings):
+        super().__init__(completion_signal)
+
+        self._colour = colour
+        self._wipe_closed = wipe_closed
+        self._width = settings.size.window
+        self._height = settings.size.window
+        self._center_x = settings.size.window // 2
+        self._center_y = settings.size.window // 2
+        self._max_radius = math.floor(math.sqrt(self._center_x**2 + self._center_y**2))
+        self._radius_step = 3
+        self._current_radius = 0
+
+        if self._wipe_closed:
+            self._current_radius = self._max_radius
+        else:
+            self._current_radius = 0
+
+    def _draw(self):
+        for y in range(0, self._height):
+            for x in range(0, self._width):
+                distance = math.sqrt((x - self._center_x)**2 + (y - self._center_y)**2)
+                delta = distance - self._current_radius
+                if delta <= 0:
+                    pass
+                elif delta < 5 and (x % 2 == 0) and (y % 2 == 0):
+                    pyxel.pset(x, y, self._colour)
+                else:
+                    pyxel.pset(x, y, self._colour)
+
+        if self._wipe_closed:
+            self._current_radius -= self._radius_step
+            if self._current_radius <= 0:
+                self._complete()
+        else:
+            self._current_radius += self._radius_step
+            if self._current_radius >= self._max_radius:
+               self._complete()
+
+class _Splatter(_Effect):
+    def __init__(self, position: Coord, colour: int):
+        super().__init__(None)
+        self._colour = colour
+        self._position = position
+        self._iteration = 0
+
+        self._origin_x = position.mid_x
+        self._origin_y = position.max_y - 2
+
+    def _draw(self):
+        # Assume 60 FPS
+        if self._iteration < 5:
+            pyxel.pset(self._origin_x-1, self._origin_y, self._colour)
+            pyxel.pset(self._origin_x, self._origin_y, self._colour)
+            pyxel.pset(self._origin_x+1, self._origin_y, self._colour)
+        elif self._iteration < 10:
+            pyxel.pset(self._origin_x-1, self._origin_y+1, self._colour)
+            pyxel.pset(self._origin_x, self._origin_y, self._colour)
+            pyxel.pset(self._origin_x+1, self._origin_y+1, self._colour)
+        elif self._iteration < 20:
+            pyxel.pset(self._origin_x-2, self._origin_y+2, self._colour)
+            pyxel.pset(self._origin_x, self._origin_y, self._colour)
+            pyxel.pset(self._origin_x+2, self._origin_y+2, self._colour)
+        # elif self._iteration < 40:
+        #    pyxel.pset(self._origin_x-2, self._origin_y+2, self._colour)
+        #    pyxel.pset(self._origin_x, self._origin_y, self._colour)
+        #    pyxel.pset(self._origin_x+2, self._origin_y+2, self._colour)
+        else:
+            self._complete()
+            return
+
+        self._iteration += 1
 
 class FX:
     """
@@ -12,21 +99,9 @@ class FX:
     This class should be accessed through the `game` instance via `game.fx`.
     """
 
-    def __init__(self, settings: GameSettings) -> None:
-        self._completion_signal: str|None = None
-        
-        # TODO - move the circular wipe code out to either a class or functions
-        self._colour: int = COLOURS.BLACK
-        self._wipe_closed: bool = True
-        self._width = settings.size.window
-        self._height = settings.size.window
-        self._center_x = settings.size.window // 2
-        self._center_y = settings.size.window // 2
-
-        # Calculate the maximum possible distance from the center to any corner
-        self._max_radius = math.floor(math.sqrt(self._center_x**2 + self._center_y**2))
-        self._radius_step = 3
-        self._current_radius = 0
+    def __init__(self, settings: GameSettings):
+        self._settings = settings
+        self._effects: list[_Effect] = []
 
     def circular_wipe(self, colour: int, wipe_closed: bool, completion_signal: str):
         """
@@ -42,49 +117,23 @@ class FX:
         completion_signal : str
             Identifier of the signal/event to emit when the wipe animation finishes.
         """
-        self._colour = colour
-        self._wipe_closed = wipe_closed
+        wipe = _CircularWipe(colour, wipe_closed, completion_signal, self._settings)
+        self._effects.append(wipe)
 
-        self._completion_signal = completion_signal
-
-        if self._wipe_closed:
-            self._current_radius = self._max_radius
-        else:
-            self._current_radius = 0
-
-    @property
-    def _is_active(self):
-        return not self._completion_signal == None
+    def splatter(self, colour: int, position: Coord):
+        splatter = _Splatter(position, colour)
+        self._effects.append(splatter)
 
     def _clear_all(self):
-        pass
+        self._effects.clear()
 
     def _draw(self):
-        # Iterate through every pixel (y=row, x=column)
-        for y in range(0, self._height):
-            for x in range(0, self._width):
-                # Calculate the distance of the pixel from the center (Euclidean distance)
-                # Distance = sqrt((x - Cx)^2 + (y - Cy)^2)
-                distance = math.sqrt(
-                    (x - self._center_x)**2 + (y - self._center_y)**2
-                )
-                
-                delta = distance - self._current_radius
-                if delta <= 0: # If the pixel is inside the circle, leave transparent
-                    pass
-                elif delta < 5 and (x % 2 == 0) and (y % 2 == 0): # Create a ragged edge
-                    pyxel.pset(x, y, self._colour)
-                else:
-                    pyxel.pset(x, y, self._colour)
+        for effect in self._effects:
+            effect._draw()
+            if not effect._active:
+                self._effects.remove(effect)
 
-        # 3. Update radius
-        if self._wipe_closed:
-            self._current_radius -= self._radius_step
-            if (self._current_radius <= 0) and (signal := self._completion_signal):
-                Signals.send(signal, self)                    
-                self._completion_signal = None
-        else:
-            self._current_radius += self._radius_step
-            if (self._current_radius >= self._max_radius) and (signal := self._completion_signal):
-                Signals.send(signal, self)      
-                self._completion_signal = None
+    @property
+    def is_active(self):
+        return any(effect._active for effect in self._effects)
+        

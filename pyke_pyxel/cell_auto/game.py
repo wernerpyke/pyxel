@@ -42,7 +42,7 @@ class CellAutoGame(Game):
         if self._hud:
             self._hud._draw(self._settings)
 
-        if self._fx and self._fx._is_active:
+        if self._fx and self._fx.is_active:
             self._fx._draw()
 
     # Convenience accessors

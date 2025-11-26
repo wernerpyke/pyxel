@@ -102,7 +102,7 @@ class Game:
         if self._hud:
             self._hud._clear_all()
 
-        if self._fx and self._fx._is_active:
+        if self._fx and self._fx.is_active:
             self._fx._clear_all()
 
     def add_sprite(self, sprite: Sprite|CompoundSprite):
@@ -289,7 +289,7 @@ class Game:
         if self._hud:
             self._hud._draw(self._settings)
 
-        if self._fx and self._fx._is_active:
+        if self._fx and self._fx.is_active:
             self._fx._draw()
 
         # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
