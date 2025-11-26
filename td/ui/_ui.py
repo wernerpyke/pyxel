@@ -2,7 +2,7 @@ from pathlib import Path
 
 from pyke_pyxel import Coord, GameSettings, log_error
 from pyke_pyxel.game import Game
-from pyke_pyxel.sprite._sprites import Sprite, TextSprite
+from pyke_pyxel.sprite import Sprite, TextSprite
 from pyke_pyxel.drawable import Button
 
 from td.state import STATE

@@ -59,25 +59,6 @@
     * [center\_y](#pyke_pyxel.map.Map.center_y)
     * [right\_x](#pyke_pyxel.map.Map.right_x)
     * [bottom\_y](#pyke_pyxel.map.Map.bottom_y)
-* [sprite](#pyke_pyxel.sprite)
-  * [Animation](#pyke_pyxel.sprite.Animation)
-  * [Sprite](#pyke_pyxel.sprite.Sprite)
-    * [activate\_animation](#pyke_pyxel.sprite.Sprite.activate_animation)
-    * [pause\_animation](#pyke_pyxel.sprite.Sprite.pause_animation)
-    * [unpause\_animation](#pyke_pyxel.sprite.Sprite.unpause_animation)
-    * [deactivate\_animations](#pyke_pyxel.sprite.Sprite.deactivate_animations)
-    * [set\_position](#pyke_pyxel.sprite.Sprite.set_position)
-  * [OpenableSprite](#pyke_pyxel.sprite.OpenableSprite)
-  * [MovableSprite](#pyke_pyxel.sprite.MovableSprite)
-  * [TextSprite](#pyke_pyxel.sprite.TextSprite)
-  * [CompoundSprite](#pyke_pyxel.sprite.CompoundSprite)
-    * [fill\_tiles](#pyke_pyxel.sprite.CompoundSprite.fill_tiles)
-    * [fill\_col](#pyke_pyxel.sprite.CompoundSprite.fill_col)
-    * [fill\_row](#pyke_pyxel.sprite.CompoundSprite.fill_row)
-    * [set\_tile](#pyke_pyxel.sprite.CompoundSprite.set_tile)
-    * [clear\_graphics](#pyke_pyxel.sprite.CompoundSprite.clear_graphics)
-    * [graph\_rect](#pyke_pyxel.sprite.CompoundSprite.graph_rect)
-    * [graph\_triangle](#pyke_pyxel.sprite.CompoundSprite.graph_triangle)
 * [matrix](#pyke_pyxel.cell_auto.matrix)
   * [Cell](#pyke_pyxel.cell_auto.matrix.Cell)
     * [reset](#pyke_pyxel.cell_auto.matrix.Cell.reset)
@@ -100,6 +81,25 @@
 * [game](#pyke_pyxel.cell_auto.game)
   * [CellAutoGame](#pyke_pyxel.cell_auto.game.CellAutoGame)
     * [\_\_init\_\_](#pyke_pyxel.cell_auto.game.CellAutoGame.__init__)
+* [\_sprites](#pyke_pyxel.sprite._sprites)
+  * [Animation](#pyke_pyxel.sprite._sprites.Animation)
+  * [Sprite](#pyke_pyxel.sprite._sprites.Sprite)
+    * [activate\_animation](#pyke_pyxel.sprite._sprites.Sprite.activate_animation)
+    * [pause\_animation](#pyke_pyxel.sprite._sprites.Sprite.pause_animation)
+    * [unpause\_animation](#pyke_pyxel.sprite._sprites.Sprite.unpause_animation)
+    * [deactivate\_animations](#pyke_pyxel.sprite._sprites.Sprite.deactivate_animations)
+    * [set\_position](#pyke_pyxel.sprite._sprites.Sprite.set_position)
+  * [OpenableSprite](#pyke_pyxel.sprite._sprites.OpenableSprite)
+  * [MovableSprite](#pyke_pyxel.sprite._sprites.MovableSprite)
+  * [TextSprite](#pyke_pyxel.sprite._sprites.TextSprite)
+  * [CompoundSprite](#pyke_pyxel.sprite._sprites.CompoundSprite)
+    * [fill\_tiles](#pyke_pyxel.sprite._sprites.CompoundSprite.fill_tiles)
+    * [fill\_col](#pyke_pyxel.sprite._sprites.CompoundSprite.fill_col)
+    * [fill\_row](#pyke_pyxel.sprite._sprites.CompoundSprite.fill_row)
+    * [set\_tile](#pyke_pyxel.sprite._sprites.CompoundSprite.set_tile)
+    * [clear\_graphics](#pyke_pyxel.sprite._sprites.CompoundSprite.clear_graphics)
+    * [graph\_rect](#pyke_pyxel.sprite._sprites.CompoundSprite.graph_rect)
+    * [graph\_triangle](#pyke_pyxel.sprite._sprites.CompoundSprite.graph_triangle)
 * [hud](#pyke_pyxel.hud)
   * [HUD](#pyke_pyxel.hud.HUD)
     * [add\_text](#pyke_pyxel.hud.HUD.add_text)
@@ -112,6 +112,7 @@
 * [fx](#pyke_pyxel.fx)
   * [FX](#pyke_pyxel.fx.FX)
     * [circular\_wipe](#pyke_pyxel.fx.FX.circular_wipe)
+    * [splatter](#pyke_pyxel.fx.FX.splatter)
 * [\_base\_types](#pyke_pyxel._base_types)
   * [ColourSettings](#pyke_pyxel._base_types.ColourSettings)
     * [sprite\_transparency](#pyke_pyxel._base_types.ColourSettings.sprite_transparency)
@@ -829,232 +830,6 @@ def bottom_y() -> int
 
 Bottom-most `y` point of the map
 
-<a id="pyke_pyxel.sprite"></a>
-
-# sprite
-
-<a id="pyke_pyxel.sprite.Animation"></a>
-
-## Animation Objects
-
-```python
-class Animation()
-```
-
-Represents a sequence of frames for a sprite animation.
-
-Parameters
-----------
-start_frame : Coord
-    The coordinate of the first frame in the animation strip.
-frames : int
-    Number of frames in the animation.
-flip : Optional[bool]
-    If True, the animation should be drawn flipped horizontally.
-
-<a id="pyke_pyxel.sprite.Sprite"></a>
-
-## Sprite Objects
-
-```python
-class Sprite()
-```
-
-A drawable sprite with optional animations.
-
-A Sprite contains a set of named Animation objects, a current
-active_frame to draw, and a position. Animations may be started,
-paused, resumed and looped. Sprites are lightweight containers for
-animation state and drawing metadata.
-
-Parameters
-----------
-name : str
-    Logical name for the sprite.
-default_frame : Coord
-    The frame to use when no animation is active (idle frame).
-col_tile_count, row_tile_count : int
-    Width/height in tiles for framed sprites (used when advancing frames).
-resource_image_index : int
-    Index of the image resource (if multiple images are used).
-
-<a id="pyke_pyxel.sprite.Sprite.activate_animation"></a>
-
-#### activate\_animation
-
-```python
-def activate_animation(name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None)
-```
-
-Start the named animation.
-
-If the named animation is already active this is a no-op. When
-started the animation is unpaused, flip state is applied and the
-optional `on_animation_end` callback will be invoked when a
-non-looping animation finishes.
-
-<a id="pyke_pyxel.sprite.Sprite.pause_animation"></a>
-
-#### pause\_animation
-
-```python
-def pause_animation()
-```
-
-Pause the currently active animation, if any.
-
-<a id="pyke_pyxel.sprite.Sprite.unpause_animation"></a>
-
-#### unpause\_animation
-
-```python
-def unpause_animation()
-```
-
-Unpause the currently active animation, if any.
-
-<a id="pyke_pyxel.sprite.Sprite.deactivate_animations"></a>
-
-#### deactivate\_animations
-
-```python
-def deactivate_animations()
-```
-
-Stop any active animation and reset flip state.
-
-<a id="pyke_pyxel.sprite.Sprite.set_position"></a>
-
-#### set\_position
-
-```python
-def set_position(position: Coord)
-```
-
-Set the pixel/grid position where this Sprite will be drawn.
-
-<a id="pyke_pyxel.sprite.OpenableSprite"></a>
-
-## OpenableSprite Objects
-
-```python
-class OpenableSprite(Sprite)
-```
-
-A Sprite that supports open/close states (e.g., doors, chests).
-
-The OpenableSprite exposes simple open/close methods and manages an
-internal status value that determines which frame is shown.
-
-<a id="pyke_pyxel.sprite.MovableSprite"></a>
-
-## MovableSprite Objects
-
-```python
-class MovableSprite(Sprite)
-```
-
-Sprite with movement-related configuration and convenience setters.
-
-MovableSprite stores a movement speed and provides helper methods to
-create simple directional animations (up/down/left/right).
-
-<a id="pyke_pyxel.sprite.TextSprite"></a>
-
-## TextSprite Objects
-
-```python
-class TextSprite()
-```
-
-A simple text sprite for rendering text using a pyxel font.
-
-<a id="pyke_pyxel.sprite.CompoundSprite"></a>
-
-## CompoundSprite Objects
-
-```python
-class CompoundSprite()
-```
-
-A multi-tile sprite composed of a grid of `Coord` tiles with optional overlay graphics.
-
-CompoundSprite manages a matrix of tile coordinates (cols x rows)
-and provides helpers to fill tiles or set individual tiles. Useful for
-larger objects built from multiple sprite tiles.
-
-The class also provides a graphics buffer allowing geometric shapes to be drawn over the sprite tiles
-
-<a id="pyke_pyxel.sprite.CompoundSprite.fill_tiles"></a>
-
-#### fill\_tiles
-
-```python
-def fill_tiles(tile: Coord)
-```
-
-Fill the sprite with a tile
-
-<a id="pyke_pyxel.sprite.CompoundSprite.fill_col"></a>
-
-#### fill\_col
-
-```python
-def fill_col(col: int, from_row: int, to_row: int, tile_col: int, tile_rows: list[int])
-```
-
-Fill one column (all rows) of a sprite with a sequence of tiles
-
-<a id="pyke_pyxel.sprite.CompoundSprite.fill_row"></a>
-
-#### fill\_row
-
-```python
-def fill_row(row: int, from_col: int, to_col: int, tile_row: int, tile_cols: list[int])
-```
-
-Fill one row (all columns) of a sprite with a sequence of tiles
-
-<a id="pyke_pyxel.sprite.CompoundSprite.set_tile"></a>
-
-#### set\_tile
-
-```python
-def set_tile(col: int, row: int, tile: Coord)
-```
-
-Set one tile in the sprite
-
-<a id="pyke_pyxel.sprite.CompoundSprite.clear_graphics"></a>
-
-#### clear\_graphics
-
-```python
-def clear_graphics()
-```
-
-Clear the graphics buffer
-
-<a id="pyke_pyxel.sprite.CompoundSprite.graph_rect"></a>
-
-#### graph\_rect
-
-```python
-def graph_rect(x: int, y: int, width_px: int, height_px: int, colour: int)
-```
-
-Draw a rectangle to the graphics buffer
-
-<a id="pyke_pyxel.sprite.CompoundSprite.graph_triangle"></a>
-
-#### graph\_triangle
-
-```python
-def graph_triangle(x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, colour: int)
-```
-
-Draw a triangle to the graphics buffer
-
 <a id="pyke_pyxel.cell_auto.matrix"></a>
 
 # matrix
@@ -1332,6 +1107,232 @@ def __init__(settings: GameSettings, title: str, resources: str)
 - `title` _str_ - The title of the game window.
 - `resources` _str_ - The path to the resources directory.
 
+<a id="pyke_pyxel.sprite._sprites"></a>
+
+# \_sprites
+
+<a id="pyke_pyxel.sprite._sprites.Animation"></a>
+
+## Animation Objects
+
+```python
+class Animation()
+```
+
+Represents a sequence of frames for a sprite animation.
+
+Parameters
+----------
+start_frame : Coord
+    The coordinate of the first frame in the animation strip.
+frames : int
+    Number of frames in the animation.
+flip : Optional[bool]
+    If True, the animation should be drawn flipped horizontally.
+
+<a id="pyke_pyxel.sprite._sprites.Sprite"></a>
+
+## Sprite Objects
+
+```python
+class Sprite()
+```
+
+A drawable sprite with optional animations.
+
+A Sprite contains a set of named Animation objects, a current
+active_frame to draw, and a position. Animations may be started,
+paused, resumed and looped. Sprites are lightweight containers for
+animation state and drawing metadata.
+
+Parameters
+----------
+name : str
+    Logical name for the sprite.
+default_frame : Coord
+    The frame to use when no animation is active (idle frame).
+col_tile_count, row_tile_count : int
+    Width/height in tiles for framed sprites (used when advancing frames).
+resource_image_index : int
+    Index of the image resource (if multiple images are used).
+
+<a id="pyke_pyxel.sprite._sprites.Sprite.activate_animation"></a>
+
+#### activate\_animation
+
+```python
+def activate_animation(name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None)
+```
+
+Start the named animation.
+
+If the named animation is already active this is a no-op. When
+started the animation is unpaused, flip state is applied and the
+optional `on_animation_end` callback will be invoked when a
+non-looping animation finishes.
+
+<a id="pyke_pyxel.sprite._sprites.Sprite.pause_animation"></a>
+
+#### pause\_animation
+
+```python
+def pause_animation()
+```
+
+Pause the currently active animation, if any.
+
+<a id="pyke_pyxel.sprite._sprites.Sprite.unpause_animation"></a>
+
+#### unpause\_animation
+
+```python
+def unpause_animation()
+```
+
+Unpause the currently active animation, if any.
+
+<a id="pyke_pyxel.sprite._sprites.Sprite.deactivate_animations"></a>
+
+#### deactivate\_animations
+
+```python
+def deactivate_animations()
+```
+
+Stop any active animation and reset flip state.
+
+<a id="pyke_pyxel.sprite._sprites.Sprite.set_position"></a>
+
+#### set\_position
+
+```python
+def set_position(position: Coord)
+```
+
+Set the pixel/grid position where this Sprite will be drawn.
+
+<a id="pyke_pyxel.sprite._sprites.OpenableSprite"></a>
+
+## OpenableSprite Objects
+
+```python
+class OpenableSprite(Sprite)
+```
+
+A Sprite that supports open/close states (e.g., doors, chests).
+
+The OpenableSprite exposes simple open/close methods and manages an
+internal status value that determines which frame is shown.
+
+<a id="pyke_pyxel.sprite._sprites.MovableSprite"></a>
+
+## MovableSprite Objects
+
+```python
+class MovableSprite(Sprite)
+```
+
+Sprite with movement-related configuration and convenience setters.
+
+MovableSprite stores a movement speed and provides helper methods to
+create simple directional animations (up/down/left/right).
+
+<a id="pyke_pyxel.sprite._sprites.TextSprite"></a>
+
+## TextSprite Objects
+
+```python
+class TextSprite()
+```
+
+A simple text sprite for rendering text using a pyxel font.
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite"></a>
+
+## CompoundSprite Objects
+
+```python
+class CompoundSprite()
+```
+
+A multi-tile sprite composed of a grid of `Coord` tiles with optional overlay graphics.
+
+CompoundSprite manages a matrix of tile coordinates (cols x rows)
+and provides helpers to fill tiles or set individual tiles. Useful for
+larger objects built from multiple sprite tiles.
+
+The class also provides a graphics buffer allowing geometric shapes to be drawn over the sprite tiles
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.fill_tiles"></a>
+
+#### fill\_tiles
+
+```python
+def fill_tiles(tile: Coord)
+```
+
+Fill the sprite with a tile
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.fill_col"></a>
+
+#### fill\_col
+
+```python
+def fill_col(col: int, from_row: int, to_row: int, tile_col: int, tile_rows: list[int])
+```
+
+Fill one column (all rows) of a sprite with a sequence of tiles
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.fill_row"></a>
+
+#### fill\_row
+
+```python
+def fill_row(row: int, from_col: int, to_col: int, tile_row: int, tile_cols: list[int])
+```
+
+Fill one row (all columns) of a sprite with a sequence of tiles
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.set_tile"></a>
+
+#### set\_tile
+
+```python
+def set_tile(col: int, row: int, tile: Coord)
+```
+
+Set one tile in the sprite
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.clear_graphics"></a>
+
+#### clear\_graphics
+
+```python
+def clear_graphics()
+```
+
+Clear the graphics buffer
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.graph_rect"></a>
+
+#### graph\_rect
+
+```python
+def graph_rect(x: int, y: int, width_px: int, height_px: int, colour: int)
+```
+
+Draw a rectangle to the graphics buffer
+
+<a id="pyke_pyxel.sprite._sprites.CompoundSprite.graph_triangle"></a>
+
+#### graph\_triangle
+
+```python
+def graph_triangle(x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, colour: int)
+```
+
+Draw a triangle to the graphics buffer
+
 <a id="pyke_pyxel.hud"></a>
 
 # hud
@@ -1453,7 +1454,7 @@ This class should be accessed through the `game` instance via `game.fx`.
 def circular_wipe(colour: int, wipe_closed: bool, completion_signal: str)
 ```
 
-Initialize and configure a circular wipe animation.
+Create a full-screen circular wipe animation.
 
 Parameters
 ----------
@@ -1464,6 +1465,24 @@ wipe_closed : bool
     If False, the wipe is configured to open (expand) outward.
 completion_signal : str
     Identifier of the signal/event to emit when the wipe animation finishes.
+
+<a id="pyke_pyxel.fx.FX.splatter"></a>
+
+#### splatter
+
+```python
+def splatter(colour: int, position: Coord)
+```
+
+Create a splatter effect at the specified position. 
+The splatter effect animates within a single tile for 30 frames.
+
+Parameters
+----------
+colour : int
+    Colour index/value to use for the splatter.
+position : Coord
+    The coordinate where the splatter effect should appear.
 
 <a id="pyke_pyxel._base_types"></a>
 

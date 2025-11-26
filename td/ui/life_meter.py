@@ -1,6 +1,5 @@
 from pyke_pyxel import Coord, COLOURS
-from pyke_pyxel.game import Game
-from pyke_pyxel.sprite._sprites import CompoundSprite
+from pyke_pyxel.sprite import CompoundSprite
 
 
 class LifeMeter:

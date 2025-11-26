@@ -1,5 +1,5 @@
 import pyxel
-from pyke_pyxel._base_types import Coord, GameSettings
+from pyke_pyxel import Coord, GameSettings
 
 
 class Image:

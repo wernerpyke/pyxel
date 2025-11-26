@@ -1,7 +1,6 @@
 import pyxel
 
-from .._base_types import Coord
-from .. import GameSettings
+from pyke_pyxel import Coord, GameSettings
 
 class TileMap:
 
