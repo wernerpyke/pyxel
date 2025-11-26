@@ -23,13 +23,13 @@ class Weapon:
         self.cells: list[Cell] = []
 
     def launch(self, field: Matrix):
-        print("Weapon.launch() implement in your class")
+        raise NotImplementedError("Weapon.launch() implement in your class")
 
     def update(self, field: Matrix):
-        print("Weapon.update() implement in your class")
+        raise NotImplementedError("Weapon.update() implement in your class")
 
     def kill(self):
-        print("Weapon.kill() implement in your class")
+        raise NotImplementedError("Weapon.kill() implement in your class")
 
     @property
     def is_alive(self) -> bool:

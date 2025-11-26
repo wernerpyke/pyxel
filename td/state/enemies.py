@@ -2,6 +2,7 @@ import time
 import random
 
 from pyke_pyxel import Coord, log_error
+from pyke_pyxel._base_types import COLOURS
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
 from td.enemies.enemy import Enemy
@@ -52,7 +53,9 @@ class GameEnemies:
         for e in self._enemies:
             cells = field.cells_at(e._sprite.position, include_empty=False)
             result = e.update(cells)
-            match result:
+            outcome = result[0]
+            was_hit = result[1]
+            match outcome:
                 case 0: # continue
                     pass
                 case -1: # killed
@@ -61,25 +64,29 @@ class GameEnemies:
                     e._sprite.activate_animation("die", loop=False, on_animation_end=_remove_enemy_sprite)
                     Signals.send_with("enemy_killed", game, e.bounty)
                 case _: # win with potential multiplier
-                    damage = e.damage * result
+                    damage = e.damage * outcome
                     self._enemies.remove(e)
                     e._sprite.activate_animation("kill", loop=False, on_animation_end=_remove_enemy_sprite)
                     Signals.send_with("enemy_attacks", game, damage)
 
+            if was_hit:
+                game.fx.splatter(COLOURS.RED, e._sprite.position)
+
         type = self.launch_enemy_type(len(self._enemies))
         if type:
+            location = self._random_location()
             match type:
                 case "skeleton":
                     skeleton = Skeleton()
-                    skeleton.launch(game, self._random_location())
+                    skeleton.launch(game, location)
                     self._enemies.append(skeleton)
                 case "orb":
                     orb = Orb()
-                    orb.launch(game, self._random_location())
+                    orb.launch(game, location)
                     self._enemies.append(orb)
                 case "mage":
                     mage = Mage()
-                    mage.launch(game, self._random_location())
+                    mage.launch(game, location)
                     self._enemies.append(mage)
                 case _:
                     log_error(f"enemies.update invalid enemy type:{type}")

@@ -43,11 +43,12 @@ class Enemy:
         self._sprite.set_position(position)
         game.add_sprite(self._sprite)
 
-    def update(self, field_cells: list[Cell]) -> int: # 0: continue, -1: dies, 1: wins, 2: super wins
+    def update(self, field_cells: list[Cell]) -> tuple[int, bool]: # 0: continue, -1: dies, 1: wins, 2: super wins
         if not self._should_skip_move():
             to = self._move_towards_target()
             self._sprite.position.move_by(to[0], to[1])
         
+        was_hit = False
         if len(field_cells) > 0:
             # current_power = self.power
             for c in field_cells:
@@ -56,16 +57,16 @@ class Enemy:
                     # TODO - there's a messy thing here, we're resetting a cell which may be in a weapon's active cells
                     # See Fungus.update(). Another possibility is to check if not c.can_propogate:
                     c.reset()
-                    # c.power = 0
+                    was_hit = True
                 else:
                     c.power -= self.power
                     self.power = 0
             # if not self.power == current_power:
             #    print(f"Enemy.update({self}) lost:{(current_power - self.power)} remaining:{self.power}")
         if self.power <= 0:
-            return -1 # killed
+            return (-1, False) # killed
         else:
-            return self._calculate_win()
+            return (self._calculate_win(), was_hit)
     
     def __str__(self):
         return f"{self.type}{self._sprite._id}"

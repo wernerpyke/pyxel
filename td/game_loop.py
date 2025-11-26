@@ -8,7 +8,7 @@ from game_load import load_level
 
 from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
-DEBUG_START_GAME_LEVEL=True
+DEBUG_START_GAME_LEVEL=False
 DEBUG_START_GAME_OVER=False
 
 @dataclass

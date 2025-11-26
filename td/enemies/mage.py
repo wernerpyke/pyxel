@@ -24,7 +24,7 @@ class Mage(Enemy):
         # print(f"Mage DOWN to x:{self._to_x} y:{self._to_y}")
         return super().launch(game, position)
     
-    def update(self, field_cells: list[Cell]) -> int:
+    def update(self, field_cells: list[Cell]) -> tuple[int, bool]:
         result = super().update(field_cells)
         if self._launch_projectile:
             launch_at = self._sprite.position.clone()
