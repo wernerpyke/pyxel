@@ -93,4 +93,4 @@ class HUD:
          b._draw(settings)
 
       for t in self._text:
-         t.draw()
+         t._draw()

@@ -20,7 +20,17 @@ class Button:
 
         self.is_down = False
     
-    def contains(self, x: int, y: int):
+    def contains(self, x: int, y: int) -> bool:
+        """
+        Checks if the given coordinates are within the bounds of the button.
+
+        Args:
+            x (int): The x-coordinate to check.
+            y (int): The y-coordinate to check.
+
+        Returns:
+            bool: True if the coordinates are within the button's bounds, False otherwise.
+        """
         min_x = self.position._x
         max_x = self.position._x + self.width
         if x < min_x or x > max_x:
@@ -32,13 +42,21 @@ class Button:
             return False
         return True
 
-    def push_down(self):
+    def push_down(self):        
+        """Sets the button's state to 'down', drawing the down frame."""
         self.is_down = True
     
     def pop_up(self):
+        """Sets the button's state to 'up', drawing the up frame."""
         self.is_down = False
 
-    def set_position(self, position: Coord):
+    def set_position(self, position: Coord):        
+        """
+        Sets the position of the button.
+
+        Args:
+            position (Coord): The new coordinate for the button's top-left corner.
+        """
         self._position = position
 
     def _draw(self, settings: GameSettings):
@@ -64,4 +82,10 @@ class Button:
 
     @property
     def position(self) -> Coord:
+        """
+        Returns the current position of the button.
+
+        Returns:
+            Coord: The coordinate of the button's top-left corner.
+        """
         return self._position

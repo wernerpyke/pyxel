@@ -133,8 +133,20 @@ class CompoundSprite:
         return isinstance(other, CompoundSprite) and self._id == other._id
 
     def set_position(self, position: Coord):
+        """
+        Sets the position of the sprite.
+
+        Args:
+            position (Coord): The new coordinate for the sprite's top-left corner.
+        """
         self._position = position
 
     @property
     def position(self) -> Coord:
+        """
+        Returns the current position of the sprite.
+
+        Returns:
+            Coord: The coordinate of the sprite's top-left corner.
+        """
         return self._position

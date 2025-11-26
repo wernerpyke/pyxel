@@ -65,6 +65,15 @@ class Sprite:
         self._resource_image_index = resource_image_index
 
     def add_animation(self, name: str, animation: Animation):
+        """Add an animation to the sprite.
+
+        Parameters
+        ----------
+        name : str
+            The name to associate with the animation.
+        animation : Animation
+            The Animation object to add.
+        """
         animation._name = name
         self.animations[name] = animation
         
@@ -105,11 +114,22 @@ class Sprite:
         self.is_flipped = False
 
     def set_position(self, position: Coord):
-        """Set the pixel/grid position where this Sprite will be drawn."""
+        """
+        Sets the position of the sprite.
+
+        Args:
+            position (Coord): The new coordinate for the sprite's top-left corner.
+        """
         self._position = position
 
     @property
     def position(self) -> Coord:
+        """
+        Returns the current position of the sprite.
+
+        Returns:
+            Coord: The coordinate of the sprite's top-left corner.
+        """
         return self._position
     
     def __eq__(self, other):

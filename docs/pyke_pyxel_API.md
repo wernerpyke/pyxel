@@ -7,6 +7,13 @@
     * [connect](#pyke_pyxel.signals.Signals.connect)
     * [send](#pyke_pyxel.signals.Signals.send)
     * [send\_with](#pyke_pyxel.signals.Signals.send_with)
+* [\_button](#pyke_pyxel.drawable._button)
+  * [Button](#pyke_pyxel.drawable._button.Button)
+    * [contains](#pyke_pyxel.drawable._button.Button.contains)
+    * [push\_down](#pyke_pyxel.drawable._button.Button.push_down)
+    * [pop\_up](#pyke_pyxel.drawable._button.Button.pop_up)
+    * [set\_position](#pyke_pyxel.drawable._button.Button.set_position)
+    * [position](#pyke_pyxel.drawable._button.Button.position)
 * [game](#pyke_pyxel.game)
   * [Game](#pyke_pyxel.game.Game)
     * [\_\_init\_\_](#pyke_pyxel.game.Game.__init__)
@@ -81,25 +88,35 @@
 * [game](#pyke_pyxel.cell_auto.game)
   * [CellAutoGame](#pyke_pyxel.cell_auto.game.CellAutoGame)
     * [\_\_init\_\_](#pyke_pyxel.cell_auto.game.CellAutoGame.__init__)
-* [\_sprites](#pyke_pyxel.sprite._sprites)
-  * [Animation](#pyke_pyxel.sprite._sprites.Animation)
-  * [Sprite](#pyke_pyxel.sprite._sprites.Sprite)
-    * [activate\_animation](#pyke_pyxel.sprite._sprites.Sprite.activate_animation)
-    * [pause\_animation](#pyke_pyxel.sprite._sprites.Sprite.pause_animation)
-    * [unpause\_animation](#pyke_pyxel.sprite._sprites.Sprite.unpause_animation)
-    * [deactivate\_animations](#pyke_pyxel.sprite._sprites.Sprite.deactivate_animations)
-    * [set\_position](#pyke_pyxel.sprite._sprites.Sprite.set_position)
-  * [OpenableSprite](#pyke_pyxel.sprite._sprites.OpenableSprite)
-  * [MovableSprite](#pyke_pyxel.sprite._sprites.MovableSprite)
-  * [TextSprite](#pyke_pyxel.sprite._sprites.TextSprite)
-  * [CompoundSprite](#pyke_pyxel.sprite._sprites.CompoundSprite)
-    * [fill\_tiles](#pyke_pyxel.sprite._sprites.CompoundSprite.fill_tiles)
-    * [fill\_col](#pyke_pyxel.sprite._sprites.CompoundSprite.fill_col)
-    * [fill\_row](#pyke_pyxel.sprite._sprites.CompoundSprite.fill_row)
-    * [set\_tile](#pyke_pyxel.sprite._sprites.CompoundSprite.set_tile)
-    * [clear\_graphics](#pyke_pyxel.sprite._sprites.CompoundSprite.clear_graphics)
-    * [graph\_rect](#pyke_pyxel.sprite._sprites.CompoundSprite.graph_rect)
-    * [graph\_triangle](#pyke_pyxel.sprite._sprites.CompoundSprite.graph_triangle)
+* [\_rpg\_sprites](#pyke_pyxel.sprite._rpg_sprites)
+  * [OpenableSprite](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite)
+  * [MovableSprite](#pyke_pyxel.sprite._rpg_sprites.MovableSprite)
+* [\_sprite](#pyke_pyxel.sprite._sprite)
+  * [Animation](#pyke_pyxel.sprite._sprite.Animation)
+  * [Sprite](#pyke_pyxel.sprite._sprite.Sprite)
+    * [add\_animation](#pyke_pyxel.sprite._sprite.Sprite.add_animation)
+    * [activate\_animation](#pyke_pyxel.sprite._sprite.Sprite.activate_animation)
+    * [pause\_animation](#pyke_pyxel.sprite._sprite.Sprite.pause_animation)
+    * [unpause\_animation](#pyke_pyxel.sprite._sprite.Sprite.unpause_animation)
+    * [deactivate\_animations](#pyke_pyxel.sprite._sprite.Sprite.deactivate_animations)
+    * [set\_position](#pyke_pyxel.sprite._sprite.Sprite.set_position)
+    * [position](#pyke_pyxel.sprite._sprite.Sprite.position)
+* [\_compound\_sprite](#pyke_pyxel.sprite._compound_sprite)
+  * [CompoundSprite](#pyke_pyxel.sprite._compound_sprite.CompoundSprite)
+    * [fill\_tiles](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill_tiles)
+    * [fill\_col](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill_col)
+    * [fill\_row](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill_row)
+    * [set\_tile](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_tile)
+    * [clear\_graphics](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.clear_graphics)
+    * [graph\_rect](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.graph_rect)
+    * [graph\_triangle](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.graph_triangle)
+    * [set\_position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_position)
+    * [position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.position)
+* [\_text\_sprite](#pyke_pyxel.sprite._text_sprite)
+  * [TextSprite](#pyke_pyxel.sprite._text_sprite.TextSprite)
+    * [set\_position](#pyke_pyxel.sprite._text_sprite.TextSprite.set_position)
+    * [position](#pyke_pyxel.sprite._text_sprite.TextSprite.position)
+    * [set\_text](#pyke_pyxel.sprite._text_sprite.TextSprite.set_text)
 * [hud](#pyke_pyxel.hud)
   * [HUD](#pyke_pyxel.hud.HUD)
     * [add\_text](#pyke_pyxel.hud.HUD.add_text)
@@ -207,6 +224,87 @@ def send_with(name: str, sender: Any|None, other: Optional[Any] = None)
 ```
 
 Send a signal with additional optional data
+
+<a id="pyke_pyxel.drawable._button"></a>
+
+# \_button
+
+<a id="pyke_pyxel.drawable._button.Button"></a>
+
+## Button Objects
+
+```python
+class Button()
+```
+
+<a id="pyke_pyxel.drawable._button.Button.contains"></a>
+
+#### contains
+
+```python
+def contains(x: int, y: int) -> bool
+```
+
+Checks if the given coordinates are within the bounds of the button.
+
+**Arguments**:
+
+- `x` _int_ - The x-coordinate to check.
+- `y` _int_ - The y-coordinate to check.
+  
+
+**Returns**:
+
+- `bool` - True if the coordinates are within the button's bounds, False otherwise.
+
+<a id="pyke_pyxel.drawable._button.Button.push_down"></a>
+
+#### push\_down
+
+```python
+def push_down()
+```
+
+Sets the button's state to 'down', drawing the down frame.
+
+<a id="pyke_pyxel.drawable._button.Button.pop_up"></a>
+
+#### pop\_up
+
+```python
+def pop_up()
+```
+
+Sets the button's state to 'up', drawing the up frame.
+
+<a id="pyke_pyxel.drawable._button.Button.set_position"></a>
+
+#### set\_position
+
+```python
+def set_position(position: Coord)
+```
+
+Sets the position of the button.
+
+**Arguments**:
+
+- `position` _Coord_ - The new coordinate for the button's top-left corner.
+
+<a id="pyke_pyxel.drawable._button.Button.position"></a>
+
+#### position
+
+```python
+@property
+def position() -> Coord
+```
+
+Returns the current position of the button.
+
+**Returns**:
+
+- `Coord` - The coordinate of the button's top-left corner.
 
 <a id="pyke_pyxel.game"></a>
 
@@ -1107,11 +1205,41 @@ def __init__(settings: GameSettings, title: str, resources: str)
 - `title` _str_ - The title of the game window.
 - `resources` _str_ - The path to the resources directory.
 
-<a id="pyke_pyxel.sprite._sprites"></a>
+<a id="pyke_pyxel.sprite._rpg_sprites"></a>
 
-# \_sprites
+# \_rpg\_sprites
 
-<a id="pyke_pyxel.sprite._sprites.Animation"></a>
+<a id="pyke_pyxel.sprite._rpg_sprites.OpenableSprite"></a>
+
+## OpenableSprite Objects
+
+```python
+class OpenableSprite(Sprite)
+```
+
+A Sprite that supports open/close states (e.g., doors, chests).
+
+The OpenableSprite exposes simple open/close methods and manages an
+internal status value that determines which frame is shown.
+
+<a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite"></a>
+
+## MovableSprite Objects
+
+```python
+class MovableSprite(Sprite)
+```
+
+Sprite with movement-related configuration and convenience setters.
+
+MovableSprite stores a movement speed and provides helper methods to
+create simple directional animations (up/down/left/right).
+
+<a id="pyke_pyxel.sprite._sprite"></a>
+
+# \_sprite
+
+<a id="pyke_pyxel.sprite._sprite.Animation"></a>
 
 ## Animation Objects
 
@@ -1130,7 +1258,7 @@ frames : int
 flip : Optional[bool]
     If True, the animation should be drawn flipped horizontally.
 
-<a id="pyke_pyxel.sprite._sprites.Sprite"></a>
+<a id="pyke_pyxel.sprite._sprite.Sprite"></a>
 
 ## Sprite Objects
 
@@ -1156,7 +1284,24 @@ col_tile_count, row_tile_count : int
 resource_image_index : int
     Index of the image resource (if multiple images are used).
 
-<a id="pyke_pyxel.sprite._sprites.Sprite.activate_animation"></a>
+<a id="pyke_pyxel.sprite._sprite.Sprite.add_animation"></a>
+
+#### add\_animation
+
+```python
+def add_animation(name: str, animation: Animation)
+```
+
+Add an animation to the sprite.
+
+Parameters
+----------
+name : str
+    The name to associate with the animation.
+animation : Animation
+    The Animation object to add.
+
+<a id="pyke_pyxel.sprite._sprite.Sprite.activate_animation"></a>
 
 #### activate\_animation
 
@@ -1171,7 +1316,7 @@ started the animation is unpaused, flip state is applied and the
 optional `on_animation_end` callback will be invoked when a
 non-looping animation finishes.
 
-<a id="pyke_pyxel.sprite._sprites.Sprite.pause_animation"></a>
+<a id="pyke_pyxel.sprite._sprite.Sprite.pause_animation"></a>
 
 #### pause\_animation
 
@@ -1181,7 +1326,7 @@ def pause_animation()
 
 Pause the currently active animation, if any.
 
-<a id="pyke_pyxel.sprite._sprites.Sprite.unpause_animation"></a>
+<a id="pyke_pyxel.sprite._sprite.Sprite.unpause_animation"></a>
 
 #### unpause\_animation
 
@@ -1191,7 +1336,7 @@ def unpause_animation()
 
 Unpause the currently active animation, if any.
 
-<a id="pyke_pyxel.sprite._sprites.Sprite.deactivate_animations"></a>
+<a id="pyke_pyxel.sprite._sprite.Sprite.deactivate_animations"></a>
 
 #### deactivate\_animations
 
@@ -1201,7 +1346,7 @@ def deactivate_animations()
 
 Stop any active animation and reset flip state.
 
-<a id="pyke_pyxel.sprite._sprites.Sprite.set_position"></a>
+<a id="pyke_pyxel.sprite._sprite.Sprite.set_position"></a>
 
 #### set\_position
 
@@ -1209,45 +1354,32 @@ Stop any active animation and reset flip state.
 def set_position(position: Coord)
 ```
 
-Set the pixel/grid position where this Sprite will be drawn.
+Sets the position of the sprite.
 
-<a id="pyke_pyxel.sprite._sprites.OpenableSprite"></a>
+**Arguments**:
 
-## OpenableSprite Objects
+- `position` _Coord_ - The new coordinate for the sprite's top-left corner.
 
-```python
-class OpenableSprite(Sprite)
-```
+<a id="pyke_pyxel.sprite._sprite.Sprite.position"></a>
 
-A Sprite that supports open/close states (e.g., doors, chests).
-
-The OpenableSprite exposes simple open/close methods and manages an
-internal status value that determines which frame is shown.
-
-<a id="pyke_pyxel.sprite._sprites.MovableSprite"></a>
-
-## MovableSprite Objects
+#### position
 
 ```python
-class MovableSprite(Sprite)
+@property
+def position() -> Coord
 ```
 
-Sprite with movement-related configuration and convenience setters.
+Returns the current position of the sprite.
 
-MovableSprite stores a movement speed and provides helper methods to
-create simple directional animations (up/down/left/right).
+**Returns**:
 
-<a id="pyke_pyxel.sprite._sprites.TextSprite"></a>
+- `Coord` - The coordinate of the sprite's top-left corner.
 
-## TextSprite Objects
+<a id="pyke_pyxel.sprite._compound_sprite"></a>
 
-```python
-class TextSprite()
-```
+# \_compound\_sprite
 
-A simple text sprite for rendering text using a pyxel font.
-
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite"></a>
 
 ## CompoundSprite Objects
 
@@ -1263,7 +1395,7 @@ larger objects built from multiple sprite tiles.
 
 The class also provides a graphics buffer allowing geometric shapes to be drawn over the sprite tiles
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.fill_tiles"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill_tiles"></a>
 
 #### fill\_tiles
 
@@ -1273,7 +1405,7 @@ def fill_tiles(tile: Coord)
 
 Fill the sprite with a tile
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.fill_col"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill_col"></a>
 
 #### fill\_col
 
@@ -1283,7 +1415,7 @@ def fill_col(col: int, from_row: int, to_row: int, tile_col: int, tile_rows: lis
 
 Fill one column (all rows) of a sprite with a sequence of tiles
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.fill_row"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill_row"></a>
 
 #### fill\_row
 
@@ -1293,7 +1425,7 @@ def fill_row(row: int, from_col: int, to_col: int, tile_row: int, tile_cols: lis
 
 Fill one row (all columns) of a sprite with a sequence of tiles
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.set_tile"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_tile"></a>
 
 #### set\_tile
 
@@ -1303,7 +1435,7 @@ def set_tile(col: int, row: int, tile: Coord)
 
 Set one tile in the sprite
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.clear_graphics"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.clear_graphics"></a>
 
 #### clear\_graphics
 
@@ -1313,7 +1445,7 @@ def clear_graphics()
 
 Clear the graphics buffer
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.graph_rect"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.graph_rect"></a>
 
 #### graph\_rect
 
@@ -1323,7 +1455,7 @@ def graph_rect(x: int, y: int, width_px: int, height_px: int, colour: int)
 
 Draw a rectangle to the graphics buffer
 
-<a id="pyke_pyxel.sprite._sprites.CompoundSprite.graph_triangle"></a>
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.graph_triangle"></a>
 
 #### graph\_triangle
 
@@ -1332,6 +1464,92 @@ def graph_triangle(x1: int, y1: int, x2: int, y2: int, x3: int, y3: int, colour:
 ```
 
 Draw a triangle to the graphics buffer
+
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_position"></a>
+
+#### set\_position
+
+```python
+def set_position(position: Coord)
+```
+
+Sets the position of the sprite.
+
+**Arguments**:
+
+- `position` _Coord_ - The new coordinate for the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.position"></a>
+
+#### position
+
+```python
+@property
+def position() -> Coord
+```
+
+Returns the current position of the sprite.
+
+**Returns**:
+
+- `Coord` - The coordinate of the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._text_sprite"></a>
+
+# \_text\_sprite
+
+<a id="pyke_pyxel.sprite._text_sprite.TextSprite"></a>
+
+## TextSprite Objects
+
+```python
+class TextSprite()
+```
+
+A simple text sprite for rendering text using a pyxel font.
+
+<a id="pyke_pyxel.sprite._text_sprite.TextSprite.set_position"></a>
+
+#### set\_position
+
+```python
+def set_position(position: Coord)
+```
+
+Sets the position of the sprite.
+
+**Arguments**:
+
+- `position` _Coord_ - The new coordinate for the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._text_sprite.TextSprite.position"></a>
+
+#### position
+
+```python
+@property
+def position() -> Coord
+```
+
+Returns the current position of the sprite.
+
+**Returns**:
+
+- `Coord` - The coordinate of the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._text_sprite.TextSprite.set_text"></a>
+
+#### set\_text
+
+```python
+def set_text(text: str)
+```
+
+Sets the text content of the sprite.
+
+**Arguments**:
+
+- `text` _str_ - The new text content.
 
 <a id="pyke_pyxel.hud"></a>
 

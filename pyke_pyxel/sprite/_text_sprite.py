@@ -12,17 +12,36 @@ class TextSprite:
 
         self._id = 0
 
-    def draw(self):
+    def _draw(self):
         pyxel.text(self.position.x, self.position.y, self._text, self._colour, font=self._font)
 
     def set_position(self, position: Coord):
+        """
+        Sets the position of the sprite.
+
+        Args:
+            position (Coord): The new coordinate for the sprite's top-left corner.
+        """
         self._position = position
 
     @property
     def position(self) -> Coord:
+        """
+        Returns the current position of the sprite.
+
+        Returns:
+            Coord: The coordinate of the sprite's top-left corner.
+        """
         return self._position
 
     def set_text(self, text: str):
+        """
+        Sets the text content of the sprite.
+
+        Args:
+            text (str): The new text content.
+        """
+
         self._text = text
 
     def set_colour(self, colour: int):
