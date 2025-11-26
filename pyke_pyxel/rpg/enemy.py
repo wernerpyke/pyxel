@@ -1,7 +1,7 @@
 from .actor import MovableActor
-from ..signals import Signals
-from ..sprite import MovableSprite
-from ..map import Map
+from pyke_pyxel.signals import Signals
+from pyke_pyxel.sprite import MovableSprite
+from pyke_pyxel.map import Map
 
 class Enemy(MovableActor):
 

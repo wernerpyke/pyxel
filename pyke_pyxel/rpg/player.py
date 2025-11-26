@@ -1,10 +1,9 @@
 from typing import Optional
 
 from .actor import MovableActor
-from .. import DIRECTION, Coord
-from ..signals import Signals
-from ..sprite import Sprite, OpenableSprite, MovableSprite
-from ..map import Map
+from pyke_pyxel.signals import Signals
+from pyke_pyxel.sprite import Sprite, OpenableSprite, MovableSprite
+from pyke_pyxel.map import Map
 
 class Player(MovableActor):
     def __init__(self, sprite: MovableSprite):

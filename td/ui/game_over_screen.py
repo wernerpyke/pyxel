@@ -1,5 +1,5 @@
-from pyke_pyxel import Coord, Image
-from pyke_pyxel.button import Button
+from pyke_pyxel import Coord
+from pyke_pyxel.drawable import Image
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 

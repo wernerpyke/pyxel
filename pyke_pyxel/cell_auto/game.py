@@ -39,11 +39,9 @@ class CellAutoGame(Game):
 
         super()._draw_sprites()
 
-        if self._hud:
-            self._hud._draw(self._settings)
+        super()._draw_hud()
 
-        if self._fx and self._fx.is_active:
-            self._fx._draw()
+        super()._draw_fx()
 
     # Convenience accessors
 

@@ -1,8 +1,8 @@
 from typing import Callable
-from .. import Coord
-from ..map import Map
-from ..sprite import Sprite, OpenableSprite, MovableSprite
-from ..signals import Signals
+from pyke_pyxel import Coord
+from pyke_pyxel.map import Map
+from pyke_pyxel.sprite import Sprite, OpenableSprite, MovableSprite
+from pyke_pyxel.signals import Signals
 from .enemy import Enemy
 
 class Room:

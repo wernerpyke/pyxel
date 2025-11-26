@@ -5,8 +5,7 @@ from pyke_pyxel.fx import FX
 
 from ._base_types import GameSettings, Coord, GameSettings
 from ._log import log_debug
-from . import draw
-from .draw import _TileMap
+from .drawable._tilemap import TileMap
 from .signals import Signals
 from .map import Map
 from .sprite import Sprite, CompoundSprite
@@ -53,7 +52,7 @@ class Game:
 
         self._map = Map(settings)
 
-        self._tile_map: Optional[_TileMap] = None
+        self._tile_map: Optional[TileMap] = None
 
         self._hud: Optional[HUD] = None
         self._fx: Optional[FX] = None
@@ -169,7 +168,7 @@ class Game:
         resource_tilemap_index : int
             The index of the tilemap in the resource bundle
         """
-        self._tile_map = _TileMap(resource_position, tiles_wide, tiles_high, resource_tilemap_index, self._settings)
+        self._tile_map = TileMap(resource_position, tiles_wide, tiles_high, resource_tilemap_index, self._settings)
         # log_debug(f"GAME.add_tilemap() at {resource_position.x},{resource_position.y} size {tiles_wide}x{tiles_high}")
 
     def pause(self):
@@ -286,21 +285,27 @@ class Game:
         
         self._draw_sprites()
 
-        if self._hud:
-            self._hud._draw(self._settings)
+        self._draw_hud()
 
-        if self._fx and self._fx.is_active:
-            self._fx._draw()
+        self._draw_fx()
 
         # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
 
     def _draw_background(self):
-        draw.background(self._settings.colours.background)
+        pyxel.cls(self._settings.colours.background)
 
         if self._tile_map:
-            draw.tile_map(self._tile_map, self._settings)
+            self._tile_map._draw(self._settings)
 
     def _draw_sprites(self):
         for sprite in self._sprites:
-            draw.sprite(sprite, self._settings)
+            sprite._draw(self._settings)
+
+    def _draw_hud(self):
+        if hud := self._hud:
+            hud._draw(self._settings)
+
+    def _draw_fx(self):
+        if self._fx and self._fx.is_active:
+            self._fx._draw()
         

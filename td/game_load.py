@@ -1,7 +1,7 @@
 from pyke_pyxel import Coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.game import Game
-from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite, TextSprite
+from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite
 
 from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 

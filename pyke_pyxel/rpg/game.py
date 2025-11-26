@@ -5,12 +5,11 @@ import pyxel
 from pyke_pyxel.rpg.actor import Actor
 from pyke_pyxel.rpg.enemy import Enemy
 
-from .. import DIRECTION, log_debug
-from .. import GameSettings
-from ..game import Game
+from pyke_pyxel import DIRECTION, log_debug, GameSettings
+from pyke_pyxel.game import Game
 from .player import Player
-from ..signals import Signals
-from ..sprite import Sprite, MovableSprite
+from pyke_pyxel.signals import Signals
+from pyke_pyxel.sprite import Sprite, MovableSprite
 from .room import Room
 
 class RPGGame(Game):

@@ -105,7 +105,7 @@ class FX:
 
     def circular_wipe(self, colour: int, wipe_closed: bool, completion_signal: str):
         """
-        Initialize and configure a circular wipe animation.
+        Create a full-screen circular wipe animation.
 
         Parameters
         ----------
@@ -120,7 +120,18 @@ class FX:
         wipe = _CircularWipe(colour, wipe_closed, completion_signal, self._settings)
         self._effects.append(wipe)
 
-    def splatter(self, colour: int, position: Coord):
+    def splatter(self, colour: int, position: Coord):        
+        """
+        Create a splatter effect at the specified position. 
+        The splatter effect animates within a single tile for 30 frames.
+
+        Parameters
+        ----------
+        colour : int
+            Colour index/value to use for the splatter.
+        position : Coord
+            The coordinate where the splatter effect should appear.
+        """
         splatter = _Splatter(position, colour)
         self._effects.append(splatter)
 

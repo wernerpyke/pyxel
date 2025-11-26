@@ -1,7 +1,7 @@
-from ._base_types import GameSettings, Image
-from .button import Button
+from ._base_types import GameSettings
+from .drawable._image import Image
+from .drawable._button import Button
 from .sprite import CompoundSprite, Sprite, TextSprite
-from . import draw
 
 class HUD:
    """
@@ -84,13 +84,13 @@ class HUD:
 
    def _draw(self, settings: GameSettings):
       for i in self._images:
-          draw.image(i, settings)
+          i._draw(settings)
 
       for s in self._sprites:
-         draw.sprite(s, settings)
+         s._draw(settings)
 
       for b in self._buttons:
-         draw.button(b, settings)
+         b._draw(settings)
 
       for t in self._text:
-         draw.text(t)
+         t.draw()

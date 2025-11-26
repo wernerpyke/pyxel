@@ -1,7 +1,7 @@
 
 from dataclasses import dataclass
 from pyke_pyxel import Coord
-from pyke_pyxel.button import Button
+from pyke_pyxel.drawable import Button
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 

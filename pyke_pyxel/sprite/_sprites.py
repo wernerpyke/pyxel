@@ -1,8 +1,7 @@
 from typing import Optional, Callable
 import pyxel
 
-from ._log import log_error
-from ._base_types import Coord, GameSettings
+from pyke_pyxel import log_error, Coord, GameSettings
 
 class Animation:
     """Represents a sequence of frames for a sprite animation.
@@ -139,6 +138,24 @@ class Sprite:
         else:
             self.active_frame = self.idle_frame
 
+    def _draw(self, settings: GameSettings):
+        frame = self.active_frame
+        position = self._position
+
+        width = settings.size.tile * self.col_tile_count
+        height = settings.size.tile * self.row_tile_count
+        if self.is_flipped:
+            width *= -1
+
+        pyxel.blt(x=position.x,
+                y=position.y,
+                img=self._resource_image_index,
+                u=frame.x,
+                v=frame.y,
+                w=width,
+                h=height,
+                colkey=settings.colours.sprite_transparency)
+
 OPEN: int = 0
 CLOSED: int = 1
 CLOSING: int = 2
@@ -216,6 +233,9 @@ class TextSprite:
         self._font = pyxel.Font(font_file)
 
         self._id = 0
+
+    def draw(self):
+        pyxel.text(self.position.x, self.position.y, self._text, self._colour, font=self._font)
 
     def set_position(self, position: Coord):
         self._position = position

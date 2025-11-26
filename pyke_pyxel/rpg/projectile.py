@@ -1,8 +1,8 @@
-from ..signals import Signals
-from ..sprite import Sprite
-from ..map import Map
+from pyke_pyxel.signals import Signals
+from pyke_pyxel.sprite import Sprite
+from pyke_pyxel.map import Map
 
-from .. import DIRECTION
+from pyke_pyxel import DIRECTION
 
 class Projectile:
 

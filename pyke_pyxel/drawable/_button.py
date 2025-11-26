@@ -1,4 +1,5 @@
-from ._base_types import GameSettings, Coord
+import pyxel
+from .._base_types import GameSettings, Coord
 
 class Button:
     def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0) -> None:
@@ -39,6 +40,24 @@ class Button:
 
     def set_position(self, position: Coord):
         self._position = position
+
+    def _draw(self, settings: GameSettings):
+        frame = self._up_frame
+        if self.is_down:
+            frame = self._down_frame
+        position = self._position
+
+        width = settings.size.tile * self._col_tile_count
+        height = settings.size.tile * self._row_tile_count
+
+        pyxel.blt(x=position.x,
+                y=position.y,
+                img=self._resource_image_index,
+                u=frame.x,
+                v=frame.y,
+                w=width,
+                h=height,
+                colkey=settings.colours.sprite_transparency)
 
     def __eq__(self, other):
         return isinstance(other, Button) and self._id == other._id
