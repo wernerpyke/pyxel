@@ -57,6 +57,11 @@ class Signals:
         signal(name).connect(listener)
 
     @staticmethod
+    def disconnect(name: str, listener: Callable):
+        """Disconnect a listener callback from a named signal"""
+        signal(name).disconnect(listener)
+
+    @staticmethod
     def send(name: str, sender: Any|None):
         """Send a signal with a sender object"""
         signal(name).send(sender)

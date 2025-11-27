@@ -1,5 +1,5 @@
 from ._image import Image
-from ._tilemap import TileMap
 from ._button import Button
+from ._rect import Rect
 
-__all__ = ["Image", "TileMap", "Button"]
+__all__ = ["Image", "Button", "Rect"]

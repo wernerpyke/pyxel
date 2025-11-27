@@ -1,7 +1,6 @@
 import pyxel
 from pyke_pyxel import Coord, GameSettings
 
-
 class Image:
     def __init__(self, frame: Coord, position: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0) -> None:
         self.frame = frame

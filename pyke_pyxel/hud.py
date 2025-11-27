@@ -1,6 +1,6 @@
+
 from ._base_types import GameSettings
-from .drawable._image import Image
-from .drawable._button import Button
+from .drawable import Image, Button, Rect
 from .sprite import CompoundSprite, Sprite, TextSprite
 
 class HUD:
@@ -12,7 +12,7 @@ class HUD:
    
    def __init__(self) -> None:
       self._text: list[TextSprite] = []
-      self._images: list[Image] = []
+      self._bg: list[Image|Rect] = []
       self._buttons: list[Button] = []
       self._sprite_id = 0
       self._sprites: list[Sprite|CompoundSprite] = []
@@ -58,32 +58,32 @@ class HUD:
       if button in self._buttons:
             self._buttons.remove(button)
 
-   def add_image(self, image: Image):
-      """Add an Image to the HUD and assign a unique ID."""
+   def add_bg(self, item: Image|Rect):
+      """Add a background Image or Rect to the HUD and assign a unique ID."""
       self._sprite_id += 1
-      image._id = self._sprite_id
-      self._images.append(image)
+      item._id = self._sprite_id
+      self._bg.append(item)
 
-   def remove_image(self, image: Image):
+   def remove_bg(self, item: Image|Rect):
       """
-      Remove an Image from the HUD.
+      Remove a background Image or Rect from the HUD.
 
       Behavior:
-      - If the image is not present, the method does nothing (no exception raised).
+      - If the item is not present, the method does nothing (no exception raised).
       """
       # TODO - see Game.remove_sprite
-      if image in self._images:
-            self._images.remove(image)
+      if item in self._bg:
+            self._bg.remove(item)
 
    def _clear_all(self):
        self._sprites.clear()
        self._text.clear()
        self._buttons.clear()
-       self._images.clear()
+       self._bg.clear()
        self._sprite_id = 0
 
    def _draw(self, settings: GameSettings):
-      for i in self._images:
+      for i in self._bg:
           i._draw(settings)
 
       for s in self._sprites:

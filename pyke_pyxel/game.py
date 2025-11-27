@@ -1,8 +1,6 @@
 from typing import Optional
 import pyxel
 
-from pyke_pyxel.fx import FX
-
 from ._base_types import GameSettings, Coord, GameSettings
 from ._log import log_debug
 from .drawable._tilemap import TileMap
@@ -10,6 +8,7 @@ from .signals import Signals
 from .map import Map
 from .sprite import Sprite, CompoundSprite
 from .hud import HUD
+from .fx import FX
 
 class Game:
     """
@@ -42,8 +41,13 @@ class Game:
         _settings.size.tile = settings.size.tile
         _settings.fps.game = settings.fps.game
         _settings.fps.animation = settings.fps.animation
+        _settings.colours.sprite_transparency = settings.colours.sprite_transparency
+        _settings.colours.background = settings.colours.background
+        _settings.colours.hud_text = settings.colours.hud_text
         _settings.display_smoothing_enabled = settings.display_smoothing_enabled
         _settings.full_screen_enabled = settings.full_screen_enabled
+        _settings.mouse_enabled = settings.mouse_enabled
+
 
         self._settings = settings
 
