@@ -1,10 +1,10 @@
 import pyxel
 from pyke_pyxel import GameSettings, Coord
+from ._drawable import Drawable
 
-class Button:
+class Button(Drawable):
     def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0) -> None:
-        self._id = 0
-        
+        super().__init__()
         self.name = name
         self._up_frame = up_frame
         self._down_frame = down_frame
@@ -50,20 +50,12 @@ class Button:
         """Sets the button's state to 'up', drawing the up frame."""
         self.is_down = False
 
-    def set_position(self, position: Coord):        
-        """
-        Sets the position of the button.
-
-        Args:
-            position (Coord): The new coordinate for the button's top-left corner.
-        """
-        self._position = position
-
     def _draw(self, settings: GameSettings):
         frame = self._up_frame
         if self.is_down:
             frame = self._down_frame
-        position = self._position
+        
+        position = self.position
 
         width = settings.size.tile * self._col_tile_count
         height = settings.size.tile * self._row_tile_count
@@ -76,16 +68,3 @@ class Button:
                 w=width,
                 h=height,
                 colkey=settings.colours.sprite_transparency)
-
-    def __eq__(self, other):
-        return isinstance(other, Button) and self._id == other._id
-
-    @property
-    def position(self) -> Coord:
-        """
-        Returns the current position of the button.
-
-        Returns:
-            Coord: The coordinate of the button's top-left corner.
-        """
-        return self._position

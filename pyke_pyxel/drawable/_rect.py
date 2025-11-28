@@ -1,10 +1,11 @@
 import pyxel
 from pyke_pyxel import Coord, GameSettings
-from pyke_pyxel._base_types import COLOURS
 
+from ._drawable import Drawable
 
-class Rect:
+class Rect(Drawable):
     def __init__(self, position: Coord, col_count: int, row_count: int) -> None:
+        super().__init__()
         self._position = position
         self._col_count = col_count
         self._row_count = row_count
@@ -12,7 +13,6 @@ class Rect:
         self._bg_colour: int|None = None
         self._border_colour: int|None = None
         self._border_width: int|None = None
-        self._id = 0
 
     def set_background(self, colour: int):
         self._bg_colour = colour
@@ -20,9 +20,6 @@ class Rect:
     def set_border(self, colour: int, width: int):
         self._border_colour = colour
         self._border_width = width
-
-    def __eq__(self, other):
-        return isinstance(other, Rect) and self._id == other._id
 
     def _draw(self, settings: GameSettings):
         width = settings.size.tile * self._col_count

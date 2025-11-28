@@ -1,6 +1,5 @@
-
 from ._base_types import GameSettings
-from .drawable import Image, Button, Rect
+from .drawable import Drawable, Image, Button, Rect
 from .sprite import CompoundSprite, Sprite, TextSprite
 
 class HUD:
@@ -12,7 +11,7 @@ class HUD:
    
    def __init__(self) -> None:
       self._text: list[TextSprite] = []
-      self._bg: list[Image|Rect] = []
+      self._bg: list[Drawable] = []
       self._buttons: list[Button] = []
       self._sprite_id = 0
       self._sprites: list[Sprite|CompoundSprite] = []
@@ -58,15 +57,15 @@ class HUD:
       if button in self._buttons:
             self._buttons.remove(button)
 
-   def add_bg(self, item: Image|Rect):
-      """Add a background Image or Rect to the HUD and assign a unique ID."""
+   def add_bg(self, item: Drawable|Image|Rect):
+      """Add a background Drawable to the HUD and assign a unique ID."""
       self._sprite_id += 1
       item._id = self._sprite_id
       self._bg.append(item)
 
-   def remove_bg(self, item: Image|Rect):
+   def remove_bg(self, item: Drawable|Image|Rect):
       """
-      Remove a background Image or Rect from the HUD.
+      Remove a background Drawable from the HUD.
 
       Behavior:
       - If the item is not present, the method does nothing (no exception raised).

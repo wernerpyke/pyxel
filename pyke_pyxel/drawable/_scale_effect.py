@@ -33,7 +33,7 @@ class _ScaleEffect(_Effect):
 
         image = self._image
 
-        position = image.position
+        position = image._position
 
         # Pyxel is cool enough to transform x & y without us needing to manually recalculate
         pyxel.blt(x=position.x,
