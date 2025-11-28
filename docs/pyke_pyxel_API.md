@@ -5,15 +5,20 @@
 * [signals](#pyke_pyxel.signals)
   * [Signals](#pyke_pyxel.signals.Signals)
     * [connect](#pyke_pyxel.signals.Signals.connect)
+    * [disconnect](#pyke_pyxel.signals.Signals.disconnect)
     * [send](#pyke_pyxel.signals.Signals.send)
     * [send\_with](#pyke_pyxel.signals.Signals.send_with)
 * [\_button](#pyke_pyxel.drawable._button)
   * [Button](#pyke_pyxel.drawable._button.Button)
     * [contains](#pyke_pyxel.drawable._button.Button.contains)
+    * [highlight](#pyke_pyxel.drawable._button.Button.highlight)
     * [push\_down](#pyke_pyxel.drawable._button.Button.push_down)
     * [pop\_up](#pyke_pyxel.drawable._button.Button.pop_up)
-    * [set\_position](#pyke_pyxel.drawable._button.Button.set_position)
-    * [position](#pyke_pyxel.drawable._button.Button.position)
+    * [check\_mouse\_move](#pyke_pyxel.drawable._button.Button.check_mouse_move)
+* [\_drawable](#pyke_pyxel.drawable._drawable)
+  * [Drawable](#pyke_pyxel.drawable._drawable.Drawable)
+    * [position](#pyke_pyxel.drawable._drawable.Drawable.position)
+    * [set\_position](#pyke_pyxel.drawable._drawable.Drawable.set_position)
 * [game](#pyke_pyxel.game)
   * [Game](#pyke_pyxel.game.Game)
     * [\_\_init\_\_](#pyke_pyxel.game.Game.__init__)
@@ -124,8 +129,8 @@
     * [remove\_sprite](#pyke_pyxel.hud.HUD.remove_sprite)
     * [add\_button](#pyke_pyxel.hud.HUD.add_button)
     * [remove\_button](#pyke_pyxel.hud.HUD.remove_button)
-    * [add\_image](#pyke_pyxel.hud.HUD.add_image)
-    * [remove\_image](#pyke_pyxel.hud.HUD.remove_image)
+    * [add\_bg](#pyke_pyxel.hud.HUD.add_bg)
+    * [remove\_bg](#pyke_pyxel.hud.HUD.remove_bg)
 * [fx](#pyke_pyxel.fx)
   * [FX](#pyke_pyxel.fx.FX)
     * [circular\_wipe](#pyke_pyxel.fx.FX.circular_wipe)
@@ -203,6 +208,17 @@ def connect(name: str, listener: Callable)
 
 Connect a listener callback to a named signal
 
+<a id="pyke_pyxel.signals.Signals.disconnect"></a>
+
+#### disconnect
+
+```python
+@staticmethod
+def disconnect(name: str, listener: Callable)
+```
+
+Disconnect a listener callback from a named signal
+
 <a id="pyke_pyxel.signals.Signals.send"></a>
 
 #### send
@@ -234,7 +250,7 @@ Send a signal with additional optional data
 ## Button Objects
 
 ```python
-class Button()
+class Button(Drawable)
 ```
 
 <a id="pyke_pyxel.drawable._button.Button.contains"></a>
@@ -257,6 +273,21 @@ Checks if the given coordinates are within the bounds of the button.
 
 - `bool` - True if the coordinates are within the button's bounds, False otherwise.
 
+<a id="pyke_pyxel.drawable._button.Button.highlight"></a>
+
+#### highlight
+
+```python
+def highlight(active: bool)
+```
+
+Highlight the button. This sets the icon of the button to its down/active state.
+No effect if the button does not have an icon
+
+**Arguments**:
+
+- `active` _bool_ - Enable or disable highlighting
+
 <a id="pyke_pyxel.drawable._button.Button.push_down"></a>
 
 #### push\_down
@@ -277,21 +308,36 @@ def pop_up()
 
 Sets the button's state to 'up', drawing the up frame.
 
-<a id="pyke_pyxel.drawable._button.Button.set_position"></a>
+<a id="pyke_pyxel.drawable._button.Button.check_mouse_move"></a>
 
-#### set\_position
+#### check\_mouse\_move
 
 ```python
-def set_position(position: Coord)
+def check_mouse_move(x: int, y: int)
 ```
 
-Sets the position of the button.
+Ask the button to respond to mouse movement. The default reaction is:
+- MOUSE_IN: highlight=True
+- MOUSE_OUT: highlight=False, is_down=False
 
 **Arguments**:
 
-- `position` _Coord_ - The new coordinate for the button's top-left corner.
+- `x` _int_ - The x-coordinate to check.
+- `y` _int_ - The y-coordinate to check.
 
-<a id="pyke_pyxel.drawable._button.Button.position"></a>
+<a id="pyke_pyxel.drawable._drawable"></a>
+
+# \_drawable
+
+<a id="pyke_pyxel.drawable._drawable.Drawable"></a>
+
+## Drawable Objects
+
+```python
+class Drawable()
+```
+
+<a id="pyke_pyxel.drawable._drawable.Drawable.position"></a>
 
 #### position
 
@@ -300,11 +346,25 @@ Sets the position of the button.
 def position() -> Coord
 ```
 
-Returns the current position of the button.
+Returns the current position of the drawable.
 
 **Returns**:
 
-- `Coord` - The coordinate of the button's top-left corner.
+- `Coord` - The coordinate of the drawable's top-left corner.
+
+<a id="pyke_pyxel.drawable._drawable.Drawable.set_position"></a>
+
+#### set\_position
+
+```python
+def set_position(position: Coord)
+```
+
+Sets the position of the drawable.
+
+**Arguments**:
+
+- `position` _Coord_ - The new coordinate for the drawable's top-left corner.
 
 <a id="pyke_pyxel.game"></a>
 
@@ -1624,28 +1684,28 @@ Remove a Button from the HUD.
 Behavior:
 - If the button is not present, the method does nothing (no exception raised).
 
-<a id="pyke_pyxel.hud.HUD.add_image"></a>
+<a id="pyke_pyxel.hud.HUD.add_bg"></a>
 
-#### add\_image
-
-```python
-def add_image(image: Image)
-```
-
-Add an Image to the HUD and assign a unique ID.
-
-<a id="pyke_pyxel.hud.HUD.remove_image"></a>
-
-#### remove\_image
+#### add\_bg
 
 ```python
-def remove_image(image: Image)
+def add_bg(item: Drawable|Image|Rect)
 ```
 
-Remove an Image from the HUD.
+Add a background Drawable to the HUD and assign a unique ID.
+
+<a id="pyke_pyxel.hud.HUD.remove_bg"></a>
+
+#### remove\_bg
+
+```python
+def remove_bg(item: Drawable|Image|Rect)
+```
+
+Remove a background Drawable from the HUD.
 
 Behavior:
-- If the image is not present, the method does nothing (no exception raised).
+- If the item is not present, the method does nothing (no exception raised).
 
 <a id="pyke_pyxel.fx"></a>
 
