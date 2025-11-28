@@ -6,7 +6,7 @@ from pyke_pyxel.cell_auto.game import CellAutoGame
 from td.profiler import ProfileGame
 
 import game_loop
-import ui # Note: important that this not be imported as td.ui to preserve singleton weirdness
+import ui
 
 settings = GameSettings()
 

@@ -27,8 +27,8 @@ class _UI:
         self.pause_button = Button("pause", 
                                    up_frame=Coord(27, 3), 
                                    down_frame=Coord(25, 3), 
-                                   col_tile_count=2, 
-                                   row_tile_count=2, 
+                                   col_count=2, 
+                                   row_count=2, 
                                    resource_image_index=1)
     
     def show_title_screen(self, game: Game):

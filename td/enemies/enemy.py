@@ -10,7 +10,7 @@ from td.state.stats import STATS
 class Enemy:
     def __init__(self, type: str, from_frame: Coord, animation_frame_count:int = 2) -> None:
         self.type = type
-        stats = STATS.ENEMIES.get(type)
+        stats = STATS.enemy_stats(type)
         if not stats:
             log_error(f"Enemy() invalid type:{type}")
             return

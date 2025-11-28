@@ -1,5 +1,6 @@
 import time
 
+from pyke_pyxel import log_debug
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
 from .stats import STATS
@@ -20,12 +21,12 @@ class GameState:
         # Progression
         self.level = 0
         self.score_counter: float = 0
-        self._max_health = STATS.PLAYER_HEALTH
+        self._max_health = STATS.player_health
 
     def start(self):
         self.level = 0
         self.score_counter = 0
-        self._max_health = STATS.PLAYER_HEALTH
+        self._max_health = STATS.player_health
 
         self._timestamp = time.time()
         self._running_time = 0
@@ -50,18 +51,19 @@ class GameState:
         minutes = self.running_time_minutes
         if self.level < minutes:
             self.level = minutes
-            print(f"STATE.update() PROGRESS level:{self.level}")
+            log_debug(f"STATE.update() PROGRESS level:{self.level}")
             self.enemies.set_level(self.level)
 
         self.enemies.update(game)
         self.weapons.update(game.matrix, self.enemies)
 
     def acquire_weapon(self, type: str) -> bool:
-        cost = STATS.WEAPONS[type].cost
-        # if cost > self.score_counter:
-        #    return False
+        cost = STATS.weapon_cost(type)
+        if cost > self.score_counter:
+            print(f"STATE.acquire_weapon() insufficient funds cost:{cost} score:{self.score_counter}")
+            return False
         self.score_counter -= cost
-        print(f"STATE.acquire_weapon() cost:{cost} score:{self.score_counter}")
+        log_debug(f"STATE.acquire_weapon() cost:{cost} score:{self.score_counter}")
         return True
 
     @property

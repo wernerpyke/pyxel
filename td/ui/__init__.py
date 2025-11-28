@@ -1,12 +1,14 @@
 from pyke_pyxel import Coord
 from pyke_pyxel.game import Game
+
 from td.state import STATE
-from td.ui import power_up
 
 from ._ui import _UI
 from . import title_screen
 from . import weapon_select
 from . import game_over_screen
+from . import power_up
+
 
 UI = _UI()
 

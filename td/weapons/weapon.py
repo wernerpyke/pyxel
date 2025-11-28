@@ -9,7 +9,7 @@ class Weapon:
         self._location_id = location_id
         self.position = position
 
-        stats = STATS.WEAPONS.get(type)
+        stats = STATS.weapon_stats(type)
         if not stats:
             log_error(f"Weapon() invalid type {type}")
             return

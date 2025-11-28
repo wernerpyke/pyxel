@@ -6,10 +6,10 @@ from pyke_pyxel.cell_auto.game import CellAutoGame
 from td.state import STATE
 from game_load import load_level
 
-from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
+from ui import UI
 
-DEBUG_SKIP_TITLE_SCREEN=False
-DEBUG_TRIGGER_POWER_UP= False
+DEBUG_SKIP_TITLE_SCREEN=True
+DEBUG_TRIGGER_POWER_UP= True
 DEBUG_TRIGGER_GAME_OVER=False
 
 @dataclass

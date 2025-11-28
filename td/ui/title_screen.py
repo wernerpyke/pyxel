@@ -6,7 +6,7 @@ from pyke_pyxel.signals import Signals
 image = Image(Coord(1, 1), col_tile_count=24, row_tile_count=10, resource_image_index=1)
 image.set_position(Coord(9, 10))
 
-play_button = Button("play_button", Coord(1, 11), Coord(17, 11), col_tile_count=16, row_tile_count=4, resource_image_index=1)
+play_button = Button("play_button", Coord(1, 11), Coord(17, 11), col_count=16, row_count=4, resource_image_index=1)
 play_button.set_icon(Coord(1, 22), Coord(17, 22))
 play_button.set_position(Coord(12, 24))
 

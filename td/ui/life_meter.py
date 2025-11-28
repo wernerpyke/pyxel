@@ -7,8 +7,8 @@ class LifeMeter:
     def __init__(self) -> None:
         sprite = CompoundSprite("life_meter", 14, 2, resource_image_index=1)
 
-        sprite.fill_row(row=1, from_col=1, to_col=12, tile_row=1,tile_cols=[27]) # middle
-        sprite.fill_row(row=2, from_col=1, to_col=12, tile_row=2,tile_cols=[27])
+        sprite.fill_row(row=1, tile_row=1,tile_cols=[27]) # middle
+        sprite.fill_row(row=2, tile_row=2,tile_cols=[27])
 
         sprite.set_tile(1, 1, Coord(25,1)) # left cap
         sprite.set_tile(1, 2, Coord(25,2))

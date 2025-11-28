@@ -6,6 +6,7 @@ from pyke_pyxel import Coord, log_debug, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
+from td.state.stats import STATS, WeaponPowerUp
 from td.weapons.bolt import Bolt
 from td.weapons.star import Star
 from td.weapons.fungus import Fungus
@@ -114,6 +115,19 @@ class GameWeapons:
         for l in self._locations:
             l._active = None
             l._type = None
+
+    def available_power_ups(self) -> list[WeaponPowerUp]:
+        ups: list[WeaponPowerUp] = []
+        for l in self._locations:
+            if l._type:
+                lups = STATS.weapon_power_ups(l._type)
+                ups.extend(lups)
+        
+        if len(ups) == 0:
+            lups = STATS.weapon_power_ups("star")
+            ups.extend(lups)
+        
+        return ups
 
     def _launch_fungus(self, location: WeaponLocation, field: Matrix):
         active = location._active
