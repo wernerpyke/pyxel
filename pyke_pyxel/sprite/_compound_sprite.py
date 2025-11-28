@@ -22,16 +22,31 @@ class CompoundSprite:
 
         self._img: pyxel.Image|None = None
 
-    def fill_tiles(self, tile: Coord):
-        """Fill the sprite with a tile"""
+    def fill(self, tile_cols: list[int], tile_rows: list[int]):
+        """Fill the sprite with a grid of tiles, iterating over the provided columns and rows"""
+
+        col_index = 0
+        row_index = 0
+
         for c in range(0, len(self.cols)):
+            col_value = tile_cols[col_index]
             row = self.cols[c]
             for r in range(0, len(row)):
-                row[r] = tile
+                row_value = tile_rows[row_index]
+                row[r] = Coord(col_value, row_value)
+                row_index += 1
+                row_index = row_index % len(tile_rows)
+
+            col_index += 1
+            col_index = col_index % len(tile_cols)
         self._img = None
 
-    def fill_col(self, col: int, from_row: int, to_row: int, tile_col: int, tile_rows: list[int]):
+    def fill_col(self, col: int, tile_col: int, tile_rows: list[int], from_row: int = 1, to_row: int|None = None):
         """Fill one column (all rows) of a sprite with a sequence of tiles"""
+
+        if not to_row:
+            to_row = self.cols[0].__len__()
+
         rows = self.cols[(col-1)]
         tile_index = 0
         for r in range((from_row-1), to_row):
@@ -40,8 +55,12 @@ class CompoundSprite:
             tile_index = tile_index % len(tile_rows)
         self._img = None
 
-    def fill_row(self, row: int, from_col: int, to_col: int, tile_row: int, tile_cols: list[int]):
+    def fill_row(self, row: int, tile_row: int, tile_cols: list[int], from_col: int = 1, to_col: int|None = None):
         """Fill one row (all columns) of a sprite with a sequence of tiles"""
+        
+        if not to_col:   
+            to_col = self.cols.__len__()
+
         tile_index = 0
         for col_i in range((from_col-1), to_col):
             col = self.cols[col_i]
@@ -72,7 +91,7 @@ class CompoundSprite:
         # PERFORMANCE: use an in-memory pyxel Image to cache the rendered sprite
         # However, if we want to add animation to CompoundSprite does that mean that we need to store an Image per frame?
         if not self._img:
-            self._img = self._cache_image(settings)
+            self._img = self._render_image(settings)
         
         pyxel.blt(x=self.position.x, 
                   y=self.position.y, 
@@ -101,7 +120,7 @@ class CompoundSprite:
                 case _:
                     log_error(f"CompoundSprite.draw() invalid graphics type {g[0]}")
 
-    def _cache_image(self, settings: GameSettings) -> pyxel.Image:
+    def _render_image(self, settings: GameSettings) -> pyxel.Image:
         total_width = len(self.cols) * settings.size.tile
         total_height = len(self.cols[0]) * settings.size.tile
         img = pyxel.Image(total_width, total_height)
