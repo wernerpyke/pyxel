@@ -8,21 +8,22 @@ from game_load import load_level
 
 from ui import UI # Note: important that this not be imported as td.ui to preserve singleton weirdness
 
-DEBUG_START_GAME_LEVEL=False
-DEBUG_START_GAME_OVER=False
+DEBUG_SKIP_TITLE_SCREEN=False
+DEBUG_TRIGGER_POWER_UP= False
+DEBUG_TRIGGER_GAME_OVER=False
 
 @dataclass
-class UpdateQueueItem:
+class _Update:
     type: str
     params: Optional[Any] = None
 
-update_queue: list[UpdateQueueItem] = []
+update_queue: list[_Update] = []
 
 def start(game: CellAutoGame):
-    if DEBUG_START_GAME_LEVEL:
+    if DEBUG_SKIP_TITLE_SCREEN:
         load_level(game)
         ui_game_screen_fade_in_complete(None)
-    elif DEBUG_START_GAME_OVER:
+    elif DEBUG_TRIGGER_GAME_OVER:
         UI.show_game_over_screen(game)
     else:
         UI.show_title_screen(game)
@@ -74,6 +75,8 @@ def _process_update_queue(game: CellAutoGame):
                 UI.show_game_over_screen(game)
             case "ui_hide_game_over_screen":
                 UI.hide_game_over_screen(game)
+            case "ui_display_power_up":
+                UI.show_power_up(game)
             case _:
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()
@@ -119,7 +122,7 @@ def enemy_attacks(game: CellAutoGame, other: float):
         # Important: we don't trigger game over as soon as the health % == 0
         # Once it hits zero the player still has one more chance to survive.
         # It is only the first attack below zero that causes game over
-        update_queue.append(UpdateQueueItem("game_over"))
+        update_queue.append(_Update("game_over"))
         return
     
     damage = other
@@ -132,35 +135,38 @@ def enemy_spawns_enemy(sender, other):
     name: str = sender
     x: int = other[0]
     y: int = other[1]
-    update_queue.append(UpdateQueueItem("launch_enemy", (name, x, y)))
+    update_queue.append(_Update("launch_enemy", (name, x, y)))
 
 def weapon_deactivate_at_location(sender):
     location_id = sender
-    update_queue.append(UpdateQueueItem("deactivate_weapon", location_id))
+    update_queue.append(_Update("deactivate_weapon", location_id))
 
 def ui_title_screen_selected(sender):
-    update_queue.append(UpdateQueueItem("ui_display_title_screen"))
+    update_queue.append(_Update("ui_display_title_screen"))
 
 def ui_game_start_selected(sender):
-    update_queue.append(UpdateQueueItem("ui_fade_from_title_to_game"))
+    update_queue.append(_Update("ui_fade_from_title_to_game"))
 
 def ui_title_screen_fade_out_complete(sender):
-    update_queue.append(UpdateQueueItem("load_level"))
+    update_queue.append(_Update("load_level"))
 
 def ui_game_screen_fade_in_complete(sender):
     STATE.start()
     UI.state_to("select_location")
     UI.life_meter.set_percentage(STATE.health_percentage)
 
+    if DEBUG_TRIGGER_POWER_UP:
+        update_queue.append(_Update("ui_display_power_up"))
+
 def ui_weapon_selected(type: str):
     # The order is important - hide_weapon_ui clears STATE.launch_location
     # which is required by launch_weapon
-    update_queue.append(UpdateQueueItem("launch_weapon", type))
-    update_queue.append(UpdateQueueItem("hide_weapon_ui"))
+    update_queue.append(_Update("launch_weapon", type))
+    update_queue.append(_Update("hide_weapon_ui"))
 
 def ui_game_over_fade_out_complete(sender):
-    update_queue.append(UpdateQueueItem("ui_display_game_over_screen"))
+    update_queue.append(_Update("ui_display_game_over_screen"))
 
 def ui_game_over_restart_selected(sender):
-    update_queue.append(UpdateQueueItem("ui_hide_game_over_screen"))
-    update_queue.append(UpdateQueueItem("ui_display_title_screen"))
+    update_queue.append(_Update("ui_hide_game_over_screen"))
+    update_queue.append(_Update("ui_display_title_screen"))

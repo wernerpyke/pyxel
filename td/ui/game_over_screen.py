@@ -3,14 +3,15 @@ from pyke_pyxel.drawable import Image
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
-image = Image(Coord(1, 15), Coord(11, 12), col_tile_count=20, row_tile_count=4, resource_image_index=1)
+image = Image(Coord(1, 15), col_tile_count=20, row_tile_count=4, resource_image_index=1)
+image.set_position(Coord(10, 12))
 
 def display(game: Game):
-    game.hud.add_image(image)
+    game.hud.add_bg(image)
     # print(f"GAME OVER AT {image.position.x}")
 
 def hide(game: Game):
-    game.hud.remove_image(image)
+    game.hud.remove_bg(image)
 
 def mouse_down(x: int, y: int):
     pass

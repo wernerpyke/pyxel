@@ -5,30 +5,22 @@ from pyke_pyxel.drawable import Button
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
+up = Coord(9, 9)
+down = Coord(13, 9)
+
 @dataclass
 class buttons:
-    star = Button("star", 
-                up_frame=Coord(25,13), 
-                down_frame=Coord(29,13),
-                col_tile_count=4, 
-                row_tile_count=4)
-    bolt = Button("bolt", 
-                up_frame=Coord(1,13), 
-                down_frame=Coord(5,13),
-                col_tile_count=4, 
-                row_tile_count=4)
-    fungus = Button("fungus", 
-                up_frame=Coord(9,13), 
-                down_frame=Coord(13,13),
-                col_tile_count=4, 
-                row_tile_count=4)
-    meteor = Button("meteor", 
-                up_frame=Coord(17,13), 
-                down_frame=Coord(21,13),
-                col_tile_count=4, 
-                row_tile_count=4)
+    star = Button("star", up, down, 4, 4)
+    bolt = Button("bolt", up, down, 4, 4)
+    fungus = Button("fungus", up, down, 4, 4)
+    meteor = Button("meteor", up, down, 4, 4)
 
 BUTTONS = buttons()
+BUTTONS.bolt.set_icon(Coord(1,13), Coord(5,13))
+BUTTONS.fungus.set_icon(Coord(9,13), Coord(13,13))
+BUTTONS.meteor.set_icon(Coord(17,13), Coord(21,13))
+BUTTONS.star.set_icon(Coord(25,13), Coord(29,13))
+
 
 def display(game: Game):  
     BUTTONS.star.set_position(Coord(12, 36))
@@ -64,14 +56,10 @@ def mouse_down(x: int, y: int) -> bool:
         return False
     
 def mouse_move(x: int, y: int):
-    if BUTTONS.star.is_down and not BUTTONS.star.contains(x, y):
-        BUTTONS.star.pop_up()
-    elif BUTTONS.bolt.is_down and not BUTTONS.bolt.contains(x, y):
-        BUTTONS.bolt.pop_up()
-    elif BUTTONS.fungus.is_down and not BUTTONS.fungus.contains(x, y):
-        BUTTONS.fungus.pop_up()
-    elif BUTTONS.meteor.is_down and not BUTTONS.meteor.contains(x, y):
-        BUTTONS.meteor.pop_up()
+    BUTTONS.bolt.check_mouse_move(x, y)
+    BUTTONS.fungus.check_mouse_move(x, y)
+    BUTTONS.meteor.check_mouse_move(x, y)
+    BUTTONS.star.check_mouse_move(x, y)
 
 def mouse_up():
     if BUTTONS.star.is_down:

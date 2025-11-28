@@ -12,6 +12,7 @@ from .life_meter import LifeMeter
 from . import title_screen
 from . import weapon_select
 from . import game_over_screen
+from . import power_up
 
 class _UI:
 
@@ -63,6 +64,10 @@ class _UI:
     def hide_game_over_screen(self, game: Game):
         game_over_screen.hide(game)
 
+    def show_power_up(self, game: Game):
+        power_up.display(game)
+        self.state_to("select_power_up")
+
     def set_weapon_marker(self, name: str, location: WeaponLocation, game: Game):
         if location.marker:
             game.hud.remove_sprite(location.marker)
@@ -96,4 +101,7 @@ class _UI:
         self._state = "wait"
 
     def state_is_waiting(self):
-        return self._state == "wait" or self._state == "select_title_option" or self._state == "select_game_over_option"
+        return self._state == "wait" or self._state == "select_title_option" or self._state == "select_game_over_option" or self._state == "select_power_up"
+
+UI = _UI()
+

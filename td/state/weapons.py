@@ -28,17 +28,17 @@ class WeaponLocation:
 
     def activate(self, type: str):
         if self._active:
-            log_debug(f"WeaponLocation.activate() KILL {self._type}")
+            # log_debug(f"WeaponLocation.activate() KILL {self._type}")
             self._active.kill()
             self._active = None
         
-        log_debug(f"WeaponLocation.activate() {type}")
+        # log_debug(f"WeaponLocation.activate() {type}")
         self._type = type
         self._previous_launch_time = 0
 
     def deactivate(self):
         if self._active:
-            log_debug(f"WeaponLocation.deactivate() KILL {self._type}")
+            # log_debug(f"WeaponLocation.deactivate() KILL {self._type}")
             self._active.kill()
             self._active = None
         
@@ -91,7 +91,7 @@ class GameWeapons:
         
         for w in to_remove:
             if w._deactivate_upon_death:
-                print(f"DEACTIVATE {w.type} from location {w._location_id}")
+                # log_debug(f"DEACTIVATE {w.type} from location {w._location_id}")
                 Signals.send("weapon_deactivate_at_location", w._location_id)
             self.active.remove(w)
 
@@ -121,8 +121,7 @@ class GameWeapons:
             # log_debug(f"weapons.launch_fungus skipping launch - current fungus is still active")
             return active
         
-        log_debug("weapons.launch_fungus")
-
+        # log_debug("weapons.launch_fungus")
         fungus = Fungus(location.id, location.position)
         fungus.launch(field)
 
@@ -131,8 +130,7 @@ class GameWeapons:
         self.active.append(fungus)
 
     def _launch_meteor(self, location: WeaponLocation, field: Matrix):
-        log_debug("weapons._launch_meteor")
-
+        # log_debug("weapons._launch_meteor")
         meteor = Meteor(location.id, location.position)
         meteor.launch(field)
         
@@ -147,7 +145,7 @@ class GameWeapons:
         if to_enemy:
             to = to_enemy._sprite.position
             to = to.clone_by(0, 20) # TODO - this is not great, just guessing 20 px below
-            log_debug(f"weapons._launch_star at {to_enemy.type} {to}")
+            # log_debug(f"weapons._launch_star at {to_enemy.type} {to}")
         else:
             to_x = 0
             if position.x >= 160: # right
@@ -156,7 +154,7 @@ class GameWeapons:
                 to_x = position.x - random.randint(10, 80)
             to_y = position.y - random.randint(80, 120)
             to = Coord.with_xy(to_x, to_y)
-            log_debug(f"weapons._launch_star random {to}")
+            # log_debug(f"weapons._launch_star random {to}")
 
         star = Star(location.id, location.position, to)
         star.launch(field)
@@ -166,8 +164,7 @@ class GameWeapons:
         self.active.append(star)
 
     def _launch_bolt(self, location: WeaponLocation, field: Matrix):
-        log_debug("weapons._launch_bolt")
-
+        # log_debug("weapons._launch_bolt")
         bolt = Bolt(location.id, location.position, location.orientation)
         bolt.launch(field)
 

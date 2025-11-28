@@ -1,6 +1,7 @@
 from pyke_pyxel import Coord
 from pyke_pyxel.game import Game
 from td.state import STATE
+from td.ui import power_up
 
 from ._ui import _UI
 from . import title_screen
@@ -43,6 +44,8 @@ def mouse_move(game: Game, other: tuple[int, int]):
 
         case "select_weapon":
             weapon_select.mouse_move(x, y)
+        case "select_power_up":
+            power_up.mouse_move(x, y)
         case "select_game_over_option":
             game_over_screen.mouse_move(x, y)
 
@@ -69,6 +72,8 @@ def mouse_down(game: Game, other: tuple[int, int]):
         case "select_weapon":
             if not weapon_select.mouse_down(x, y):
                 UI.hide_weapons_ui(game)
+        case "select_power_up":
+            power_up.mouse_down(x, y)
         case "select_game_over_option":
             game_over_screen.mouse_down(x, y)
 
@@ -80,6 +85,8 @@ def mouse_up(game: Game):
             pass
         case "select_weapon":
             weapon_select.mouse_up()
+        case "select_power_up":
+            power_up.mouse_up()
         case "select_game_over_option":
             game_over_screen.mouse_up()
 
