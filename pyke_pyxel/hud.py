@@ -1,5 +1,5 @@
 from ._base_types import GameSettings
-from .drawable import Drawable, Image, CompoundButton, Rect
+from .drawable import Drawable, Image, Button, Rect
 from .sprite import CompoundSprite, Sprite, TextSprite
 
 class HUD:
@@ -12,7 +12,7 @@ class HUD:
    def __init__(self) -> None:
       self._text: list[TextSprite] = []
       self._bg: list[Drawable] = []
-      self._buttons: list[CompoundButton] = []
+      self._buttons: list[Button] = []
       self._sprite_id = 0
       self._sprites: list[Sprite|CompoundSprite] = []
 
@@ -40,13 +40,13 @@ class HUD:
       if sprite in self._sprites:
             self._sprites.remove(sprite)
 
-   def add_button(self, button: CompoundButton):
+   def add_button(self, button: Button):
       """Add a Button to the HUD and assign a unique ID."""
       self._sprite_id += 1
       button._id = self._sprite_id
       self._buttons.append(button)
 
-   def remove_button(self, button: CompoundButton):
+   def remove_button(self, button: Button):
       """
       Remove a Button from the HUD.
 

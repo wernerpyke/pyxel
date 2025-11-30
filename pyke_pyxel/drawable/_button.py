@@ -2,7 +2,7 @@ import pyxel
 from pyke_pyxel.drawable import Drawable, Image
 from pyke_pyxel.sprite import CompoundSprite
 
-class CompoundButton(Drawable):
+class Button(Drawable):
     """
     This class represents a clickable button in the UI. It is constructed from either `Image` or `CompoundSprite`
     objects for its 'up' and 'down' states. It can also have an optional icon, which can also be a
