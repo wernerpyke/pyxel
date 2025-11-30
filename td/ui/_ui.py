@@ -3,7 +3,7 @@ from pathlib import Path
 from pyke_pyxel import Coord, GameSettings, log_error
 from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Sprite, TextSprite
-from pyke_pyxel.drawable import Button, Image
+from pyke_pyxel.drawable import Button, ImageFactory, Image
 
 from td.state import STATE
 from td.state.weapons import WeaponLocation
@@ -24,9 +24,8 @@ class _UI:
                             GameSettings.get().colours.hud_text,
                             f"{Path(__file__).parent.resolve()}/../assets/t0-14b-uni.bdf")
         
-        up = Image(Coord(27, 3), cols=2, rows=2, image_index=1)
-        down = up.clone_to(Coord(25, 3))
-        self.pause_button = Button("pause_button", up, down)
+        img = ImageFactory(cols=2, rows=2, image_index=1)
+        self.pause_button = Button("pause_button", img.at(Coord(27, 3)), img.at(Coord(25, 3)))
     
     def show_title_screen(self, game: Game):
         title_screen.display(game)
