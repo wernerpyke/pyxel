@@ -3,7 +3,7 @@ from pathlib import Path
 from pyke_pyxel import Coord, GameSettings, log_error
 from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Sprite, TextSprite
-from pyke_pyxel.drawable import Button
+from pyke_pyxel.drawable import Button, Image
 
 from td.state import STATE
 from td.state.weapons import WeaponLocation
@@ -18,18 +18,15 @@ class _UI:
 
     def __init__(self):
         self._state: str = ""
-        self.marker_sprite = Sprite("location_marker", Coord(5, 10), col_tile_count=2, row_tile_count=2)
+        self.marker_sprite = Sprite("location_marker", Coord(5, 10), cols=2, rows=2)
         self.life_meter = LifeMeter()
         self.timer_text = TextSprite("", 
                             GameSettings.get().colours.hud_text,
                             f"{Path(__file__).parent.resolve()}/../assets/t0-14b-uni.bdf")
         
-        self.pause_button = Button("pause", 
-                                   up_frame=Coord(27, 3), 
-                                   down_frame=Coord(25, 3), 
-                                   col_count=2, 
-                                   row_count=2, 
-                                   resource_image_index=1)
+        up = Image(Coord(27, 3), cols=2, rows=2, image_index=1)
+        down = up.clone_to(Coord(25, 3))
+        self.pause_button = Button("pause_button", up, down)
     
     def show_title_screen(self, game: Game):
         title_screen.display(game)

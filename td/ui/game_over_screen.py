@@ -3,7 +3,7 @@ from pyke_pyxel.drawable import Image
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
-image = Image(Coord(1, 15), col_tile_count=20, row_tile_count=4, resource_image_index=1)
+image = Image(Coord(1, 15), cols=20, rows=4, image_index=1)
 image.set_position(Coord(10, 12))
 
 def display(game: Game):

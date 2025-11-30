@@ -1,25 +1,37 @@
 
 from dataclasses import dataclass
 from pyke_pyxel import Coord
-from pyke_pyxel.drawable import Button
+from pyke_pyxel.drawable import Button, Image
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
-up = Coord(9, 9)
-down = Coord(13, 9)
+up = Image(Coord(9, 9), cols=4, rows=4)
+down = up.clone_to(Coord(13, 9))
 
 @dataclass
 class buttons:
-    star = Button("star", up, down, 4, 4)
-    bolt = Button("bolt", up, down, 4, 4)
-    fungus = Button("fungus", up, down, 4, 4)
-    meteor = Button("meteor", up, down, 4, 4)
+    star = Button("star", up, down)
+    bolt = Button("bolt", up, down)
+    fungus = Button("fungus", up, down)
+    meteor = Button("meteor", up, down)
 
 BUTTONS = buttons()
-BUTTONS.bolt.set_icon(Coord(1,13), Coord(5,13))
-BUTTONS.fungus.set_icon(Coord(9,13), Coord(13,13))
-BUTTONS.meteor.set_icon(Coord(17,13), Coord(21,13))
-BUTTONS.star.set_icon(Coord(25,13), Coord(29,13))
+
+up = up.clone_to(Coord(1, 13))
+down = down.clone_to(Coord(5, 13))
+BUTTONS.bolt.set_icon(up, down)
+
+up = up.clone_to(Coord(9, 13))
+down = down.clone_to(Coord(13, 13))
+BUTTONS.fungus.set_icon(up, down)
+
+up = up.clone_to(Coord(17, 13))
+down = down.clone_to(Coord(21, 13))
+BUTTONS.meteor.set_icon(up, down)
+
+up = up.clone_to(Coord(25, 13))
+down = down.clone_to(Coord(29, 13))
+BUTTONS.star.set_icon(up, down)
 
 
 def display(game: Game):  

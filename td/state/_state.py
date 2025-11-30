@@ -59,9 +59,9 @@ class GameState:
 
     def acquire_weapon(self, type: str) -> bool:
         cost = STATS.weapon_cost(type)
-        if cost > self.score_counter:
-            print(f"STATE.acquire_weapon() insufficient funds cost:{cost} score:{self.score_counter}")
-            return False
+        # if cost > self.score_counter:
+        #    print(f"STATE.acquire_weapon() insufficient funds cost:{cost} score:{self.score_counter}")
+        #    return False
         self.score_counter -= cost
         log_debug(f"STATE.acquire_weapon() cost:{cost} score:{self.score_counter}")
         return True

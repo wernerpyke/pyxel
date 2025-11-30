@@ -1,13 +1,13 @@
 
 from pyke_pyxel import Coord, COLOURS
-from pyke_pyxel.drawable import Image, Rect, CompoundButton, Button
+from pyke_pyxel.drawable import Image, Rect, Button
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import CompoundSprite
 from td.state import STATE
 from td.state.stats import WeaponPowerUp
 
-image = Image(Coord(1, 19), col_tile_count=20, row_tile_count=3, resource_image_index=1)
+image = Image(Coord(1, 19), cols=20, rows=3, image_index=1)
 image.set_position(Coord(10, 7))
 
 up_sprite = CompoundSprite(f"up", cols=22, rows=4)
@@ -20,7 +20,7 @@ down_sprite.fill(tile_cols=[14, 15], tile_rows=[9, 10, 11, 12])
 down_sprite.fill_col(col=1, tile_col=13, tile_rows=[9, 10, 11, 12]) # left cap
 down_sprite.fill_col(col=22, tile_col=16, tile_rows=[9, 10, 11, 12]) # right cap
 
-buttons: list[CompoundButton] = []
+buttons: list[Button] = []
 
 def _show_options(game: Game):
     buttons.clear()
@@ -42,24 +42,26 @@ def _show_options(game: Game):
         row_index += 6
 
 def _make_button(up: WeaponPowerUp):
-    button = CompoundButton(f"{up._weapon_type}_{up.type}", up_sprite, down_sprite)
+    button = Button(f"{up._weapon_type}_{up.type}", up_sprite, down_sprite)
+
+    up_icon = Image(Coord(1, 13), cols=4, rows=4)
+    down_icon = Image(Coord(5, 13), cols=4, rows=4)
     
-    up_icon = CompoundSprite("up_icon", cols=4, rows=4)
-    down_icon = CompoundSprite("down_icon", cols=4, rows=4)
+    up_icon: Image
+    down_icon: Image
     match up._weapon_type:
         case "bolt":
-            up_icon.fill(tile_cols=[1,2,3,4], tile_rows=[13, 14, 15, 16])
-            down_icon.fill(tile_cols=[5,6,7,8], tile_rows=[13, 14, 15, 16])
+            up_icon = Image(Coord(1, 13), cols=4, rows=4)
+            down_icon = Image(Coord(5, 13), cols=4, rows=4)
         case "fungus":
-            up_icon.fill(tile_cols=[9,10,11,12], tile_rows=[13, 14, 15, 16])
-            down_icon.fill(tile_cols=[13,14,15,16], tile_rows=[13, 14, 15, 16])
+            up_icon = Image(Coord(9, 13), cols=4, rows=4)
+            down_icon = Image(Coord(13, 13), cols=4, rows=4)
         case "meteor":
-            up_icon.fill(tile_cols=[17,18,19,20], tile_rows=[13, 14, 15, 16])
-            down_icon.fill(tile_cols=[21,22,23,24], tile_rows=[13, 14, 15, 16])
+            up_icon = Image(Coord(17, 13), cols=4, rows=4)
+            down_icon = Image(Coord(21, 13), cols=4, rows=4)
         case "star":
-            up_icon.fill(tile_cols=[25,26,27,28], tile_rows=[13, 14, 15, 16])
-            down_icon.fill(tile_cols=[29,30,31,32], tile_rows=[13, 14, 15, 16])
-        
+            up_icon = Image(Coord(25, 13), cols=4, rows=4)
+            down_icon = Image(Coord(29, 13), cols=4, rows=4)
     button.set_icon(up_icon, down_icon)
     buttons.append(button)
     return button
