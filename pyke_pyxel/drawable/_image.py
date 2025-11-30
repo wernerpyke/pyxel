@@ -25,16 +25,6 @@ class Image(Drawable):
         self.rows = rows
         self.image_index = image_index
 
-    def clone_to(self, frame: Coord) -> "Image":
-        """
-        Create a clone of this image but with a different `Coord` indicating the location 
-        of the clone on the Pyxel image bank. The cloned instance will retain the 
-        `cols`, `rows` and `image_index` values of this instance.
-        The position of this image is not retained in the clone.
-        """
-        clone = Image(frame, self.cols, self.rows, self.image_index)
-        return clone
-
     def _render_image(self, settings: GameSettings) -> pyxel.Image :
         width = settings.size.tile * self.cols
         height = settings.size.tile * self.rows
@@ -68,3 +58,37 @@ class Image(Drawable):
                 w=width,
                 h=height,
                 colkey=settings.colours.sprite_transparency)
+
+class ImageFactory:
+    """
+    Convenience class to create multiple `Image` instances with the same width/height and using the same image index.
+
+    Parameters
+    ----------
+    cols : int, optional
+        The number of columns the created images will occupy, by default 1.
+    rows : int, optional
+        The number of rows the the created images will occupy, by default 1.
+    image_index : int, optional
+        The index of the Pyxel resources image bank where the image graphics are located, by default 0.
+    """
+    def __init__(self, cols: int = 1, rows: int = 1, image_index: int=0) -> None:
+        self.cols = cols
+        self.rows = rows
+        self.image_index = image_index
+
+    def at(self, position: Coord) -> Image:
+        """
+        Create an `Image` instance at the given position.
+
+        Parameters
+        ----------
+        position : Coord
+            The `Coord` of the top-left corner of the image's graphic on the Pyxel resource sheet.
+
+        Returns
+        -------
+        Image
+            The created `Image` instance.
+        """
+        return Image(position, self.cols, self.rows, self.image_index)
