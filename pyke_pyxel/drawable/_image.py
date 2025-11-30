@@ -1,5 +1,5 @@
 import pyxel
-from pyke_pyxel import Coord, GameSettings
+from pyke_pyxel import coord, GameSettings
 
 from ._drawable import Drawable
 
@@ -18,7 +18,7 @@ class Image(Drawable):
     image_index : int, optional
         The index of the Pyxel resources image bank where the image graphics are located, by default 0.
     """
-    def __init__(self, frame: Coord, cols: int = 1, rows: int = 1, image_index: int=0) -> None:
+    def __init__(self, frame: coord, cols: int = 1, rows: int = 1, image_index: int=0) -> None:
         super().__init__()
         self.frame = frame
         self.cols = cols
@@ -77,7 +77,7 @@ class ImageFactory:
         self.rows = rows
         self.image_index = image_index
 
-    def at(self, position: Coord) -> Image:
+    def at(self, position: coord) -> Image:
         """
         Create an `Image` instance at the given position.
 

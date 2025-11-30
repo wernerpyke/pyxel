@@ -1,13 +1,13 @@
 import random
 import math
 
-from pyke_pyxel import COLOURS, Coord, log_error, log_debug
+from pyke_pyxel import COLOURS, coord, log_error, log_debug
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 
 from td.weapons.weapon import Weapon
 
 class Meteor(Weapon):
-    def __init__(self, location_id: str, position: Coord) -> None:
+    def __init__(self, location_id: str, position: coord) -> None:
         to_x = 0
         if position.x >= 160: # right
             to_x = position.x + random.randint(10, 80)
@@ -15,7 +15,7 @@ class Meteor(Weapon):
             to_x = position.x - random.randint(10, 80)
 
         to_y = position.y - random.randint(80, 120)
-        to = Coord.with_xy(to_x, to_y)
+        to = coord.with_xy(to_x, to_y)
 
         super().__init__("meteor", location_id, to)
 

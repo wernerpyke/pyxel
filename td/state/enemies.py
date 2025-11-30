@@ -1,7 +1,7 @@
 import time
 import random
 
-from pyke_pyxel import Coord, log_error
+from pyke_pyxel import coord, log_error
 from pyke_pyxel._base_types import COLOURS
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
@@ -13,11 +13,11 @@ from td.enemies.skeleton import Skeleton
 from ._levels import EnemyLevel
 
 launch_locations = [
-    Coord(2, 4), Coord(3, 2), Coord(4, 4), Coord(5, 6), Coord(7, 11), Coord(8, 8), Coord(9, 11), 
-    Coord(10, 11), Coord(11, 11), Coord(12, 10), Coord(13, 10), Coord(14, 11), Coord(15, 11), Coord(16, 11), Coord(17, 10), Coord(18, 11), Coord(19, 12),
-    Coord(20, 11), Coord(21, 11), Coord(22, 12), Coord(23, 13), Coord(24, 12), Coord(25, 9), Coord(26, 9),
-    Coord(27, 10), Coord(28, 11), Coord(29, 11), Coord(30, 11), Coord(31, 11), Coord(32, 11),
-    Coord(33, 7), Coord(34, 3), Coord(35, 6), Coord(36, 4), Coord(37, 2), Coord(38, 1)
+    coord(2, 4), coord(3, 2), coord(4, 4), coord(5, 6), coord(7, 11), coord(8, 8), coord(9, 11), 
+    coord(10, 11), coord(11, 11), coord(12, 10), coord(13, 10), coord(14, 11), coord(15, 11), coord(16, 11), coord(17, 10), coord(18, 11), coord(19, 12),
+    coord(20, 11), coord(21, 11), coord(22, 12), coord(23, 13), coord(24, 12), coord(25, 9), coord(26, 9),
+    coord(27, 10), coord(28, 11), coord(29, 11), coord(30, 11), coord(31, 11), coord(32, 11),
+    coord(33, 7), coord(34, 3), coord(35, 6), coord(36, 4), coord(37, 2), coord(38, 1)
 ]
 
 class GameEnemies:
@@ -40,7 +40,7 @@ class GameEnemies:
         self._previous_launch_time = t
         return level.random_type()
 
-    def launch_bat(self, game: CellAutoGame, position: Coord):
+    def launch_bat(self, game: CellAutoGame, position: coord):
         bat = Bat()
         bat.launch(game, position)
         self._enemies.append(bat)
@@ -91,7 +91,7 @@ class GameEnemies:
                 case _:
                     log_error(f"enemies.update invalid enemy type:{type}")
 
-    def closest_to(self, position: Coord) -> Enemy|None:
+    def closest_to(self, position: coord) -> Enemy|None:
         if len(self._enemies) == 0:
             return None
 
@@ -104,6 +104,6 @@ class GameEnemies:
     def set_level(self, id: int):
         self._level.activate(id)
 
-    def _random_location(self) -> Coord:
+    def _random_location(self) -> coord:
         pos = launch_locations[random.randint(0, (len(launch_locations)-1))]
         return pos.clone()

@@ -1,7 +1,7 @@
 from typing import Optional, Callable
 import pyxel
 
-from pyke_pyxel import Coord, GameSettings
+from pyke_pyxel import coord, GameSettings
 
 class Animation:
     """Represents a sequence of frames for a sprite animation.
@@ -15,7 +15,7 @@ class Animation:
     flip : Optional[bool]
         If True, the animation should be drawn flipped horizontally.
     """
-    def __init__(self, start_frame: Coord, frames: int, flip: Optional[bool] = False):
+    def __init__(self, start_frame: coord, frames: int, flip: Optional[bool] = False):
         self._start_frame = start_frame
         self._frames = frames
         self.flip: bool = True if flip else False
@@ -45,13 +45,13 @@ class Sprite:
         Index of the image resource (if multiple images are used).
     """
     
-    def __init__(self, name: str, default_frame: Coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
+    def __init__(self, name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
         self._id: int = 0
         self.name = name
         self.idle_frame = default_frame
 
         self.animations: dict[str, Animation] = { }
-        self._position: Coord
+        self._position: coord
         self.active_frame = self.idle_frame
         self.is_flipped: bool = False
 
@@ -113,7 +113,7 @@ class Sprite:
         self._animation = None
         self.is_flipped = False
 
-    def set_position(self, position: Coord):
+    def set_position(self, position: coord):
         """
         Sets the position of the sprite.
 
@@ -123,7 +123,7 @@ class Sprite:
         self._position = position
 
     @property
-    def position(self) -> Coord:
+    def position(self) -> coord:
         """
         Returns the current position of the sprite.
 
@@ -151,7 +151,7 @@ class Sprite:
                         self.deactivate_animations()
 
             col = anim._start_frame._col + (anim._current_frame_index * self.col_tile_count)
-            self.active_frame = Coord(col, anim._start_frame._row)
+            self.active_frame = coord(col, anim._start_frame._row)
             # print(f"Sprite.update_frame() frame:{anim._start_frame._col}+({anim._current_frame_index}*{self.col_tile_count})={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
 
             anim._current_frame_index += 1

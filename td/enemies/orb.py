@@ -1,7 +1,7 @@
 import math
 import random
 
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel import GameSettings
 from .enemy import Enemy
@@ -9,9 +9,9 @@ from .enemy import Enemy
 class Orb(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("orb", Coord(11,8), animation_frame_count=4)
+        super().__init__("orb", coord(11,8), animation_frame_count=4)
 
-    def launch(self, game: CellAutoGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: coord):
         start_x = position.x
         start_y = position.y
 

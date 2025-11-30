@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pyke_pyxel import Coord, GameSettings, log_error
+from pyke_pyxel import coord, GameSettings, log_error
 from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Sprite, TextSprite
 from pyke_pyxel.drawable import Button, ImageFactory, Image
@@ -18,14 +18,14 @@ class _UI:
 
     def __init__(self):
         self._state: str = ""
-        self.marker_sprite = Sprite("location_marker", Coord(5, 10), cols=2, rows=2)
+        self.marker_sprite = Sprite("location_marker", coord(5, 10), cols=2, rows=2)
         self.life_meter = LifeMeter()
         self.timer_text = TextSprite("", 
                             GameSettings.get().colours.hud_text,
                             f"{Path(__file__).parent.resolve()}/../assets/t0-14b-uni.bdf")
         
         img = ImageFactory(cols=2, rows=2, image_index=1)
-        self.pause_button = Button("pause_button", img.at(Coord(27, 3)), img.at(Coord(25, 3)))
+        self.pause_button = Button("pause_button", img.at(coord(27, 3)), img.at(coord(25, 3)))
     
     def show_title_screen(self, game: Game):
         title_screen.display(game)
@@ -37,14 +37,14 @@ class _UI:
     def load_hud(self, game: Game):
         text = self.timer_text
         text.set_text("00:00")
-        text.set_position(Coord(2,2))
+        text.set_position(coord(2,2))
         game.hud.add_text(text)
 
         pause = self.pause_button
-        pause.set_position(Coord(38, 2))
+        pause.set_position(coord(38, 2))
         game.hud.add_button(pause)
         
-        self.life_meter._sprite.set_position(Coord(12, 1))
+        self.life_meter._sprite.set_position(coord(12, 1))
         game.hud.add_sprite(self.life_meter._sprite)
 
     def hide_weapons_ui(self, game: Game):
@@ -70,13 +70,13 @@ class _UI:
 
         match name:
             case "star":
-                frame = Coord(8, 11)
+                frame = coord(8, 11)
             case "bolt":
-                frame = Coord(7, 10)
+                frame = coord(7, 10)
             case "fungus":
-                frame = Coord(8, 10)
+                frame = coord(8, 10)
             case "meteor":
-                frame = Coord(7, 11)
+                frame = coord(7, 11)
             case _:
                 log_error(f"ui.set_weapon_marker invalid weapon:{name}")
                 return

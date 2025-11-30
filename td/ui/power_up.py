@@ -1,5 +1,5 @@
 
-from pyke_pyxel import Coord, COLOURS
+from pyke_pyxel import coord, COLOURS
 from pyke_pyxel.drawable import Image, Rect, Button
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
@@ -7,8 +7,8 @@ from pyke_pyxel.sprite import CompoundSprite
 from td.state import STATE
 from td.state.stats import WeaponPowerUp
 
-image = Image(Coord(1, 19), cols=20, rows=3, image_index=1)
-image.set_position(Coord(10, 7))
+image = Image(coord(1, 19), cols=20, rows=3, image_index=1)
+image.set_position(coord(10, 7))
 
 up_sprite = CompoundSprite(f"up", cols=22, rows=4)
 up_sprite.fill(tile_cols=[10, 11], tile_rows=[9, 10, 11, 12])
@@ -24,7 +24,7 @@ buttons: list[Button] = []
 
 def _show_options(game: Game):
     buttons.clear()
-    bg = Rect(position=Coord(8, 6), col_count=24, row_count=30)
+    bg = Rect(position=coord(8, 6), col_count=24, row_count=30)
     bg.set_background(COLOURS.BLACK)
     bg.set_border(COLOURS.BLUE_DARK, 2)
     game.hud.add_bg(bg)
@@ -36,7 +36,7 @@ def _show_options(game: Game):
         print(f"POWER UP {up._weapon_type} {up.type} {up.value} {up.count}")
 
         button = _make_button(up)
-        button.set_position(Coord(9, row_index))
+        button.set_position(coord(9, row_index))
 
         game.hud.add_button(button)
         row_index += 6
@@ -44,24 +44,24 @@ def _show_options(game: Game):
 def _make_button(up: WeaponPowerUp):
     button = Button(f"{up._weapon_type}_{up.type}", up_sprite, down_sprite)
 
-    up_icon = Image(Coord(1, 13), cols=4, rows=4)
-    down_icon = Image(Coord(5, 13), cols=4, rows=4)
+    up_icon = Image(coord(1, 13), cols=4, rows=4)
+    down_icon = Image(coord(5, 13), cols=4, rows=4)
     
     up_icon: Image
     down_icon: Image
     match up._weapon_type:
         case "bolt":
-            up_icon = Image(Coord(1, 13), cols=4, rows=4)
-            down_icon = Image(Coord(5, 13), cols=4, rows=4)
+            up_icon = Image(coord(1, 13), cols=4, rows=4)
+            down_icon = Image(coord(5, 13), cols=4, rows=4)
         case "fungus":
-            up_icon = Image(Coord(9, 13), cols=4, rows=4)
-            down_icon = Image(Coord(13, 13), cols=4, rows=4)
+            up_icon = Image(coord(9, 13), cols=4, rows=4)
+            down_icon = Image(coord(13, 13), cols=4, rows=4)
         case "meteor":
-            up_icon = Image(Coord(17, 13), cols=4, rows=4)
-            down_icon = Image(Coord(21, 13), cols=4, rows=4)
+            up_icon = Image(coord(17, 13), cols=4, rows=4)
+            down_icon = Image(coord(21, 13), cols=4, rows=4)
         case "star":
-            up_icon = Image(Coord(25, 13), cols=4, rows=4)
-            down_icon = Image(Coord(29, 13), cols=4, rows=4)
+            up_icon = Image(coord(25, 13), cols=4, rows=4)
+            down_icon = Image(coord(29, 13), cols=4, rows=4)
     button.set_icon(up_icon, down_icon)
     buttons.append(button)
     return button

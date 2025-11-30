@@ -1,5 +1,5 @@
 from typing import Callable
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.map import Map
 from pyke_pyxel.sprite import Sprite, OpenableSprite, MovableSprite
 from pyke_pyxel.signals import Signals
@@ -12,7 +12,7 @@ class Room:
 
     def add_wall(self, wallType: Callable[[], Sprite], col: int, row: int):
         sprite = wallType()
-        position = Coord(col, row)
+        position = coord(col, row)
         sprite.set_position(position)
         
         Signals._sprite_added(sprite)
@@ -20,7 +20,7 @@ class Room:
 
     def add_door(self, doorType: Callable[[], OpenableSprite], col: int, row: int, closed: bool = True):
         sprite = doorType()
-        position = Coord(col, row)
+        position = coord(col, row)
         sprite.set_position(position)
         
         if closed:

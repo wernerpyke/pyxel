@@ -1,13 +1,13 @@
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from .enemy import Enemy
 
 class Bat(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("bat", Coord(21,8))
+        super().__init__("bat", coord(21,8))
         
-    def launch(self, game: CellAutoGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: coord):
         self._from_x = position.x
         self._from_y = position.y
         self._to_x = game.map.center_x

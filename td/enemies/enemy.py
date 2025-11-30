@@ -1,6 +1,6 @@
 import random
 from pyke_pyxel import GameSettings, log_debug, log_error
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
@@ -8,7 +8,7 @@ from td.state.stats import STATS
 
 
 class Enemy:
-    def __init__(self, type: str, from_frame: Coord, animation_frame_count:int = 2) -> None:
+    def __init__(self, type: str, from_frame: coord, animation_frame_count:int = 2) -> None:
         self.type = type
         stats = STATS.enemy_stats(type)
         if not stats:
@@ -20,8 +20,8 @@ class Enemy:
         sprite.add_animation("loop", Animation(from_frame, animation_frame_count))
         sprite.activate_animation("loop")
 
-        sprite.add_animation("kill", Animation(Coord(5,9), 2))
-        sprite.add_animation("die", Animation(Coord(7,9), 2))
+        sprite.add_animation("kill", Animation(coord(5,9), 2))
+        sprite.add_animation("die", Animation(coord(7,9), 2))
         self._sprite = sprite
 
         self.power = stats.power
@@ -38,7 +38,7 @@ class Enemy:
         self._base_left = win_base_w + 4
         self._base_right = game_w - win_base_w - 4
 
-    def launch(self, game: CellAutoGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: coord):
         # log_debug(f"Enemy.launch() {self._sprite._id} x:{position.x} y:{position.y}")
         self._sprite.set_position(position)
         game.add_sprite(self._sprite)

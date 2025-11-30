@@ -1,5 +1,5 @@
 import pyxel
-from pyke_pyxel import Coord, GameSettings
+from pyke_pyxel import coord, GameSettings
 
 class Drawable:
     def __init__(self) -> None:
@@ -7,7 +7,7 @@ class Drawable:
         self.width = 0
         self.height = 0
 
-        self._position: Coord|None = None
+        self._position: coord|None = None
 
     def contains(self, x: int, y: int) -> bool:
         """
@@ -38,7 +38,7 @@ class Drawable:
         raise NotImplementedError("_Drawable._draw() not implemented")
 
     @property
-    def position(self) -> Coord:
+    def position(self) -> coord:
         """
         Returns the current position of the drawable.
 
@@ -50,7 +50,7 @@ class Drawable:
 
         return self._position
 
-    def set_position(self, position: Coord):        
+    def set_position(self, position: coord):        
         """
         Sets the position of the drawable.
 

@@ -6,7 +6,7 @@ import math
 import random
 
 from ._log import log_debug
-from ._base_types import GameSettings, Coord
+from ._base_types import GameSettings, coord
 from .sprite import Sprite, OpenableSprite
     
 @dataclass
@@ -42,7 +42,7 @@ class Map:
             
             self._grid.append(row)
 
-    def sprite_can_move_to(self, coord: Coord) -> bool:
+    def sprite_can_move_to(self, coord: coord) -> bool:
         """
         Determine if a sprite can move to the specified coordinate.
         
@@ -58,7 +58,7 @@ class Map:
         status = self.location_at(coord).status
         return status == LOCATION_STATUS.FREE or status == LOCATION_STATUS.OPEN
 
-    def mark_blocked(self, coord: Coord, sprite: Sprite):
+    def mark_blocked(self, coord: coord, sprite: Sprite):
         """
         Mark the location at the given coordinate as blocked and attach a sprite.
 
@@ -74,7 +74,7 @@ class Map:
         location.status = LOCATION_STATUS.BLOCKED
         location.sprite = sprite
 
-    def mark_openable(self, coord: Coord, sprite: OpenableSprite, closed: bool):
+    def mark_openable(self, coord: coord, sprite: OpenableSprite, closed: bool):
         """
         Mark a location as an openable object with the specified status.
         
@@ -88,24 +88,24 @@ class Map:
         location.status = status
         location.sprite = sprite
 
-    def mark_closed(self, coord: Coord):
+    def mark_closed(self, coord: coord):
         """Mark a location as closed."""
         self.location_at(coord).status = LOCATION_STATUS.CLOSED
 
-    def mark_open(self, coord: Coord):
+    def mark_open(self, coord: coord):
         """Mark a location as open."""
         self.location_at(coord).status = LOCATION_STATUS.OPEN
 
-    def is_blocked(self, coord: Coord) -> bool:
+    def is_blocked(self, coord: coord) -> bool:
         """Check if a location is blocked"""
         return self.location_at(coord).status == LOCATION_STATUS.BLOCKED
     
-    def is_openable(self, coord: Coord) -> bool:
+    def is_openable(self, coord: coord) -> bool:
         """Check if a location is openable"""
         location = self.location_at(coord)
         return location.status == LOCATION_STATUS.CLOSED or location.status == LOCATION_STATUS.OPEN
 
-    def adjacent_openable(self, coord: Coord) -> Optional[OpenableSprite]:
+    def adjacent_openable(self, coord: coord) -> Optional[OpenableSprite]:
         """Check if a location adjacent(UP, DOWN, LEFT, RIGHT) to the provided coordinate is openable"""
         left = self.location_left_of(coord)
         if left:
@@ -128,7 +128,7 @@ class Map:
                 return below.sprite # type: ignore
 
 
-    def openable_sprite_at(self, coord: Coord) -> Optional[OpenableSprite]:
+    def openable_sprite_at(self, coord: coord) -> Optional[OpenableSprite]:
         """Return the `OpenableSprite` at a coordinate"""
         location = self.location_at(coord)
         if location.status == LOCATION_STATUS.CLOSED or location.status == LOCATION_STATUS.OPEN:
@@ -136,36 +136,36 @@ class Map:
         
         return None
     
-    def sprite_at(self, coord: Coord) -> Optional[Sprite]:
+    def sprite_at(self, coord: coord) -> Optional[Sprite]:
         """Return the `Sprite` at a coordinate"""
         return self.location_at(coord).sprite
 
-    def location_at(self, coord: Coord) -> MapLocation:
+    def location_at(self, coord: coord) -> MapLocation:
         """Return the `MapLocation` at a coordinate"""
         if coord._col < 1 or coord._col > self._cols or coord._row < 1 or coord._row > self._rows:
             return self._edgeLocation
 
         return self._grid[coord._col - 1][coord._row-1]
     
-    def location_left_of(self, coord: Coord) -> Optional[MapLocation]:
+    def location_left_of(self, coord: coord) -> Optional[MapLocation]:
         """Return the location LEFT of the coordinate"""
         if coord._col <= 1:
             return None
         return self._grid[coord._col - 1 - 1][coord._row - 1]
     
-    def location_right_of(self, coord: Coord) -> Optional[MapLocation]:
+    def location_right_of(self, coord: coord) -> Optional[MapLocation]:
         """Return the location RIGHT of the coordinate"""
         if coord._col >= self._grid.__len__() - 1:
             return None
         return self._grid[coord._col - 1 + 1][coord._row - 1]
     
-    def location_above(self, coord: Coord) -> Optional[MapLocation]:
+    def location_above(self, coord: coord) -> Optional[MapLocation]:
         """Return the location UP from of the coordinate"""
         if coord._row <= 1:
             return None
         return self._grid[coord._col - 1][coord._row - 1 - 1]
     
-    def location_below(self, coord: Coord) -> Optional[MapLocation]:
+    def location_below(self, coord: coord) -> Optional[MapLocation]:
         """Return the location DOWN from of the coordinate"""
         if coord._row >= self._grid[0].__len__() - 1:
             return None

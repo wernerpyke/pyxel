@@ -2,7 +2,7 @@ import time
 import random
 
 from typing import Optional
-from pyke_pyxel import Coord, log_debug, log_error
+from pyke_pyxel import coord, log_debug, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
@@ -16,7 +16,7 @@ from td.weapons.weapon import Weapon
 from .enemies import GameEnemies
 
 class WeaponLocation:
-    def __init__(self, id: str, position: Coord, orientation: str) -> None:
+    def __init__(self, id: str, position: coord, orientation: str) -> None:
         self.id = id
         self.position = position
         self.orientation = orientation    
@@ -69,12 +69,12 @@ class GameWeapons:
         self.selected_location: Optional[WeaponLocation] = None
 
         self._locations: list[WeaponLocation] = [
-            WeaponLocation("1", Coord.with_center(124, 268), "vertical"),
-            WeaponLocation("2", Coord.with_center(130, 244), "horizontal"),
-            WeaponLocation("3", Coord.with_center(140, 234), "horizontal"),
-            WeaponLocation("4", Coord.with_center(164, 234), "horizontal"),
-            WeaponLocation("5", Coord.with_center(174, 244), "horizontal"),
-            WeaponLocation("6", Coord.with_center(180, 268), "vertical")
+            WeaponLocation("1", coord.with_center(124, 268), "vertical"),
+            WeaponLocation("2", coord.with_center(130, 244), "horizontal"),
+            WeaponLocation("3", coord.with_center(140, 234), "horizontal"),
+            WeaponLocation("4", coord.with_center(164, 234), "horizontal"),
+            WeaponLocation("5", coord.with_center(174, 244), "horizontal"),
+            WeaponLocation("6", coord.with_center(180, 268), "vertical")
         ]
 
         self.active: list[Weapon] = []
@@ -167,7 +167,7 @@ class GameWeapons:
             else:
                 to_x = position.x - random.randint(10, 80)
             to_y = position.y - random.randint(80, 120)
-            to = Coord.with_xy(to_x, to_y)
+            to = coord.with_xy(to_x, to_y)
             # log_debug(f"weapons._launch_star random {to}")
 
         star = Star(location.id, location.position, to)

@@ -1,5 +1,5 @@
 import pyxel
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 
 class TextSprite:
     """A simple text sprite for rendering text using a pyxel font.
@@ -15,7 +15,7 @@ class TextSprite:
     def _draw(self):
         pyxel.text(self.position.x, self.position.y, self._text, self._colour, font=self._font)
 
-    def set_position(self, position: Coord):
+    def set_position(self, position: coord):
         """
         Sets the position of the sprite.
 
@@ -25,7 +25,7 @@ class TextSprite:
         self._position = position
 
     @property
-    def position(self) -> Coord:
+    def position(self) -> coord:
         """
         Returns the current position of the sprite.
 

@@ -1,10 +1,10 @@
 import pyxel
-from pyke_pyxel import Coord, GameSettings
+from pyke_pyxel import coord, GameSettings
 
 from ._drawable import Drawable
 
 class Rect(Drawable):
-    def __init__(self, position: Coord, col_count: int, row_count: int) -> None:
+    def __init__(self, position: coord, col_count: int, row_count: int) -> None:
         super().__init__()
         self._position = position
         self._col_count = col_count

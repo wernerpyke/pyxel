@@ -1,7 +1,7 @@
 from typing import Any, Optional
 import pyxel
 
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.signals import Signals
 
 """
@@ -287,7 +287,7 @@ class Matrix:
             return None
         return self._cells[y][x]
     
-    def cells_at(self, position: Coord, include_empty: bool = False) -> list[Cell]:
+    def cells_at(self, position: coord, include_empty: bool = False) -> list[Cell]:
         """Return cells within the rectangular region described by ``position``.
 
         ``position`` is expected to expose ``min_x``, ``min_y``, ``max_x``
@@ -313,7 +313,7 @@ class Matrix:
             ]
         return cells
 
-    def cells_in_line(self, from_position: Coord, to_position: Coord, extend_to_matrix_end: bool = False) -> list[Cell]:
+    def cells_in_line(self, from_position: coord, to_position: coord, extend_to_matrix_end: bool = False) -> list[Cell]:
         """Return the sequence of cells forming a discrete line between two coords.
 
         The result includes both endpoints.

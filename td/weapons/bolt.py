@@ -1,14 +1,14 @@
 from typing import Optional
 import random
 
-from pyke_pyxel import COLOURS, Coord, DIRECTION, log_error
+from pyke_pyxel import COLOURS, coord, DIRECTION, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix, Cell
 
 from .weapon import Weapon
 
 class Bolt(Weapon):
 
-    def __init__(self, location_id: str, position: Coord, orientation: str) -> None:
+    def __init__(self, location_id: str, position: coord, orientation: str) -> None:
         super().__init__("bolt", location_id, position)
 
         self.cell_count = 5 # POWER UP - increase width of bolt

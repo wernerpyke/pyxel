@@ -1,13 +1,13 @@
 import random
 
 from pyke_pyxel import GameSettings
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from .enemy import Enemy
 
 class Skeleton(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("skeleton", Coord(9,8))
+        super().__init__("skeleton", coord(9,8))
 
         self._move_from_y = random.randint(80, 180)
 

@@ -1,9 +1,9 @@
 import pyxel
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from ._effect import _Effect
 
 class _SplatterEffect(_Effect):
-    def __init__(self, position: Coord, colour: int):
+    def __init__(self, position: coord, colour: int):
         super().__init__(None)
         self._colour = colour
         self._position = position

@@ -62,7 +62,7 @@ class COLOURS:
     PINK = 14
     BEIGE = 15
 
-class Coord:
+class coord:
     """A grid-aware coordinate representing a tile and its pixel position.
 
     Coord stores both a grid location (column and row, 1-indexed) and the
@@ -97,7 +97,7 @@ class Coord:
         self._y: int = (self._row - 1) * self.size
 
     @staticmethod
-    def with_center(x: int, y: int, size: Optional[int] = None) -> "Coord":
+    def with_center(x: int, y: int, size: Optional[int] = None) -> "coord":
         """Create a Coord where (x, y) are treated as the visual center.
 
         The returned Coord will have its internal pixel `x, y` set so that
@@ -105,7 +105,7 @@ class Coord:
         calculated from the center position.
         """
 
-        c = Coord(1, 1, size)
+        c = coord(1, 1, size)
         half = math.floor(c.size / 2)
         c._x = x - half
         c._y = y - half
@@ -116,14 +116,14 @@ class Coord:
         return c
 
     @staticmethod
-    def with_xy(x: int, y: int, size: Optional[int] = None) -> "Coord":
+    def with_xy(x: int, y: int, size: Optional[int] = None) -> "coord":
         """Create a Coord with the provided top-left pixel coordinates.
 
         The provided x and y are used directly as the tile's top-left
         pixel coordinates and the grid column/row are computed from them.
         """
 
-        c = Coord(1, 1, size)
+        c = coord(1, 1, size)
         c._x = x
         c._y = y
 
@@ -132,7 +132,7 @@ class Coord:
 
         return c
 
-    def is_different_grid_location(self, coord: "Coord"):
+    def is_different_grid_location(self, coord: "coord"):
         """Return True when this Coord is on a different grid tile than `coord`.
 
         Comparison is based on grid column and row (1-indexed), not pixel
@@ -141,7 +141,7 @@ class Coord:
 
         return self._col != coord._col or self._row != coord._row
 
-    def is_same_grid_location(self, coord: "Coord"):
+    def is_same_grid_location(self, coord: "coord"):
         """Return True when this Coord is on the same grid tile as `coord`."""
 
         return self._col == coord._col and self._row == coord._row
@@ -179,7 +179,7 @@ class Coord:
     def clone(self):
         """Return a shallow copy of this Coord (same grid location and size)."""
 
-        return Coord(self._col, self._row, self.size)
+        return coord(self._col, self._row, self.size)
 
     def clone_by(self, x: int, y: int, direction: Optional[str] = None):
         """Return a new Coord offset by (x, y) pixels from this one.
@@ -190,7 +190,7 @@ class Coord:
         grid location is computed from the cloned midpoint.
         """
 
-        cloned = Coord(self._col, self._row)
+        cloned = coord(self._col, self._row)
         cloned._x = self._x + x
         cloned._y = self._y + y
         cloned.size = self.size
@@ -214,7 +214,7 @@ class Coord:
 
         return cloned
 
-    def collides_with(self, coord: "Coord"):
+    def collides_with(self, coord: "coord"):
 
         """Return True if this tile collides with another tile using AABB.
 
@@ -241,7 +241,7 @@ class Coord:
             collide_y + h > (sprite_y + tolerance)
         )
 
-    def distance_to(self, coord: "Coord") -> float:
+    def distance_to(self, coord: "coord") -> float:
         """Return the distance between this Coord and the provided Coord"""
         delta_x = self._x - coord._x
         delta_y = self._y - coord._y

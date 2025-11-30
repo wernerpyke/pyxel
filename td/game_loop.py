@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Optional
-from pyke_pyxel import COLOURS, Coord, log_error
+from pyke_pyxel import COLOURS, coord, log_error
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
 from td.state import STATE
@@ -103,7 +103,7 @@ def _deactivate_weapon(location_id: str, game: CellAutoGame):
 def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
     match type:
         case "bat":
-            STATE.enemies.launch_bat(game, Coord.with_xy(x, y))
+            STATE.enemies.launch_bat(game, coord.with_xy(x, y))
         case _:
             log_error(f"game_loop._process_launch_enemy unrecognised name {type}")
 

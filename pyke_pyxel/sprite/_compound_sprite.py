@@ -1,5 +1,5 @@
 import pyxel
-from pyke_pyxel import Coord, GameSettings, log_error
+from pyke_pyxel import coord, GameSettings, log_error
 
 class CompoundSprite:
     """A multi-tile sprite composed of a grid of `Coord` tiles with optional overlay graphics.
@@ -13,10 +13,10 @@ class CompoundSprite:
     def __init__(self, name: str, cols: int, rows: int, resource_image_index: int=0):
         self.name = name
         self._id: int = 0
-        self._position: Coord
+        self._position: coord
         self._resource_image_index = resource_image_index
 
-        self.cols: list[list[Coord|None]] = [[None for r in range(rows)] for c in range(cols)]
+        self.cols: list[list[coord|None]] = [[None for r in range(rows)] for c in range(cols)]
 
         self._graphics: list[tuple] = []
 
@@ -33,7 +33,7 @@ class CompoundSprite:
             row = self.cols[c]
             for r in range(0, len(row)):
                 row_value = tile_rows[row_index]
-                row[r] = Coord(col_value, row_value)
+                row[r] = coord(col_value, row_value)
                 row_index += 1
                 row_index = row_index % len(tile_rows)
 
@@ -50,7 +50,7 @@ class CompoundSprite:
         rows = self.cols[(col-1)]
         tile_index = 0
         for r in range((from_row-1), to_row):
-            rows[r] = Coord(tile_col, tile_rows[tile_index])
+            rows[r] = coord(tile_col, tile_rows[tile_index])
             tile_index += 1
             tile_index = tile_index % len(tile_rows)
         self._img = None
@@ -64,12 +64,12 @@ class CompoundSprite:
         tile_index = 0
         for col_i in range((from_col-1), to_col):
             col = self.cols[col_i]
-            col[(row-1)] = Coord(tile_cols[tile_index], tile_row)
+            col[(row-1)] = coord(tile_cols[tile_index], tile_row)
             tile_index += 1
             tile_index = tile_index % len(tile_cols)
         self._img = None
 
-    def set_tile(self, col: int, row: int, tile: Coord):
+    def set_tile(self, col: int, row: int, tile: coord):
         """Set one tile in the sprite"""
         self.cols[(col-1)][(row-1)] = tile
         self._img = None
@@ -151,7 +151,7 @@ class CompoundSprite:
     def __eq__(self, other):
         return isinstance(other, CompoundSprite) and self._id == other._id
 
-    def set_position(self, position: Coord):
+    def set_position(self, position: coord):
         """
         Sets the position of the sprite.
 
@@ -161,7 +161,7 @@ class CompoundSprite:
         self._position = position
 
     @property
-    def position(self) -> Coord:
+    def position(self) -> coord:
         """
         Returns the current position of the sprite.
 

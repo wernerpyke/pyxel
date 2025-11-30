@@ -1,10 +1,10 @@
 import pyxel
 
-from pyke_pyxel import Coord, GameSettings
+from pyke_pyxel import coord, GameSettings
 
 class TileMap:
 
-    def __init__(self, resource_position: Coord, tiles_wide: int, tiles_high: int, resource_index: int, settings: GameSettings):
+    def __init__(self, resource_position: coord, tiles_wide: int, tiles_high: int, resource_index: int, settings: GameSettings):
         super().__init__()
         screen_width = settings.size.window
         screen_height = settings.size.window

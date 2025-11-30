@@ -1,10 +1,10 @@
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.drawable import Image
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 
-image = Image(Coord(1, 15), cols=20, rows=4, image_index=1)
-image.set_position(Coord(10, 12))
+image = Image(coord(1, 15), cols=20, rows=4, image_index=1)
+image.set_position(coord(10, 12))
 
 def display(game: Game):
     game.hud.add_bg(image)

@@ -1,10 +1,10 @@
-from pyke_pyxel import Coord, log_error
+from pyke_pyxel import coord, log_error
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 from td.state.stats import STATS
 
 
 class Weapon:
-    def __init__(self, type: str, location_id: str, position: Coord) -> None:
+    def __init__(self, type: str, location_id: str, position: coord) -> None:
         self.type = type
         self._location_id = location_id
         self.position = position

@@ -1,5 +1,5 @@
 import pyxel
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel._base_types import GameSettings
 from ._image import Image
 from ._effect import _Effect

@@ -1,4 +1,4 @@
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.game import Game
 
 from td.state import STATE
@@ -34,7 +34,7 @@ def mouse_move(game: Game, other: tuple[int, int]):
                 
                 # Mark the location
                 marker = UI.marker_sprite
-                marker.set_position(Coord.with_center(
+                marker.set_position(coord.with_center(
                     location.position.mid_x, 
                     location.position.mid_y, 
                     size=16))

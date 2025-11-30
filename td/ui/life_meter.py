@@ -1,4 +1,4 @@
-from pyke_pyxel import Coord, COLOURS
+from pyke_pyxel import coord, COLOURS
 from pyke_pyxel.sprite import CompoundSprite
 
 
@@ -10,15 +10,15 @@ class LifeMeter:
         sprite.fill_row(row=1, tile_row=1,tile_cols=[27]) # middle
         sprite.fill_row(row=2, tile_row=2,tile_cols=[27])
 
-        sprite.set_tile(1, 1, Coord(25,1)) # left cap
-        sprite.set_tile(1, 2, Coord(25,2))
-        sprite.set_tile(2, 1, Coord(26,1))
-        sprite.set_tile(2, 2, Coord(26,2))
+        sprite.set_tile(1, 1, coord(25,1)) # left cap
+        sprite.set_tile(1, 2, coord(25,2))
+        sprite.set_tile(2, 1, coord(26,1))
+        sprite.set_tile(2, 2, coord(26,2))
 
-        sprite.set_tile(13, 1, Coord(28,1)) # right cap
-        sprite.set_tile(13, 2, Coord(28,2))
-        sprite.set_tile(14, 1, Coord(29,1)) 
-        sprite.set_tile(14, 2, Coord(29,2))
+        sprite.set_tile(13, 1, coord(28,1)) # right cap
+        sprite.set_tile(13, 2, coord(28,2))
+        sprite.set_tile(14, 1, coord(29,1)) 
+        sprite.set_tile(14, 2, coord(29,2))
 
         self._sprite = sprite
 

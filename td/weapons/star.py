@@ -1,14 +1,14 @@
 from typing import Optional
 import random
 
-from pyke_pyxel import COLOURS, Coord, DIRECTION, log_error
+from pyke_pyxel import COLOURS, coord, DIRECTION, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix, Cell
 
 from .weapon import Weapon
 
 class Star(Weapon):
 
-    def __init__(self, location_id: str, position: Coord, to: Coord) -> None:
+    def __init__(self, location_id: str, position: coord, to: coord) -> None:
         super().__init__("star", location_id, position)
 
         self._from = position

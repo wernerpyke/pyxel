@@ -1,4 +1,4 @@
-from ._base_types import Coord, GameSettings
+from ._base_types import coord, GameSettings
 from .drawable._image import Image
 from .drawable._effect import _Effect
 from .drawable._circular_wipe_effect import _CircularWipeEffect
@@ -34,7 +34,7 @@ class FX:
         wipe = _CircularWipeEffect(colour, wipe_closed, completion_signal, self._settings)
         self._effects.append(wipe)
 
-    def splatter(self, colour: int, position: Coord):        
+    def splatter(self, colour: int, position: coord):        
         """
         Create a splatter effect at the specified position. 
         The splatter effect animates within a single tile for 30 frames.

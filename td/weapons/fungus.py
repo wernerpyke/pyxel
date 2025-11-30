@@ -1,12 +1,12 @@
 import random
 
-from pyke_pyxel import COLOURS, Coord, log_error, log_debug
+from pyke_pyxel import COLOURS, coord, log_error, log_debug
 from pyke_pyxel.cell_auto.matrix import Matrix, Cell
 from .weapon import Weapon
 
 class Fungus(Weapon):
 
-    def __init__(self, location_id: str, position: Coord) -> None:
+    def __init__(self, location_id: str, position: coord) -> None:
         super().__init__("fungus", location_id, position)
 
         self.colour = COLOURS.GREEN_MINT

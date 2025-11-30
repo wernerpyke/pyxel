@@ -6,7 +6,7 @@ from .projectile import Projectile
 from pyke_pyxel.sprite import Sprite, MovableSprite
 from ..map import Map
 
-from .. import DIRECTION, Coord, log_debug
+from .. import DIRECTION, coord, log_debug
 
 class Actor:
 
@@ -57,13 +57,13 @@ class MovableActor(Actor):
         super().__init__(sprite)
 
         self._movementSpeed = sprite.movementSpeed
-        self._moveTo: Coord
+        self._moveTo: coord
 
         self.currentDirection = DIRECTION.DOWN
         self._moveInDirection: Optional[str] = None
 
     def set_position(self, col: int, row: int):
-        self._sprite.set_position(Coord(col, row))
+        self._sprite.set_position(coord(col, row))
 
     def start_moving(self, direction: str):
         self._moveInDirection = direction

@@ -1,7 +1,7 @@
 from typing import Optional
 import pyxel
 
-from ._base_types import GameSettings, Coord, GameSettings
+from ._base_types import GameSettings, coord, GameSettings
 from ._log import log_debug
 from .drawable._tilemap import TileMap
 from .signals import Signals
@@ -152,7 +152,7 @@ class Game:
                 self._sprites.remove(s)
                 return
 
-    def set_tilemap(self, resource_position: Coord, tiles_wide: int, tiles_high: int, resource_tilemap_index: int = 0):
+    def set_tilemap(self, resource_position: coord, tiles_wide: int, tiles_high: int, resource_tilemap_index: int = 0):
         """
         Set a simplified version of standard Pyxel tilemaps as a background layer.
         The tilemap is horizontally and vertically repeated to fill up the screen width/height.

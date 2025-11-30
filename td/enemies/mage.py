@@ -1,7 +1,7 @@
 import math
 import random
 
-from pyke_pyxel import Coord
+from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
@@ -10,14 +10,14 @@ from .enemy import Enemy
 class Mage(Enemy):
 
     def __init__(self) -> None:
-        super().__init__("mage", Coord(19,8))
+        super().__init__("mage", coord(19,8))
         
         self._to_x = 0
         self._to_y = 0
 
         self._launch_projectile = False
 
-    def launch(self, game: CellAutoGame, position: Coord):
+    def launch(self, game: CellAutoGame, position: coord):
         self._map = game.map
         self._to_x = position.x #Down
         self._to_y = position.y + self._map.random_distance_down(position.y, 20, 40)
