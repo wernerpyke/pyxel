@@ -25,7 +25,7 @@ class Rect(Drawable):
         width = settings.size.tile * self._col_count
         height = settings.size.tile * self._row_count
 
-        position = self._position
+        position = self.position
 
         if not self._bg_colour == None: # can't just if self._bg_colour because a value of '0' will return False
             pyxel.rect(x=position.x,

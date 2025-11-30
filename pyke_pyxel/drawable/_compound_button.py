@@ -1,18 +1,30 @@
 import pyxel
-from pyke_pyxel.drawable._drawable import Drawable
-from pyke_pyxel.sprite._compound_sprite import CompoundSprite
+from pyke_pyxel.drawable import Drawable, Image
+from pyke_pyxel.sprite import CompoundSprite
 
 class CompoundButton(Drawable):
+    """
+    This class represents a clickable button in the UI. It is constructed from either `Image` or `CompoundSprite`
+    objects for its 'up' and 'down' states. It can also have an optional icon, which can also be a
+    `CompoundSprite` or a simple `Image`.
 
-    def __init__(self, name: str, up_sprite: CompoundSprite, down_sprite: CompoundSprite):
+    The button's state changes in response to mouse interactions, such as
+    highlighting when hovered over and appearing pressed ('down') when clicked.
+    """
+    def __init__(self, name: str, up: CompoundSprite|Image, down: CompoundSprite|Image):
+        """
+        Args:
+            up (CompoundSprite|Image): The icon to display when the button is in its 'up' state.
+            down (CompoundSprite|Image): The icon to display when the button is in its 'down' or highlighted state.
+        """
         super().__init__()
         self.name = name
 
-        self._up = up_sprite
-        self._down = down_sprite
+        self._up = up
+        self._down = down
 
-        self._icon_up: CompoundSprite|None = None
-        self._icon_down: CompoundSprite|None = None
+        self._icon_up: CompoundSprite|Image|None = None
+        self._icon_down: CompoundSprite|Image|None = None
 
         self._up_image: pyxel.Image|None = None
         self._down_image: pyxel.Image|None = None
@@ -23,9 +35,16 @@ class CompoundButton(Drawable):
         self._highlighted = False
         self.is_down = False
 
-    def set_icon(self, up_sprite: CompoundSprite, down_sprite: CompoundSprite):
-        self._icon_up = up_sprite
-        self._icon_down = down_sprite
+    def set_icon(self, up: CompoundSprite|Image, down: CompoundSprite|Image):
+        """
+        Sets the icon for the button.
+
+        Args:
+            up (CompoundSprite|Image): The icon to display when the button is in its 'up' state.
+            down (CompoundSprite|Image): The icon to display when the button is in its 'down' or highlighted state.
+        """
+        self._icon_up = up
+        self._icon_down = down
 
     def _draw(self, settings):
 
@@ -64,10 +83,9 @@ class CompoundButton(Drawable):
                     img=icon_image,
                     u=0,
                     v=0,
-                    w=self.width,
-                    h=self.height,
+                    w=icon_image.width,
+                    h=icon_image.height,
                     colkey=settings.colours.sprite_transparency)
-
 
     #
     # The below is duplicated from Button()

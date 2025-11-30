@@ -21,13 +21,13 @@ class Button(Drawable):
     resource_image_index : int, optional
         The index of the Pyxel image bank where the button graphics are located, by default 0.
     """
-    def __init__(self, name: str, up_frame: Coord, down_frame: Coord, col_count: int = 1, row_count: int = 1, resource_image_index: int=0) -> None:
+    def __init__(self, name: str, up_frame: Coord, down_frame: Coord, cols: int = 1, rows: int = 1, resource_image_index: int=0) -> None:
         super().__init__()
         self.name = name
         self._up_frame = up_frame
         self._down_frame = down_frame
-        self._col_count = col_count
-        self._row_count = row_count
+        self._col_count = cols
+        self._row_count = rows
         self._resource_image_index = resource_image_index
 
         self._icon_up_frame: Coord|None = None
@@ -36,8 +36,8 @@ class Button(Drawable):
         # TODO - this is only needed because Coord.contains() does not know how many tiles wide it is
         # Another possibility is to allow Coord() to be created with col_tile_count & row_tile_count
         size = GameSettings.get().size.tile
-        self.width = col_count * size 
-        self.height = row_count * size
+        self.width = cols * size 
+        self.height = rows * size
 
         self._highlighted = False
         self.is_down = False

@@ -12,8 +12,8 @@ class _ScaleEffect(_Effect):
         self._scale_in = scale_in
 
         settings = GameSettings.get()
-        self._width = settings.size.tile * image.col_tile_count
-        self._height = settings.size.tile * image.row_tile_count
+        self._width = settings.size.tile * image.cols
+        self._height = settings.size.tile * image.rows
         self._transparency = settings.colours.sprite_transparency
 
         self._scale: float = 0.0
@@ -33,12 +33,12 @@ class _ScaleEffect(_Effect):
 
         image = self._image
 
-        position = image._position
+        position = image.position
 
         # Pyxel is cool enough to transform x & y without us needing to manually recalculate
         pyxel.blt(x=position.x,
                 y=position.y,
-                img=image.resource_image_index,
+                img=image.image_index,
                 u=image.frame.x,
                 v=image.frame.y,
                 w=self._width,

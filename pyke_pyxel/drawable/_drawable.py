@@ -1,3 +1,4 @@
+import pyxel
 from pyke_pyxel import Coord, GameSettings
 
 class Drawable:
@@ -5,6 +6,8 @@ class Drawable:
         self._id = 0
         self.width = 0
         self.height = 0
+
+        self._position: Coord|None = None
 
     def contains(self, x: int, y: int) -> bool:
         """
@@ -27,6 +30,9 @@ class Drawable:
         if y < min_y or y > max_y:
             return False
         return True
+
+    def _render_image(self, settings: GameSettings) -> pyxel.Image:
+        raise NotImplementedError("_Drawable._render_image() not implemented")
 
     def _draw(self, settings: GameSettings):
         raise NotImplementedError("_Drawable._draw() not implemented")

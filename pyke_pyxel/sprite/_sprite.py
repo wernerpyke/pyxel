@@ -39,13 +39,13 @@ class Sprite:
         Logical name for the sprite.
     default_frame : Coord
         The frame to use when no animation is active (idle frame).
-    col_tile_count, row_tile_count : int
+    cols, rows : int
         Width/height in tiles for framed sprites (used when advancing frames).
     resource_image_index : int
         Index of the image resource (if multiple images are used).
     """
     
-    def __init__(self, name: str, default_frame: Coord, col_tile_count: int = 1, row_tile_count: int = 1, resource_image_index: int=0):
+    def __init__(self, name: str, default_frame: Coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
         self._id: int = 0
         self.name = name
         self.idle_frame = default_frame
@@ -59,8 +59,8 @@ class Sprite:
         self._loop_animation: bool = True
         self._on_animation_end: Optional[Callable[[int], None]] = None
 
-        self.col_tile_count = col_tile_count
-        self.row_tile_count = row_tile_count
+        self.col_tile_count = cols
+        self.row_tile_count = rows
 
         self._resource_image_index = resource_image_index
 
