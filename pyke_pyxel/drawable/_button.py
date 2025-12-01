@@ -1,3 +1,4 @@
+from typing import Literal
 import pyxel
 from pyke_pyxel.drawable import Drawable, Image
 from pyke_pyxel.sprite import CompoundSprite
@@ -26,6 +27,11 @@ class Button(Drawable):
         self._icon_up: CompoundSprite|Image|None = None
         self._icon_down: CompoundSprite|Image|None = None
 
+        self._text: str = ""
+        self._text_font: pyxel.Font|None = None
+        self._text_colour: int|None = None
+        self._text_highlight_colour: int|None = None
+
         self._up_image: pyxel.Image|None = None
         self._down_image: pyxel.Image|None = None
 
@@ -46,51 +52,13 @@ class Button(Drawable):
         self._icon_up = up
         self._icon_down = down
 
-    def _draw(self, settings):
+    def set_text(self, text: str, font: str, colour: int, alignment: Literal['left', 'center', 'right'] = 'left', highlight_colour: int|None = None):
+        self._text = text
+        self._text_font = pyxel.Font(font)
+        self._text_colour = colour
+        self._text_alignment = alignment
+        self._text_highlight_colour = highlight_colour
 
-        if not self._up_image:
-            self._up_image = self._up._render_image(settings)
-            self._down_image = self._down._render_image(settings)
-            self.width = self._up_image.width
-            self.height = self._up_image.height
-
-        if self._icon_up and not self._icon_up_image:
-            self._icon_up_image = self._icon_up._render_image(settings)
-            self._icon_down_image = self._icon_down._render_image(settings) # type: ignore warning
-
-        image = self._up_image
-        icon_image = self._icon_up_image
-        if self.is_down:
-            image = self._down_image
-            icon_image = self._icon_down_image
-        elif self._highlighted:
-            icon_image = self._icon_down_image
-        
-        position = self.position
-
-        pyxel.blt(x=position.x,
-                y=position.y,
-                img=image, # type: ignore warning
-                u=0,
-                v=0,
-                w=self.width,
-                h=self.height,
-                colkey=settings.colours.sprite_transparency)
-        
-        if icon_image:
-            pyxel.blt(x=position.x,
-                    y=position.y,
-                    img=icon_image,
-                    u=0,
-                    v=0,
-                    w=icon_image.width,
-                    h=icon_image.height,
-                    colkey=settings.colours.sprite_transparency)
-
-    #
-    # The below is duplicated from Button()
-    # TODO, should this class extend Button rather than Drawable?
-    #
     def highlight(self, active: bool):
         """
         Highlight the button. This sets the icon of the button to its down/active state.
@@ -126,4 +94,70 @@ class Button(Drawable):
             self.highlight(False)
             if self.is_down:
                 self.pop_up()
+
+    def _draw(self, settings):
+
+        if not self._up_image:
+            self._up_image = self._up._render_image(settings)
+            self._down_image = self._down._render_image(settings)
+            self.width = self._up_image.width
+            self.height = self._up_image.height
+
+        if self._icon_up and not self._icon_up_image:
+            self._icon_up_image = self._icon_up._render_image(settings)
+            self._icon_down_image = self._icon_down._render_image(settings) # type: ignore warning
+
+        image = self._up_image
+        icon_image = self._icon_up_image
+        text_colour = self._text_colour
+        
+        if self.is_down:
+            image = self._down_image
+            icon_image = self._icon_down_image
+            text_colour = self._text_highlight_colour
+        elif self._highlighted:
+            icon_image = self._icon_down_image
+            text_colour = self._text_highlight_colour
+        
+        position = self.position
+
+        pyxel.blt(x=position.x,
+                y=position.y,
+                img=image, # type: ignore warning
+                u=0,
+                v=0,
+                w=self.width,
+                h=self.height,
+                colkey=settings.colours.sprite_transparency)
+        
+        if icon_image:
+            pyxel.blt(x=position.x,
+                    y=position.y,
+                    img=icon_image,
+                    u=0,
+                    v=0,
+                    w=icon_image.width,
+                    h=icon_image.height,
+                    colkey=settings.colours.sprite_transparency)
+        
+        if text_colour:
+            width = self._text_font.text_width(self._text) # type: ignore warning
+            height = 14 # TODO - this is a crappy guess
+            
+            match self._text_alignment:
+                case "left":
+                    text_x = icon_image.width if icon_image else 0
+                case "center":
+                    text_x = (self.width - width) / 2
+                case "right":
+                    text_x = self.width - width
+                case _:
+                    text_x = 0
+            
+            text_y = (self.height - height) / 2
+            text_x = position.x + text_x
+            text_y = position.y + text_y
+            pyxel.text(text_x, text_y, self._text, text_colour, font=self._text_font)
+
+
     

@@ -16,7 +16,6 @@ class SizeSettings:
 class ColourSettings:
     sprite_transparency: int = 0 # COLOURS.BLACK
     background:int = 0 # COLOURS.BLACK
-    hud_text: int = 7 # COLOURS.WHITE
 
 class GameSettings:
     _instance = None

@@ -43,7 +43,6 @@ class Game:
         _settings.fps.animation = settings.fps.animation
         _settings.colours.sprite_transparency = settings.colours.sprite_transparency
         _settings.colours.background = settings.colours.background
-        _settings.colours.hud_text = settings.colours.hud_text
         _settings.display_smoothing_enabled = settings.display_smoothing_enabled
         _settings.full_screen_enabled = settings.full_screen_enabled
         _settings.mouse_enabled = settings.mouse_enabled
