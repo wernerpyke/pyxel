@@ -1,4 +1,6 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+
+from pyke_pyxel import log_debug
 
 @dataclass
 class EnemyStats:
@@ -8,13 +10,12 @@ class EnemyStats:
     bounty: float
 
 class WeaponPowerUp:
-    def __init__(self, type: str, value: float) -> None:
+    def __init__(self, weapon_type: str, type: str, value: float) -> None:
+        self.weapon_type = weapon_type
         self.type = type
         self.value = value
         self.count = 0
         self.increases = True
-
-        self._weapon_type = ""
 
         if type == "cost" or type == "cooldown":
             self.increases = False
@@ -22,6 +23,9 @@ class WeaponPowerUp:
             self.increases = True
         else:
             raise ValueError(f"WeaponPowerUp invalid affects:{type}")
+        
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, WeaponPowerUp) and self.type == other.type and self.weapon_type == other.weapon_type
 
 class WeaponStats:
     def __init__(self, cost: float, power: float, speed: float, cooldown: float) -> None:
@@ -55,8 +59,7 @@ class WeaponStats:
         return self._cooldown - (self._cooldown * up)
 
     def _add_power_up(self, affects: str, value: float):
-        up = WeaponPowerUp(affects, value)
-        up._weapon_type = self._weapon_type
+        up = WeaponPowerUp(self._weapon_type, affects, value)
         self._power_ups.append(up)
 
     def increment_power_up(self, affects: str):
@@ -66,10 +69,9 @@ class WeaponStats:
                 return
         raise ValueError(f"WeaponStats.increment_power_up invalid affects:{affects}")
 
-@dataclass
 class _stats:    
     def __init__(self):
-        self._player_health = 20
+        self._player_health = 10
         self._enemies: dict[str, EnemyStats] = {}
         self._weapons: dict[str, WeaponStats] = {}
 
@@ -81,7 +83,7 @@ class _stats:
 
     def weapon_cost(self, type: str) -> float:
         weapon = self._weapons.get(type)
-        return weapon.power if weapon else 99
+        return weapon.cost if weapon else 99
     
     def weapon_power_ups(self, type: str) -> list[WeaponPowerUp]:
         weapon = self._weapons.get(type)
@@ -91,6 +93,7 @@ class _stats:
             raise ValueError(f"WeaponStats.weapon_power_ups invalid type:{type}")
         
     def increment_weapon_power_up(self, type: str, affects: str):
+        log_debug(f"STATS.increment_weapon_power_up {type} {affects}")
         weapon = self._weapons.get(type)
         if weapon:
             weapon.increment_power_up(affects)
@@ -120,19 +123,19 @@ STATS._set_enemy_stats("orb",               power=1200,     speed=2,    damage=1
 STATS._set_enemy_stats("mage",              power=1000,     speed=3,    damage=4,   bounty=3 )
 STATS._set_enemy_stats("bat",               power=100,      speed=6,    damage=0.5, bounty=0.5 )
 
-bolt = STATS._set_weapon_stats("bolt",      cost=1,         power=150,   speed=10,  cooldown=6 )
+bolt = STATS._set_weapon_stats("bolt",      cost=3,         power=150,   speed=10,  cooldown=6 )
 bolt._add_power_up("cooldown", 0.2)
 bolt._add_power_up("power", 0.2)
 
-fungus = STATS._set_weapon_stats("fungus",  cost=3,         power=2,     speed=4,   cooldown=40 )
+fungus = STATS._set_weapon_stats("fungus",  cost=6,         power=2,     speed=4,   cooldown=40 )
 fungus._add_power_up("power", 0.2)
 fungus._add_power_up("speed", 0.2)
 
-meteor = STATS._set_weapon_stats("meteor",  cost=2,         power=20,    speed=10,  cooldown=10 )
+meteor = STATS._set_weapon_stats("meteor",  cost=4,         power=20,    speed=10,  cooldown=10 )
 meteor._add_power_up("power", 0.2)
 # TODO add a power-up type:'duration'
 
-star = STATS._set_weapon_stats("star",      cost=1,         power=10,    speed=10,  cooldown=0.5 )
+star = STATS._set_weapon_stats("star",      cost=2,         power=15,    speed=10,  cooldown=0.6 )
 star._add_power_up("power", 0.2)
 star._add_power_up("cooldown", 0.2)
 # TODO add power-up type:'accuracy'

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from typing import Any, Optional
-from pyke_pyxel import COLOURS, coord, log_error
+from pyke_pyxel import COLOURS, coord, log_error, log_debug
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
 from td.state import STATE
@@ -8,9 +8,9 @@ from game_load import load_level
 
 from ui import UI
 
-DEBUG_SKIP_TITLE_SCREEN=False
-DEBUG_TRIGGER_POWER_UP= False
-DEBUG_TRIGGER_GAME_OVER=False
+DEBUG_SKIP_TITLE_SCREEN =   True
+DEBUG_TRIGGER_POWER_UP  =   False
+DEBUG_TRIGGER_GAME_OVER =   False
 
 @dataclass
 class _Update:
@@ -77,6 +77,8 @@ def _process_update_queue(game: CellAutoGame):
                 UI.hide_game_over_screen(game)
             case "ui_display_power_up":
                 UI.show_power_up(game)
+            case "ui_hide_power_up":
+                UI.hide_power_up(game)
             case _:
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()
@@ -114,7 +116,13 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 def enemy_killed(game: CellAutoGame, other: float):
     bounty = other
     STATE.score_counter += bounty
-    UI.life_meter.set_percentage(STATE.health_percentage)
+    percentage = STATE.health_percentage
+    UI.life_meter.set_percentage(percentage)
+
+    log_debug(f"game_loop.enemy_killed() bounty:{bounty} score:{STATE.score_counter} health:{percentage}")
+    if percentage >= 1.2:
+        update_queue.append(_Update("ui_display_power_up"))
+
 
 def enemy_attacks(game: CellAutoGame, other: float):
     percentage = STATE.health_percentage
@@ -163,6 +171,9 @@ def ui_weapon_selected(type: str):
     # which is required by launch_weapon
     update_queue.append(_Update("launch_weapon", type))
     update_queue.append(_Update("hide_weapon_ui"))
+
+def ui_power_up_selected(sender):
+    update_queue.append(_Update("ui_hide_power_up"))
 
 def ui_game_over_fade_out_complete(sender):
     update_queue.append(_Update("ui_display_game_over_screen"))

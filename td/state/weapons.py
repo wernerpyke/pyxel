@@ -121,12 +121,14 @@ class GameWeapons:
         for l in self._locations:
             if l._type:
                 lups = STATS.weapon_power_ups(l._type)
-                ups.extend(lups)
+                for ll in lups:
+                    if not ll in ups:
+                        ups.append(ll)
         
         if len(ups) == 0:
+            log_error(f"!!DEBUG ONLY!! weapons.available_power_ups()")
             lups = STATS.weapon_power_ups("star")
             ups.extend(lups)
-        
         return ups
 
     def _launch_fungus(self, location: WeaponLocation, field: Matrix):

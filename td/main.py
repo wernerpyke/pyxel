@@ -48,5 +48,6 @@ Signals.connect("ui_weapon_selected", game_loop.ui_weapon_selected)
 Signals.connect("ui_game_over_fade_out_complete", game_loop.ui_game_over_fade_out_complete)
 Signals.connect("ui_game_over_restart_selected", game_loop.ui_game_over_restart_selected)
 # NOTE "ui_power_up_intro_complete" is implemented in ui/power_up.py
+Signals.connect("ui_power_up_selected", game_loop.ui_power_up_selected)
 
 game.start()

@@ -1,4 +1,4 @@
-from pyke_pyxel import coord, log_error
+from pyke_pyxel import coord, log_error, log_debug
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 from td.state.stats import STATS
 
@@ -17,6 +17,8 @@ class Weapon:
         self.power = stats.power
         self._speed = stats.speed
         self._cooldown = stats.cooldown
+
+        # log_debug(f"Weapon({self.type}) power:{self.power} speed:{self._speed} cooldown:{self._cooldown}")
 
         self._deactivate_upon_death = False
 

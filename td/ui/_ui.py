@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from pyke_pyxel import coord, GameSettings, log_error
+from pyke_pyxel import coord, log_error, COLOURS
 from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Sprite, TextSprite
 from pyke_pyxel.drawable import Button, ImageFactory, Image
@@ -13,6 +13,7 @@ from . import title_screen
 from . import weapon_select
 from . import game_over_screen
 from . import power_up
+from ._text import HUD_font
 
 class _UI:
 
@@ -21,8 +22,8 @@ class _UI:
         self.marker_sprite = Sprite("location_marker", coord(5, 10), cols=2, rows=2)
         self.life_meter = LifeMeter()
         self.timer_text = TextSprite("", 
-                            GameSettings.get().colours.hud_text,
-                            f"{Path(__file__).parent.resolve()}/../assets/t0-14b-uni.bdf")
+                            COLOURS.WHITE,
+                            HUD_font())
         
         img = ImageFactory(cols=2, rows=2, image_index=1)
         self.pause_button = Button("pause_button", img.at(coord(27, 3)), img.at(coord(25, 3)))
@@ -64,6 +65,10 @@ class _UI:
         power_up.display(game)
         self.state_to("select_power_up")
 
+    def hide_power_up(self, game: Game):
+        power_up.hide(game)
+        self.state_to("select_location")
+
     def set_weapon_marker(self, name: str, location: WeaponLocation, game: Game):
         if location.marker:
             game.hud.remove_sprite(location.marker)
@@ -83,7 +88,7 @@ class _UI:
 
         location.marker = Sprite(f"{name}_marker", frame)
         location.marker.set_position(location.position) # .clone_by(0, -8))
-        game.hud.add_sprite(location.marker)
+        game.add_sprite(location.marker)
 
     def remove_weapon_marker(self, location: WeaponLocation, game: Game):
         if location.marker:

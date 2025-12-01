@@ -43,7 +43,7 @@ class Enemy:
         self._sprite.set_position(position)
         game.add_sprite(self._sprite)
 
-    def update(self, field_cells: list[Cell]) -> tuple[int, bool]: # 0: continue, -1: dies, 1: wins, 2: super wins
+    def update(self, field_cells: list[Cell]) -> tuple[float, bool]: # 0: continue, -1: dies, 1: wins, 2: super wins
         if not self._should_skip_move():
             to = self._move_towards_target()
             self._sprite.position.move_by(to[0], to[1])
@@ -74,7 +74,7 @@ class Enemy:
     def _move_towards_target(self) -> tuple[int, int]:
         return (0, 1) # straight down
 
-    def _calculate_win(self) -> int:
+    def _calculate_win(self) -> float:
         max_y = self._sprite.position.max_y
         if max_y < self._base_top:
             return 0 # No
@@ -84,7 +84,7 @@ class Enemy:
 
         mid_x = self._sprite.position.mid_x
         if mid_x >= self._base_left and mid_x <= self._base_right: # in base
-            return 2 # Super Yes
+            return 1.2 # Super Yes
         else:
             return 0 # No
         
