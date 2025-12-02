@@ -58,11 +58,17 @@ class Sprite:
         self._animation: Optional[Animation] = None
         self._loop_animation: bool = True
         self._on_animation_end: Optional[Callable[[int], None]] = None
+        self._skip_animation_frame_update: int|None = None
+        self._skip_animation_frame_update_counter = 0
 
         self.col_tile_count = cols
         self.row_tile_count = rows
 
         self._resource_image_index = resource_image_index
+
+        tile_size = GameSettings.get().size.tile
+        self._width = cols * tile_size
+        self._height = rows * tile_size
 
     def add_animation(self, name: str, animation: Animation):
         """Add an animation to the sprite.
@@ -95,6 +101,7 @@ class Sprite:
         self._on_animation_end = on_animation_end
 
         self._animation._current_frame_index = 0
+        self._skip_animation_frame_update_counter = 0
 
     def pause_animation(self):
         """Pause the currently active animation, if any."""
@@ -112,6 +119,18 @@ class Sprite:
             self._animation._paused = False
         self._animation = None
         self.is_flipped = False
+        self._skip_animation_frame_update_counter = 0
+
+    def set_animation_fps(self, fps: int):
+        """
+        Set the FPS animation rate for this sprite. 
+        This value cannot be smaller than the global animation FPS set in GameSettings.fps.animation
+        """
+        settings = GameSettings.get()
+        if fps >= settings.fps.animation:
+            raise ValueError(f"Sprite({self.name}) animation fps cannot be >= {settings.fps.animation}")
+        
+        self._skip_animation_frame_update = round(settings.fps.animation / fps)
 
     def set_position(self, position: coord):
         """
@@ -120,7 +139,7 @@ class Sprite:
         Args:
             position (Coord): The new coordinate for the sprite's top-left corner.
         """
-        self._position = position
+        self._position = position # .clone()
 
     @property
     def position(self) -> coord:
@@ -132,6 +151,20 @@ class Sprite:
         """
         return self._position
     
+    @property
+    def width(self) -> int:
+        """
+        Returns the width of the sprite in pixels.
+        """
+        return self._width
+    
+    @property
+    def height(self) -> int:
+        """
+        Returns the height of the sprite in pixels.
+        """
+        return self._height
+    
     def __eq__(self, other):
         return isinstance(other, Sprite) and self._id == other._id
 
@@ -139,6 +172,13 @@ class Sprite:
         anim = self._animation
 
         if anim:
+            if self._skip_animation_frame_update:
+                if self._skip_animation_frame_update_counter < self._skip_animation_frame_update:
+                    self._skip_animation_frame_update_counter += 1
+                    return
+                else:
+                    self._skip_animation_frame_update_counter = 0
+
             if anim._current_frame_index >= anim._frames:
                 if self._loop_animation:
                     anim._current_frame_index = 0
@@ -162,8 +202,7 @@ class Sprite:
         frame = self.active_frame
         position = self._position
 
-        width = settings.size.tile * self.col_tile_count
-        height = settings.size.tile * self.row_tile_count
+        width = self._width
         if self.is_flipped:
             width *= -1
 
@@ -173,6 +212,6 @@ class Sprite:
                 u=frame.x,
                 v=frame.y,
                 w=width,
-                h=height,
+                h=self._height,
                 colkey=settings.colours.sprite_transparency)
 

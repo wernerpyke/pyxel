@@ -51,6 +51,7 @@ class Game:
         self._settings = settings
 
         self._sprites: list[Sprite|CompoundSprite] = []
+        self._frames_per_animation_tick = round(settings.fps.game / settings.fps.animation)
         self._animation_tick = 0
 
         self._map = Map(settings)
@@ -236,7 +237,7 @@ class Game:
             self._sprites.remove(sprite)
             log_debug(f"GAME.sprite_removed() {sprite._id}")
 
-# ===== PYXEL =====
+    # ===== PYXEL =====
 
     def update(self):
         """
@@ -248,7 +249,6 @@ class Game:
             - MOUSE.DOWN: Emitted on left mouse button press (if mouse_enabled).
             - MOUSE.UP: Emitted on left mouse button release (if mouse_enabled).
         """
-
         if not self._paused:
             Signals.send(Signals.GAME.UPDATE, self)
 
@@ -270,7 +270,8 @@ class Game:
             return
 
         # Sprite Animations
-        if self._animation_tick < (self._settings.fps.game / self._settings.fps.animation):
+        
+        if self._animation_tick < self._frames_per_animation_tick:
             self._animation_tick += 1
         else:
             self._animation_tick = 0

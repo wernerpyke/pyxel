@@ -308,9 +308,7 @@ class Matrix:
                 cells.append(self._cells[y][x])
 
         if not include_empty:
-            cells = [
-                c for c in cells if not c.is_empty
-            ]
+            cells = [ c for c in cells if not c.is_empty ]
         return cells
 
     def cells_in_line(self, from_position: coord, to_position: coord, extend_to_matrix_end: bool = False) -> list[Cell]:

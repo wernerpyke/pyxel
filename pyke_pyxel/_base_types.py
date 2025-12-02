@@ -177,8 +177,9 @@ class coord:
 
     def clone(self):
         """Return a shallow copy of this Coord (same grid location and size)."""
-
-        return coord(self._col, self._row, self.size)
+        # Use self._x/_y rather than self._col/_row
+        # to avoid prior rounding of _col/_row
+        return coord.with_xy(self._x, self._y, self.size)
 
     def clone_by(self, x: int, y: int, direction: Optional[str] = None):
         """Return a new Coord offset by (x, y) pixels from this one.
@@ -189,11 +190,7 @@ class coord:
         grid location is computed from the cloned midpoint.
         """
 
-        cloned = coord(self._col, self._row)
-        cloned._x = self._x + x
-        cloned._y = self._y + y
-        cloned.size = self.size
-
+        cloned = coord.with_xy(self._x + x, self._y + y, self.size)
         match direction:
             case "up":
                 cloned._col = math.floor(self.mid_x / self.size) + 1
