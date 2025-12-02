@@ -24,10 +24,10 @@ class Mage(Enemy):
         # print(f"Mage DOWN to x:{self._to_x} y:{self._to_y}")
         return super().launch(game, position)
     
-    def update(self, field_cells: list[Cell]) -> tuple[int, bool]:
+    def update(self, field_cells: list[Cell]) -> tuple[float, bool]:
         result = super().update(field_cells)
         if self._launch_projectile:
-            launch_at = self._sprite.position.clone()
+            launch_at = self.position.clone()
             launch_at.move_by(0, 8)
             Signals.send_with("enemy_spawns_enemy", "bat", (launch_at.x, launch_at.y))
 
@@ -35,8 +35,8 @@ class Mage(Enemy):
         return result
 
     def _move_towards_target(self) -> tuple[int, int]:
-        at_x = self._sprite.position.x
-        at_y = self._sprite.position.y
+        at_x = self.position.x
+        at_y = self.position.y
 
         by_x = 0
         by_y = 0

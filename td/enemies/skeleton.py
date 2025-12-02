@@ -2,6 +2,7 @@ import random
 
 from pyke_pyxel import GameSettings
 from pyke_pyxel import coord
+from pyke_pyxel.cell_auto.game import CellAutoGame
 from .enemy import Enemy
 
 class Skeleton(Enemy):
@@ -9,13 +10,16 @@ class Skeleton(Enemy):
     def __init__(self) -> None:
         super().__init__("skeleton", coord(9,8))
 
+    def launch(self, game: CellAutoGame, position: coord):
         self._move_from_y = random.randint(80, 180)
 
-        self.max_x = self.max_y = GameSettings.get().size.window
-        self.mid_x = self.max_x / 2
+        self.max_x = game.map.right_x
+        self.max_y = game.map.bottom_y
+        self.mid_x = game.map.center_x
+        return super().launch(game, position)
 
     def _move_towards_target(self) -> tuple[int, int]:
-        position = self._sprite.position
+        position = self.position
         x_dist = self.mid_x - position.x
         y_dist = self.max_y - position.y
 
@@ -33,7 +37,7 @@ class Skeleton(Enemy):
             threshold = 0.2
 
         if random.random() > threshold:
-            if self._sprite.position.x < self.mid_x:
+            if self.position.x < self.mid_x:
                 return (1, 1)
             else:
                 return (-1, 1)

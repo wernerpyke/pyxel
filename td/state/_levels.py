@@ -1,5 +1,6 @@
-import random
 from dataclasses import dataclass
+
+from pyke_pyxel.math import RandomChoice
 
 @dataclass
 class _let:
@@ -15,6 +16,7 @@ class _le:
 class EnemyLevel:
     def __init__(self) -> None:
         self._enemies: list[_le] = []
+        self._choice = RandomChoice()
 
         self._enemies.append(_le( # 0
             frequency=2, 
@@ -28,7 +30,7 @@ class EnemyLevel:
             max_count=3, 
             types=[
                 _let("skeleton", 0.7),
-                _let("orb", 0.3)
+                _let("mage", 0.3)
             ]))
         
         self._enemies.append(_le( # 2
@@ -36,8 +38,8 @@ class EnemyLevel:
             max_count=5, 
             types=[
                 _let("skeleton", 0.5),
-                _let("orb", 0.3),
-                _let("mage", 0.2)
+                _let("mage", 0.4),
+                _let("orb", 0.1)
             ]))
         
         self._enemies.append(_le( # 3
@@ -53,18 +55,20 @@ class EnemyLevel:
             frequency=1.3, 
             max_count=8, 
             types=[
-                _let("skeleton", 0.5),
+                _let("skeleton", 0.4),
                 _let("orb", 0.2),
-                _let("mage", 0.3)
+                _let("mage", 0.2),
+                _let("tank", 0.2)
             ]))
         
         self._enemies.append(_le( # 5
             frequency=1.1, 
             max_count=10, 
             types=[
-                _let("skeleton", 0.4),
-                _let("orb", 0.3),
-                _let("mage", 0.3)
+                _let("skeleton", 0.3),
+                _let("orb", 0.2),
+                _let("mage", 0.3),
+                _let("tank", 0.2)
             ]))
         
         self._active = self._enemies[0]
@@ -73,15 +77,7 @@ class EnemyLevel:
         self.weights: list[float] = []
     
     def random_type(self) -> str:
-        # random.choices() takes a population and a list of weights.
-        # k=1 means it returns a list containing only one item.
-        # We access the first element [0] to get the string directly.
-        selected_list = random.choices(
-            population=self.population, 
-            weights=self.weights, 
-            k=1
-        )
-        return selected_list[0]
+        return self._choice.select_one()
 
     def activate(self, id: int):
         if id >= len(self._enemies):
@@ -89,8 +85,9 @@ class EnemyLevel:
         else:
             self._active = self._enemies[id]
 
-        self.population = [t.type for t in self._active.types]
-        self.weights = [t.probability for t in self._active.types]
+        self._choice.set(
+            [t.type for t in self._active.types], 
+            [t.probability for t in self._active.types])
 
     @property
     def frequency(self) -> float:

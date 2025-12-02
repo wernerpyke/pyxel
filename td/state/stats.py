@@ -9,6 +9,10 @@ class EnemyStats:
     damage: float
     bounty: float
 
+MAX_SPEED = 10
+MIN_COOLDOWN = 0.1
+MIN_COST = 1
+
 class WeaponPowerUp:
     def __init__(self, weapon_type: str, type: str, value: float) -> None:
         self.weapon_type = weapon_type
@@ -23,7 +27,7 @@ class WeaponPowerUp:
             self.increases = True
         else:
             raise ValueError(f"WeaponPowerUp invalid affects:{type}")
-        
+
     def __eq__(self, other: object) -> bool:
         return isinstance(other, WeaponPowerUp) and self.type == other.type and self.weapon_type == other.weapon_type
 
@@ -62,6 +66,21 @@ class WeaponStats:
         up = WeaponPowerUp(self._weapon_type, affects, value)
         self._power_ups.append(up)
 
+    def incrementable_power_ups(self) -> list[WeaponPowerUp]:
+        ups: list[WeaponPowerUp] = []
+        # TODO - it would be cleaner to do this check in increment_power_up() and remove items from the list
+        for u in self._power_ups:
+            match u.type:
+                case "speed":
+                    if self.speed < MAX_SPEED: ups.append(u)
+                case "cooldown":
+                    if self.cooldown > MIN_COOLDOWN: ups.append(u)
+                case "cost":
+                    if self.cost > MIN_COST: ups.append(u)
+                case _:
+                    ups.append(u)
+        return ups
+
     def increment_power_up(self, affects: str):
         for p in self._power_ups:
             if p.type == affects:
@@ -88,7 +107,7 @@ class _stats:
     def weapon_power_ups(self, type: str) -> list[WeaponPowerUp]:
         weapon = self._weapons.get(type)
         if weapon:
-            return weapon._power_ups
+            return weapon.incrementable_power_ups()
         else: 
             raise ValueError(f"WeaponStats.weapon_power_ups invalid type:{type}")
         
@@ -122,8 +141,9 @@ STATS._set_enemy_stats("skeleton",          power=600,      speed=2,    damage=2
 STATS._set_enemy_stats("orb",               power=1200,     speed=2,    damage=1.5, bounty=2 )
 STATS._set_enemy_stats("mage",              power=1000,     speed=3,    damage=4,   bounty=3 )
 STATS._set_enemy_stats("bat",               power=100,      speed=6,    damage=0.5, bounty=0.5 )
+STATS._set_enemy_stats("tank",              power=5000,     speed=3,    damage=4, bounty=3 )
 
-bolt = STATS._set_weapon_stats("bolt",      cost=3,         power=150,   speed=10,  cooldown=6 )
+bolt = STATS._set_weapon_stats("bolt",      cost=3,         power=150,   speed=8,  cooldown=6 )
 bolt._add_power_up("cooldown", 0.2)
 bolt._add_power_up("power", 0.2)
 
@@ -131,11 +151,11 @@ fungus = STATS._set_weapon_stats("fungus",  cost=6,         power=2,     speed=4
 fungus._add_power_up("power", 0.2)
 fungus._add_power_up("speed", 0.2)
 
-meteor = STATS._set_weapon_stats("meteor",  cost=4,         power=20,    speed=10,  cooldown=10 )
+meteor = STATS._set_weapon_stats("meteor",  cost=4,         power=20,    speed=MAX_SPEED,  cooldown=10 )
 meteor._add_power_up("power", 0.2)
 # TODO add a power-up type:'duration'
 
-star = STATS._set_weapon_stats("star",      cost=2,         power=15,    speed=10,  cooldown=0.6 )
+star = STATS._set_weapon_stats("star",      cost=2,         power=15,    speed=MAX_SPEED,  cooldown=0.6 )
 star._add_power_up("power", 0.2)
 star._add_power_up("cooldown", 0.2)
 # TODO add power-up type:'accuracy'

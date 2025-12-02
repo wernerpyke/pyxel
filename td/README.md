@@ -1,7 +1,7 @@
 ## 🧩 TODO
 
 - **Balance**
-    - **Weapon Power-Ups**
+    - **Weapon Cost** should increase as power-ups are applied
 - **Weapons**
     - **Wind**: pushback to enemies
     - **Mountain** / **Crack**: prevent ground-level enemies from crossing
@@ -10,6 +10,6 @@
     - **Blob**: ??
     - **Ghost**: floats over fungus
 
-## 🎯 Acknowledgements
+## 🤘 Acknowledgements
 
 - Title font: **[Burning Wrath](https://www.font-generator.com/fonts/BurningWrath/)** by [Timothy Lyle](http://www.retconn.net/)

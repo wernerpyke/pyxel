@@ -8,14 +8,14 @@ from td.state.stats import STATS
 
 
 class Enemy:
-    def __init__(self, type: str, from_frame: coord, animation_frame_count:int = 2) -> None:
+    def __init__(self, type: str, from_frame: coord, cols: int = 1, rows: int = 1, animation_frame_count:int = 2) -> None:
         self.type = type
         stats = STATS.enemy_stats(type)
         if not stats:
             log_error(f"Enemy() invalid type:{type}")
             return
 
-        sprite = Sprite(type, from_frame, 1, 1)
+        sprite = Sprite(type, from_frame, cols, rows)
         
         sprite.add_animation("loop", Animation(from_frame, animation_frame_count))
         sprite.activate_animation("loop")
@@ -40,6 +40,8 @@ class Enemy:
 
     def launch(self, game: CellAutoGame, position: coord):
         # log_debug(f"Enemy.launch() {self._sprite._id} x:{position.x} y:{position.y}")
+        position = coord.with_xy(position.x, position.y, self._sprite.width)
+
         self._sprite.set_position(position)
         game.add_sprite(self._sprite)
 
@@ -68,6 +70,10 @@ class Enemy:
         else:
             return (self._calculate_win(), was_hit)
     
+    @property
+    def position(self) -> coord:
+        return self._sprite.position
+
     def __str__(self):
         return f"{self.type}{self._sprite._id}"
 

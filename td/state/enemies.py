@@ -10,6 +10,7 @@ from td.enemies.bat import Bat
 from td.enemies.mage import Mage
 from td.enemies.orb import Orb
 from td.enemies.skeleton import Skeleton
+from td.enemies.tank import Tank
 from ._levels import EnemyLevel
 
 launch_locations = [
@@ -77,17 +78,21 @@ class GameEnemies:
             location = self._random_location()
             match type:
                 case "skeleton":
-                    skeleton = Skeleton()
-                    skeleton.launch(game, location)
-                    self._enemies.append(skeleton)
+                    enemy = Skeleton()
+                    enemy.launch(game, location)
+                    self._enemies.append(enemy)
                 case "orb":
-                    orb = Orb()
-                    orb.launch(game, location)
-                    self._enemies.append(orb)
+                    enemy = Orb()
+                    enemy.launch(game, location)
+                    self._enemies.append(enemy)
                 case "mage":
-                    mage = Mage()
-                    mage.launch(game, location)
-                    self._enemies.append(mage)
+                    enemy = Mage()
+                    enemy.launch(game, location)
+                    self._enemies.append(enemy)
+                case "tank":
+                    enemy = Tank()
+                    enemy.launch(game, location)
+                    self._enemies.append(enemy)
                 case _:
                     log_error(f"enemies.update invalid enemy type:{type}")
 

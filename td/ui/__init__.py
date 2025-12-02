@@ -32,12 +32,14 @@ def mouse_move(game: Game, other: tuple[int, int]):
                 
                 weapons.selected_location = location 
                 
-                # Mark the location
-                marker = UI.marker_sprite
-                marker.set_position(coord.with_center(
+                mp = coord.with_center(
                     location.position.mid_x, 
                     location.position.mid_y, 
-                    size=16))
+                    size=16)
+
+                # Mark the location
+                marker = UI.marker_sprite
+                marker.set_position(mp)
                 game.hud.add_sprite(marker)
                 
             else:

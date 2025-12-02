@@ -8,7 +8,7 @@ from game_load import load_level
 
 from ui import UI
 
-DEBUG_SKIP_TITLE_SCREEN =   True
+DEBUG_SKIP_TITLE_SCREEN =   False
 DEBUG_TRIGGER_POWER_UP  =   False
 DEBUG_TRIGGER_GAME_OVER =   False
 

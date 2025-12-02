@@ -31,8 +31,8 @@ class Orb(Enemy):
         return super().launch(game, position)
 
     def _move_towards_target(self) -> tuple[int, int]:
-        at_x = self._sprite.position.x
-        at_y = self._sprite.position.y
+        at_x = self.position.x
+        at_y = self.position.y
 
         # The X-coordinate is calculated using the sine function
         to_x = self._amplitude * math.sin(self._frequency_factor * at_y) + self._center_x
