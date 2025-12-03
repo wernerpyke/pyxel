@@ -145,6 +145,26 @@ class coord:
 
         return self._col == coord._col and self._row == coord._row
 
+    def is_at(self, coord: "coord"):
+        """Return true if this coord is at exactly the same (x,y) location as `coord`"""
+        return self._x == coord._x and self._y == coord._y
+
+    def is_above(self, coord: "coord"):
+        """Return true if this coord is above `coord`"""
+        return self._y < coord._y
+    
+    def is_below(self, coord: "coord"):
+        """Return true if this coord is below `coord`"""
+        return self._y > coord._y
+    
+    def is_left_of(self, coord: "coord"):
+        """Return true if this coord is to the left of `coord`"""
+        return self._x < coord._x
+    
+    def is_right_of(self, coord: "coord"):
+        """Return true if this coord is to the right of `coord`"""
+        return self._x > coord._x
+
     def contains(self, x: int, y: int):
         """Return True if the pixel (x, y) is within this tile's bounding box.
 

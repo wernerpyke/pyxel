@@ -5,6 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Simple",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "simple/main.py",
+            "console": "integratedTerminal"
+        },
+        {
             "name": "RPG",
             "type": "debugpy",
             "request": "launch",

@@ -160,6 +160,11 @@
     * [with\_xy](#pyke_pyxel._base_types.coord.with_xy)
     * [is\_different\_grid\_location](#pyke_pyxel._base_types.coord.is_different_grid_location)
     * [is\_same\_grid\_location](#pyke_pyxel._base_types.coord.is_same_grid_location)
+    * [is\_at](#pyke_pyxel._base_types.coord.is_at)
+    * [is\_above](#pyke_pyxel._base_types.coord.is_above)
+    * [is\_below](#pyke_pyxel._base_types.coord.is_below)
+    * [is\_left\_of](#pyke_pyxel._base_types.coord.is_left_of)
+    * [is\_right\_of](#pyke_pyxel._base_types.coord.is_right_of)
     * [contains](#pyke_pyxel._base_types.coord.contains)
     * [move\_by](#pyke_pyxel._base_types.coord.move_by)
     * [clone](#pyke_pyxel._base_types.coord.clone)
@@ -1723,6 +1728,12 @@ class TextSprite()
 
 A simple text sprite for rendering text using a pyxel font.
 
+**Arguments**:
+
+  text(str):
+  colour(int):
+- `font_file(str)` - The path to the BDF font file to load and use
+
 <a id="pyke_pyxel.sprite._text_sprite.TextSprite.set_position"></a>
 
 #### set\_position
@@ -2098,6 +2109,56 @@ def is_same_grid_location(coord: "coord")
 ```
 
 Return True when this Coord is on the same grid tile as `coord`.
+
+<a id="pyke_pyxel._base_types.coord.is_at"></a>
+
+#### is\_at
+
+```python
+def is_at(coord: "coord")
+```
+
+Return true if this coord is at exactly the same (x,y) location as `coord`
+
+<a id="pyke_pyxel._base_types.coord.is_above"></a>
+
+#### is\_above
+
+```python
+def is_above(coord: "coord")
+```
+
+Return true if this coord is above `coord`
+
+<a id="pyke_pyxel._base_types.coord.is_below"></a>
+
+#### is\_below
+
+```python
+def is_below(coord: "coord")
+```
+
+Return true if this coord is below `coord`
+
+<a id="pyke_pyxel._base_types.coord.is_left_of"></a>
+
+#### is\_left\_of
+
+```python
+def is_left_of(coord: "coord")
+```
+
+Return true if this coord is to the left of `coord`
+
+<a id="pyke_pyxel._base_types.coord.is_right_of"></a>
+
+#### is\_right\_of
+
+```python
+def is_right_of(coord: "coord")
+```
+
+Return true if this coord is to the right of `coord`
 
 <a id="pyke_pyxel._base_types.coord.contains"></a>
 

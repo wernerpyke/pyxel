@@ -2,13 +2,20 @@ import pyxel
 from pyke_pyxel import coord
 
 class TextSprite:
-    """A simple text sprite for rendering text using a pyxel font.
     """
+    A simple text sprite for rendering text using a pyxel font.
 
-    def __init__(self, text: str, colour: int, font_file: str):
+    Args:
+        text(str):
+        colour(int):
+        font_file(str): The path to the BDF font file to load and use
+    """
+    def __init__(self, text: str, colour: int, font_file: str|None = None):
         self._text = text
         self._colour = colour
-        self._font = pyxel.Font(font_file)
+        self._font: pyxel.Font | None = None
+        if font_file:
+            self._font = pyxel.Font(font_file)
 
         self._id = 0
 

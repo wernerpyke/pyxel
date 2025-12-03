@@ -64,6 +64,7 @@ def game_start(game: Game):
 
 def game_update(game: Game):
     # Implement game loop update logic here
+    # This is called once per frame
     pass
 
 Signals.connect(Signals.GAME.WILL_START, game_star)
@@ -84,7 +85,7 @@ Signals.connect("my_signal", my_handler)
 # somewhere else
 Signals.send("my_signal", sender_object)
 
-def another_handler(sent_from, value:Any)
+def another_handler(sent_from, value)
     # 'value' can be anything, e.g. a tuple or class instance
 
 
@@ -146,9 +147,8 @@ For example:
 ```
 from pyke_pyxel.sprite import Sprite
 
-# the default frame of the sprite is located at col 1, row 1 of the image resource sheet
-default_frame = coord(1, 1) 
-my_sprite = Sprite("player", default_frame)
+# the default frame of the sprite is located at col 1, row 1 of the image resource sheet 
+my_sprite = Sprite("player", default_frame=coord(1, 1))
 
 # The walk animation starts at col 2, row 1 and has four frames
 walk = Animation(coord(2, 1), frames=4)
@@ -157,15 +157,14 @@ my_sprite.add_animation("walk", walk)
 def game_start(game: Game):
     my_sprite.set_position(coord.with_xy(100, 40))
     game.add_sprite(my_sprite)
+    my_sprite.activate_animation("walk")
 
 def game_update(game: Game):
-    my_sprite.activate_animation("walk")
-    
     # Move down one pixel per update (@ 60 FPS)
     my_sprite.position.c2.move_by(y=1)
 ```
 
-6) ***HUD & UI: present game state to the player***
+5) ***HUD & UI: present game state to the player***
 ----------------------------------------
 The `HUD` utilities make it easy to display player health, inventory, scores and
 other overlays. A HUD is typically updated from the same game state that drives
@@ -201,7 +200,7 @@ def game_started(game: Game):
 
 ```
 
-7) ***Mouse Input***
+6) ***Mouse Input***
 ---------------------------------
 
 Setting `mouse_enabled = True` in `GameSettings` will cause the game to emit the following signals: `Signals.MOUSE.MOVE`, `Signals.MOUSE.DOWN` and `Signals.MOUSE.UP`. These can be received by connecting to the relevant signals.
@@ -228,7 +227,7 @@ Signals.connect(Signals.MOUSE.UP, mouse_up)
 
 ```
 
-1) ***FX: short-lived visual effects***
+7) ***FX: short-lived visual effects***
 ---------------------------------
 Use `FX` helpers for transient effects and animated overlays. FX objects are lightweight and intended to be created
 on-the-fly by gameplay events (e.g. an sprite collision spawns a splatter FX instance which lives

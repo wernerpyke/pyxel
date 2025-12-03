@@ -7,7 +7,8 @@ A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://gith
 ## 🎯 Project Structure
 - [pyke_pyxel](pyke_pyxel/): a semi-reusable, Sprite- and Map-based game engine on top of Pyxel
     - with an [overview](docs/README.md) and basic [API Documentation](docs/pyke_pyxel_API.md)
-- [td](td/): the beginnings of a type of tower defence game
+- [simple](simple/): hello world
+- [td](td/): a tower defence game
 - [rpg](rpg/): prototype for a room-based RPG
 
 ---
