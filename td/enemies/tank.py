@@ -2,7 +2,7 @@ import random
 
 from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
-from pyke_pyxel.sprite import Anim
+from pyke_pyxel.sprite import Animation
 from pyke_pyxel.math import RandomChoice
 from .enemy import Enemy
 
@@ -14,8 +14,8 @@ class Tank(Enemy):
         self.choice = RandomChoice()
 
         # TODO - move the below into a new base class: BigEnemy?
-        self._sprite.add_animation("kill", Anim(coord(17,9), 2, fps=4))
-        self._sprite.add_animation("die", Anim(coord(21,9), 2, fps=4))
+        self._sprite.add_animation("kill", Animation(coord(17,9), 2, fps=4))
+        self._sprite.add_animation("die", Animation(coord(21,9), 2, fps=4))
         self._sprite.animations["loop"].fps = 4
 
     def launch(self, game: CellAutoGame, position: coord):

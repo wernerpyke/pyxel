@@ -4,7 +4,7 @@ from typing import Callable, Optional
 from pyke_pyxel._base_types import GameSettings, coord
 
 
-class Anim:
+class Animation:
     """
     An animation for a Sprite.
 
@@ -106,5 +106,5 @@ class AnimationFactory:
     Animation
         The created `Animation` instance.
     """
-    def at(self, position: coord, loop: bool = True, flip: bool = False) -> Anim:
-        return Anim(position, frames=self._frames, fps=self._fps, loop=loop, flip=flip)
+    def at(self, position: coord, loop: bool = True, flip: bool = False) -> Animation:
+        return Animation(position, frames=self._frames, fps=self._fps, loop=loop, flip=flip)

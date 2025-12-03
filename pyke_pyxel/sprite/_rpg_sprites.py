@@ -1,7 +1,7 @@
 from typing import Optional
 from pyke_pyxel import coord
 from ._sprite import Sprite
-from ._anim import Anim
+from ._anim import Animation
 
 OPEN: int = 0
 CLOSED: int = 1
@@ -14,7 +14,7 @@ class OpenableSprite(Sprite):
     The OpenableSprite exposes simple open/close methods and manages an
     internal status value that determines which frame is shown.
     """
-    def __init__(self, name: str, openFrame: coord, closedFrame: coord, openingAnimation: Anim):
+    def __init__(self, name: str, openFrame: coord, closedFrame: coord, openingAnimation: Animation):
         super().__init__(name, openFrame)
         self._openFrame = openFrame
         self._closedFrame = closedFrame
@@ -59,13 +59,13 @@ class MovableSprite(Sprite):
         self.movementSpeed = movement_speed
 
     def set_up_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
-        self.add_animation("up", Anim(start_frame, frame_count, flip=flip))
+        self.add_animation("up", Animation(start_frame, frame_count, flip=flip))
 
     def set_down_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
-        self.add_animation("down", Anim(start_frame, frame_count, flip=flip))
+        self.add_animation("down", Animation(start_frame, frame_count, flip=flip))
 
     def set_left_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
-        self.add_animation("left", Anim(start_frame, frame_count, flip=flip))
+        self.add_animation("left", Animation(start_frame, frame_count, flip=flip))
 
     def set_right_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
-        self.add_animation("right", Anim(start_frame, frame_count, flip=flip))
+        self.add_animation("right", Animation(start_frame, frame_count, flip=flip))

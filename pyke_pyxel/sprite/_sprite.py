@@ -3,7 +3,7 @@ import pyxel
 
 from pyke_pyxel import coord, GameSettings
 
-from ._anim import Anim
+from ._anim import Animation
 
 class Sprite:
     """A drawable sprite with optional animations.
@@ -29,10 +29,10 @@ class Sprite:
         self.name = name
         self.idle_frame = default_frame
 
-        self.animations: dict[str, Anim] = { }
+        self.animations: dict[str, Animation] = { }
         self._position: coord
         self.active_frame = self.idle_frame
-        self._animation: Anim|None = None
+        self._animation: Animation|None = None
 
         self.col_tile_count = cols
         self.row_tile_count = rows
@@ -43,7 +43,7 @@ class Sprite:
         self._width = cols * tile_size
         self._height = rows * tile_size
 
-    def add_animation(self, name: str, animation: Anim):
+    def add_animation(self, name: str, animation: Animation):
         """Add an animation to the sprite.
 
         Parameters
