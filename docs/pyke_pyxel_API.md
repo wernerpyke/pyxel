@@ -142,6 +142,10 @@
     * [remove\_bg](#pyke_pyxel.hud.HUD.remove_bg)
 * [math](#pyke_pyxel.math)
   * [RandomChoice](#pyke_pyxel.math.RandomChoice)
+    * [set](#pyke_pyxel.math.RandomChoice.set)
+    * [add](#pyke_pyxel.math.RandomChoice.add)
+    * [reset](#pyke_pyxel.math.RandomChoice.reset)
+    * [select\_one](#pyke_pyxel.math.RandomChoice.select_one)
 * [fx](#pyke_pyxel.fx)
   * [FX](#pyke_pyxel.fx.FX)
     * [circular\_wipe](#pyke_pyxel.fx.FX.circular_wipe)
@@ -1868,6 +1872,60 @@ For example:
 
 The sum of the probabilities should be 1.0.
 
+<a id="pyke_pyxel.math.RandomChoice.set"></a>
+
+#### set
+
+```python
+def set(choices: list[Any], probabilities: list[float])
+```
+
+Set the list of choices and their matching probabilities.
+
+**Arguments**:
+
+- `choices` _list[Any]_ - A list of choices.
+- `probabilities` _list[float]_ - A list of probabilities for each choice.
+
+<a id="pyke_pyxel.math.RandomChoice.add"></a>
+
+#### add
+
+```python
+def add(choice: Any, probability: float)
+```
+
+Add a choice and its matching probability to the list of choices and probabilities.
+
+**Arguments**:
+
+- `choice` _Any_ - The choice to add.
+- `probability` _float_ - The probability for the choice.
+
+<a id="pyke_pyxel.math.RandomChoice.reset"></a>
+
+#### reset
+
+```python
+def reset()
+```
+
+Reset the list of choices and probabilities.
+
+<a id="pyke_pyxel.math.RandomChoice.select_one"></a>
+
+#### select\_one
+
+```python
+def select_one() -> Any
+```
+
+Select one choice from the list of choices based on their matching probabilities.
+
+**Returns**:
+
+- `Any` - The selected choice.
+
 <a id="pyke_pyxel.fx"></a>
 
 # fx
@@ -2049,7 +2107,7 @@ The bounding box is inclusive on both edges (min <= value <= max).
 #### move\_by
 
 ```python
-def move_by(x: int, y: int)
+def move_by(x: int = 0, y: int = 0)
 ```
 
 Move this Coord by (x, y) pixels and update the grid location.

@@ -163,7 +163,7 @@ class coord:
 
         return True
 
-    def move_by(self, x: int, y: int):
+    def move_by(self, x: int = 0, y: int = 0):
         """Move this Coord by (x, y) pixels and update the grid location.
 
         This mutates the Coord in-place. Grid column/row are recalculated

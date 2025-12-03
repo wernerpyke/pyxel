@@ -24,19 +24,18 @@ class Tank(Enemy):
 
         self._move_from_y = random.randint(60, 100)
         
-        self.choice.add((0, 0), 0.1) # Don't move
-        # self.choice.add((0, 1), 0.1) # Down
-        
         if game.map.x_is_left_of_center(self.position.x):
-            self.choice.add((1,  0), 0.3) # E
-            self.choice.add((-1, 0), 0.25) # W
-            self.choice.add((1,  1), 0.25) # SE
-            self.choice.add((-1, 1), 0.1) # SW
+            self.choice.add((1,  0), 0.4)   # E
+            self.choice.add((1,  1), 0.3)   # SE
+            
+            self.choice.add((-1, 0), 0.2)   # W
+            self.choice.add((-1, 1), 0.1)   # SW
         else:
-            self.choice.add((-1, 0), 0.3) # W
-            self.choice.add((1,  0), 0.25) # E
-            self.choice.add((-1, 1), 0.25) # SW
-            self.choice.add((1,  1), 0.1) # SE
+            self.choice.add((-1, 0), 0.4)   # W
+            self.choice.add((-1, 1), 0.3)   # SW
+
+            self.choice.add((1,  0), 0.2)   # E
+            self.choice.add((1,  1), 0.1)   # SE
 
     def _move_towards_target(self) -> tuple[int, int]:
         if self.position.y < self._move_from_y:
