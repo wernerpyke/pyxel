@@ -14,9 +14,9 @@ UI = _UI()
 
 # Signals
 
-def mouse_move(game: Game, other: tuple[int, int]):
+def mouse_move(game: Game, value: tuple[int, int]):
     # print(f"MOVE x:{other[0]} y:{other[1]}")
-    x, y = other[0], other[1]
+    x, y = value[0], value[1]
     match UI._state:
         case "select_title_option":
             title_screen.mouse_move(x, y)
@@ -54,8 +54,8 @@ def mouse_move(game: Game, other: tuple[int, int]):
             game_over_screen.mouse_move(x, y)
 
 
-def mouse_down(game: Game, other: tuple[int, int]):
-    x, y = other[0], other[1]
+def mouse_down(game: Game, value: tuple[int, int]):
+    x, y = value[0], value[1]
     match UI._state:
         case "select_title_option":
             title_screen.mouse_down(x, y)

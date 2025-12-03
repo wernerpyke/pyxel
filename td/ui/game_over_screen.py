@@ -17,7 +17,7 @@ def mouse_down(x: int, y: int):
     pass
 
 def mouse_up():
-    Signals.send("ui_game_over_restart_selected", None)
+    Signals.send("ui_game_over_restart_selected")
 
 def mouse_move(x: int, y: int):
     pass

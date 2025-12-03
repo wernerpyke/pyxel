@@ -113,8 +113,8 @@ def _launch_enemy(type: str, x: int, y: int, game: CellAutoGame):
 # Signals
 #
 
-def enemy_killed(game: CellAutoGame, other: float):
-    bounty = other
+def enemy_killed(game: CellAutoGame, value: float):
+    bounty = value
     STATE.score_counter += bounty
     percentage = STATE.health_percentage
     UI.life_meter.set_percentage(percentage)
@@ -124,7 +124,7 @@ def enemy_killed(game: CellAutoGame, other: float):
         update_queue.append(_Update("ui_display_power_up"))
 
 
-def enemy_attacks(game: CellAutoGame, other: float):
+def enemy_attacks(game: CellAutoGame, value: float):
     percentage = STATE.health_percentage
     if percentage <= 0:
         # Important: we don't trigger game over as soon as the health % == 0
@@ -133,16 +133,16 @@ def enemy_attacks(game: CellAutoGame, other: float):
         update_queue.append(_Update("game_over"))
         return
     
-    damage = other
+    damage = value
     STATE.score_counter -= damage
     print(f"game_loop.enemy_attacks() damage:{damage} score:{STATE.score_counter}")
 
     UI.life_meter.set_percentage(STATE.health_percentage)
 
-def enemy_spawns_enemy(sender, other):
+def enemy_spawns_enemy(sender, value):
     name: str = sender
-    x: int = other[0]
-    y: int = other[1]
+    x: int = value[0]
+    y: int = value[1]
     update_queue.append(_Update("launch_enemy", (name, x, y)))
 
 def weapon_deactivate_at_location(sender):

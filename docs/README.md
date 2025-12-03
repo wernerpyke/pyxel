@@ -72,6 +72,28 @@ Signals.connect(Signals.GAME.UPDATE, game_update)
 game.start()
 ```
 
+You can also define your own custom signals, for example:
+
+```
+def my_handler(sent_from):
+    # do something
+
+Signals.connect("my_signal", my_handler)
+
+
+# somewhere else
+Signals.send("my_signal", sender_object)
+
+def another_handler(sent_from, value:Any)
+    # 'value' can be anything, e.g. a tuple or class instance
+
+
+Signals.connect("another_signal", another_handler)
+
+# somewhere else
+Signals.send("another_signal", sender_object, parameter_value)
+
+```
 
 3) ***coord and Map: grid math and spatial queries***
 -----------------------------------------------
@@ -189,12 +211,12 @@ For example:
 
 # Remember to set mouse_enabled = True in GameSettings
 
-def mouse_move(game: Game, other: tuple[int, int]):
-    x, y = other[0], other[1]
+def mouse_move(game: Game, value: tuple[int, int]):
+    x, y = value[0], value[1]
     # do something
 
-def mouse_down(game: Game, other: tuple[int, int]):
-    x, y = other[0], other[1]
+def mouse_down(game: Game, value: tuple[int, int]):
+    x, y = value[0], value[1]
     # do something
 
 def mouse_up(game: Game):

@@ -27,7 +27,7 @@ def mouse_down(x: int, y: int):
 def mouse_up():
     if play_button.is_down:
         play_button.pop_up()
-        Signals.send("ui_game_start_selected", None)
+        Signals.send("ui_game_start_selected")
 
 def mouse_move(x: int, y: int):
     play_button.check_mouse_move(x, y)

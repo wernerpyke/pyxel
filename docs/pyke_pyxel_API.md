@@ -239,10 +239,14 @@ Disconnect a listener callback from a named signal
 
 ```python
 @staticmethod
-def send(name: str, sender: Any|None)
+def send(name: str, sender: Any|None = None)
 ```
 
-Send a signal with a sender object
+Send a signal with an optional sender object
+
+**Arguments**:
+
+- `sender` _Any_ - The object sending the signal.
 
 <a id="pyke_pyxel.signals.Signals.send_with"></a>
 
@@ -250,10 +254,15 @@ Send a signal with a sender object
 
 ```python
 @staticmethod
-def send_with(name: str, sender: Any|None, other: Optional[Any] = None)
+def send_with(name: str, sender: Any, value: Any)
 ```
 
-Send a signal with additional optional data
+Send a signal with additional data/parameter value
+
+**Arguments**:
+
+- `sender` _Any_ - The object sending the signal.
+- `value` _Any_ - The additional data/parameter value
 
 <a id="pyke_pyxel.drawable._button"></a>
 

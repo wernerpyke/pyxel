@@ -62,14 +62,25 @@ class Signals:
         signal(name).disconnect(listener)
 
     @staticmethod
-    def send(name: str, sender: Any|None):
-        """Send a signal with a sender object"""
+    def send(name: str, sender: Any|None = None):
+        """
+        Send a signal with an optional sender object
+
+        Args:
+            sender (Any): The object sending the signal.
+        """
         signal(name).send(sender)
 
     @staticmethod
-    def send_with(name: str, sender: Any|None, other: Optional[Any] = None):
-        """Send a signal with additional optional data"""
-        signal(name).send(sender, other=other)
+    def send_with(name: str, sender: Any, value: Any):
+        """
+        Send a signal with additional data/parameter value
+
+        Args:
+            sender (Any): The object sending the signal.
+            value (Any): The additional data/parameter value
+        """
+        signal(name).send(sender, value=value)
 
     @staticmethod
     def _sprite_added(sprite):

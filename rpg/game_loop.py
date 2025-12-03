@@ -34,6 +34,6 @@ def player_interacts_with(sprite: OpenableSprite):
 def player_attacks(player: Player):
      player.launch_projectile(PROJECTILE.FIREBALL, 2, player.currentDirection)
 
-def enemy_blocked_by(enemy: Enemy, other: Sprite):
-     log_info(f"ENEMY {enemy.name} BLOCKED BY {other.name} AT {other.position}")
+def enemy_blocked_by(enemy: Enemy, value: Sprite):
+     log_info(f"ENEMY {enemy.name} BLOCKED BY {value.name} AT {value.position}")
      enemy.start_moving(choose_random_direction())
