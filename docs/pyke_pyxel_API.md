@@ -103,14 +103,10 @@
   * [OpenableSprite](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite)
   * [MovableSprite](#pyke_pyxel.sprite._rpg_sprites.MovableSprite)
 * [\_sprite](#pyke_pyxel.sprite._sprite)
-  * [Animation](#pyke_pyxel.sprite._sprite.Animation)
   * [Sprite](#pyke_pyxel.sprite._sprite.Sprite)
     * [add\_animation](#pyke_pyxel.sprite._sprite.Sprite.add_animation)
     * [activate\_animation](#pyke_pyxel.sprite._sprite.Sprite.activate_animation)
-    * [pause\_animation](#pyke_pyxel.sprite._sprite.Sprite.pause_animation)
-    * [unpause\_animation](#pyke_pyxel.sprite._sprite.Sprite.unpause_animation)
     * [deactivate\_animations](#pyke_pyxel.sprite._sprite.Sprite.deactivate_animations)
-    * [set\_animation\_fps](#pyke_pyxel.sprite._sprite.Sprite.set_animation_fps)
     * [set\_position](#pyke_pyxel.sprite._sprite.Sprite.set_position)
     * [position](#pyke_pyxel.sprite._sprite.Sprite.position)
     * [width](#pyke_pyxel.sprite._sprite.Sprite.width)
@@ -126,6 +122,9 @@
     * [graph\_triangle](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.graph_triangle)
     * [set\_position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_position)
     * [position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.position)
+* [\_anim](#pyke_pyxel.sprite._anim)
+  * [Anim](#pyke_pyxel.sprite._anim.Anim)
+  * [AnimationFactory](#pyke_pyxel.sprite._anim.AnimationFactory)
 * [\_text\_sprite](#pyke_pyxel.sprite._text_sprite)
   * [TextSprite](#pyke_pyxel.sprite._text_sprite.TextSprite)
     * [set\_position](#pyke_pyxel.sprite._text_sprite.TextSprite.set_position)
@@ -1426,25 +1425,6 @@ create simple directional animations (up/down/left/right).
 
 # \_sprite
 
-<a id="pyke_pyxel.sprite._sprite.Animation"></a>
-
-## Animation Objects
-
-```python
-class Animation()
-```
-
-Represents a sequence of frames for a sprite animation.
-
-Parameters
-----------
-start_frame : Coord
-    The coordinate of the first frame in the animation strip.
-frames : int
-    Number of frames in the animation.
-flip : Optional[bool]
-    If True, the animation should be drawn flipped horizontally.
-
 <a id="pyke_pyxel.sprite._sprite.Sprite"></a>
 
 ## Sprite Objects
@@ -1476,7 +1456,7 @@ resource_image_index : int
 #### add\_animation
 
 ```python
-def add_animation(name: str, animation: Animation)
+def add_animation(name: str, animation: Anim)
 ```
 
 Add an animation to the sprite.
@@ -1493,7 +1473,7 @@ animation : Animation
 #### activate\_animation
 
 ```python
-def activate_animation(name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None)
+def activate_animation(name: str, on_animation_end: Optional[Callable[[int], None]] = None)
 ```
 
 Start the named animation.
@@ -1502,26 +1482,6 @@ If the named animation is already active this is a no-op. When
 started the animation is unpaused, flip state is applied and the
 optional `on_animation_end` callback will be invoked when a
 non-looping animation finishes.
-
-<a id="pyke_pyxel.sprite._sprite.Sprite.pause_animation"></a>
-
-#### pause\_animation
-
-```python
-def pause_animation()
-```
-
-Pause the currently active animation, if any.
-
-<a id="pyke_pyxel.sprite._sprite.Sprite.unpause_animation"></a>
-
-#### unpause\_animation
-
-```python
-def unpause_animation()
-```
-
-Unpause the currently active animation, if any.
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.deactivate_animations"></a>
 
@@ -1532,17 +1492,6 @@ def deactivate_animations()
 ```
 
 Stop any active animation and reset flip state.
-
-<a id="pyke_pyxel.sprite._sprite.Sprite.set_animation_fps"></a>
-
-#### set\_animation\_fps
-
-```python
-def set_animation_fps(fps: int)
-```
-
-Set the FPS animation rate for this sprite. 
-This value cannot be smaller than the global animation FPS set in GameSettings.fps.animation
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.set_position"></a>
 
@@ -1713,6 +1662,50 @@ Returns the current position of the sprite.
 **Returns**:
 
 - `Coord` - The coordinate of the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._anim"></a>
+
+# \_anim
+
+<a id="pyke_pyxel.sprite._anim.Anim"></a>
+
+## Anim Objects
+
+```python
+class Anim()
+```
+
+An animation for a Sprite.
+
+Parameters
+----------
+start_frame: coord
+    The position of the initial frame of the animation
+frames: int
+    The number of frames in the animation
+loop: bool
+    Whether the animation should loop or not
+flip: bool
+    Whether the animation image should be horizontally flipped
+fps: int
+    The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
+
+<a id="pyke_pyxel.sprite._anim.AnimationFactory"></a>
+
+## AnimationFactory Objects
+
+```python
+class AnimationFactory()
+```
+
+Convenience class to create multiple `Animation` instances with the same number of frames and FPS.
+
+Parameters
+----------
+frames : int
+    The number of frames the created animations will have
+fps   : int
+    The FPS of the created animations
 
 <a id="pyke_pyxel.sprite._text_sprite"></a>
 

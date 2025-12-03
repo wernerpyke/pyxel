@@ -1,6 +1,7 @@
-from ._sprite import Animation, Sprite
+from ._sprite import Sprite
 from ._rpg_sprites import OpenableSprite, MovableSprite
 from ._text_sprite import TextSprite
 from ._compound_sprite import CompoundSprite
+from ._anim import Anim, AnimationFactory
 
-__all__ = ["Animation", "Sprite", "CompoundSprite", "TextSprite", "OpenableSprite", "MovableSprite"]
+__all__ = ["AnimationFactory", "Anim", "Sprite", "CompoundSprite", "TextSprite", "OpenableSprite", "MovableSprite"]

@@ -1,11 +1,10 @@
 from dataclasses import dataclass
 from pathlib import Path
-import random
 
 from pyke_pyxel import GameSettings, COLOURS, coord
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
-from pyke_pyxel.sprite import Sprite, Animation, TextSprite
+from pyke_pyxel.sprite import Sprite, TextSprite, AnimationFactory
 
 settings = GameSettings()
 settings.size.window = 160
@@ -17,10 +16,13 @@ settings.colours.sprite_transparency = COLOURS.BEIGE
 game = Game(settings, title="Hello, World", resources=f"{Path(__file__).parent.resolve()}/assets/resources.pyxres")
 
 sprite = Sprite("skeleton", default_frame=coord(1,1))
-sprite.add_animation("down", Animation(start_frame=coord(2, 1), frames=2))
-sprite.add_animation("up", Animation(start_frame=coord(4, 1), frames=2))
-sprite.add_animation("right", Animation(start_frame=coord(6, 1), frames=2))
-sprite.add_animation("left", Animation(start_frame=coord(6, 1), frames=2, flip=True))
+
+anims = AnimationFactory(frames=2)
+
+sprite.add_animation("down", anims.at(coord(2,1)))
+sprite.add_animation("up", anims.at(coord(4,1)))
+sprite.add_animation("right", anims.at(coord(6,1)))
+sprite.add_animation("left", anims.at(coord(6,1), flip=True))
 
 @dataclass
 class _state:

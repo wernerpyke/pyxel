@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from pyke_pyxel import coord
-from pyke_pyxel.sprite import Sprite, Animation, OpenableSprite, MovableSprite
+from pyke_pyxel.sprite import Sprite, OpenableSprite, MovableSprite, Anim
 
 @dataclass
 class OBJECTS:
@@ -31,7 +31,7 @@ class DOOR:
     
     @staticmethod
     def BROWN():
-        sprite = OpenableSprite(OBJECTS.DOOR, coord(10, 15), coord(8,15), Animation(coord(8, 15), 3))
+        sprite = OpenableSprite(OBJECTS.DOOR, coord(10, 15), coord(8,15), Anim(coord(8, 15), 3))
         return sprite
     
 class PROJECTILE:
@@ -39,7 +39,7 @@ class PROJECTILE:
     @staticmethod
     def FIREBALL():
         sprite = Sprite(OBJECTS.FIREBALL, coord(6,5))
-        sprite.add_animation("go", Animation(coord(6, 5), 2))
+        sprite.add_animation("go", Anim(coord(6, 5), 2))
         sprite.activate_animation("go")
         return sprite
 

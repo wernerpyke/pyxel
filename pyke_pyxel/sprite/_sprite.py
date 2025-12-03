@@ -3,27 +3,7 @@ import pyxel
 
 from pyke_pyxel import coord, GameSettings
 
-class Animation:
-    """Represents a sequence of frames for a sprite animation.
-
-    Parameters
-    ----------
-    start_frame : Coord
-        The coordinate of the first frame in the animation strip.
-    frames : int
-        Number of frames in the animation.
-    flip : Optional[bool]
-        If True, the animation should be drawn flipped horizontally.
-    """
-    def __init__(self, start_frame: coord, frames: int, flip: Optional[bool] = False):
-        self._start_frame = start_frame
-        self._frames = frames
-        self.flip: bool = True if flip else False
-
-        self._name: str
-        self._current_frame_index:int = 0
-
-        self._paused = False
+from ._anim import Anim
 
 class Sprite:
     """A drawable sprite with optional animations.
@@ -44,22 +24,15 @@ class Sprite:
     resource_image_index : int
         Index of the image resource (if multiple images are used).
     """
-    
     def __init__(self, name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
         self._id: int = 0
         self.name = name
         self.idle_frame = default_frame
 
-        self.animations: dict[str, Animation] = { }
+        self.animations: dict[str, Anim] = { }
         self._position: coord
         self.active_frame = self.idle_frame
-        self.is_flipped: bool = False
-
-        self._animation: Optional[Animation] = None
-        self._loop_animation: bool = True
-        self._on_animation_end: Optional[Callable[[int], None]] = None
-        self._skip_animation_frame_update: int|None = None
-        self._skip_animation_frame_update_counter = 0
+        self._animation: Anim|None = None
 
         self.col_tile_count = cols
         self.row_tile_count = rows
@@ -70,7 +43,7 @@ class Sprite:
         self._width = cols * tile_size
         self._height = rows * tile_size
 
-    def add_animation(self, name: str, animation: Animation):
+    def add_animation(self, name: str, animation: Anim):
         """Add an animation to the sprite.
 
         Parameters
@@ -82,8 +55,12 @@ class Sprite:
         """
         animation._name = name
         self.animations[name] = animation
-        
-    def activate_animation(self, name: str, loop: bool = True, on_animation_end: Optional[Callable[[int], None]] = None):
+
+        # The animation needs to know how 'wide' the sprite is
+        # to be able to update frames correctly
+        animation._col_tile_count = self.col_tile_count
+
+    def activate_animation(self, name: str, on_animation_end: Optional[Callable[[int], None]] = None):
         """Start the named animation.
 
         If the named animation is already active this is a no-op. When
@@ -95,42 +72,11 @@ class Sprite:
             return
 
         self._animation = self.animations[name]
-        self._animation._paused = False
-        self.is_flipped = self._animation.flip
-        self._loop_animation = loop
-        self._on_animation_end = on_animation_end
-
-        self._animation._current_frame_index = 0
-        self._skip_animation_frame_update_counter = 0
-
-    def pause_animation(self):
-        """Pause the currently active animation, if any."""
-        if self._animation:
-            self._animation._paused = True
-
-    def unpause_animation(self):
-        """Unpause the currently active animation, if any."""
-        if self._animation:
-            self._animation._paused = False
+        self._animation._activate(self._id, on_animation_end)
 
     def deactivate_animations(self):
         """Stop any active animation and reset flip state."""
-        if self._animation:
-            self._animation._paused = False
         self._animation = None
-        self.is_flipped = False
-        self._skip_animation_frame_update_counter = 0
-
-    def set_animation_fps(self, fps: int):
-        """
-        Set the FPS animation rate for this sprite. 
-        This value cannot be smaller than the global animation FPS set in GameSettings.fps.animation
-        """
-        settings = GameSettings.get()
-        if fps >= settings.fps.animation:
-            raise ValueError(f"Sprite({self.name}) animation fps cannot be >= {settings.fps.animation}")
-        
-        self._skip_animation_frame_update = round(settings.fps.animation / fps)
 
     def set_position(self, position: coord):
         """
@@ -169,32 +115,14 @@ class Sprite:
         return isinstance(other, Sprite) and self._id == other._id
 
     def _update_frame(self):
-        anim = self._animation
-
-        if anim:
-            if self._skip_animation_frame_update:
-                if self._skip_animation_frame_update_counter < self._skip_animation_frame_update:
-                    self._skip_animation_frame_update_counter += 1
-                    return
-                else:
-                    self._skip_animation_frame_update_counter = 0
-
-            if anim._current_frame_index >= anim._frames:
-                if self._loop_animation:
-                    anim._current_frame_index = 0
-                else:
-                    if self._on_animation_end:
-                        id = self._id
-                        self._on_animation_end(id)
-                        self._on_animation_end = None
-                    else:
-                        self.deactivate_animations()
-
-            col = anim._start_frame._col + (anim._current_frame_index * self.col_tile_count)
-            self.active_frame = coord(col, anim._start_frame._row)
-            # print(f"Sprite.update_frame() frame:{anim._start_frame._col}+({anim._current_frame_index}*{self.col_tile_count})={col} frameCol:{self.active_frame._col} x:{self.active_frame.x}")
-
-            anim._current_frame_index += 1
+        
+        if anim := self._animation:
+            if frame := anim._update_frame():
+                self.active_frame = frame
+            else:
+                self._animation = None
+                self.active_frame = self.idle_frame
+                
         else:
             self.active_frame = self.idle_frame
 
@@ -203,7 +131,7 @@ class Sprite:
         position = self._position
 
         width = self._width
-        if self.is_flipped:
+        if self._animation and self._animation.flip:
             width *= -1
 
         pyxel.blt(x=position.x,

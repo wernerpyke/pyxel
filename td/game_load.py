@@ -1,7 +1,7 @@
 from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.game import Game
-from pyke_pyxel.sprite import Animation, Sprite, CompoundSprite
+from pyke_pyxel.sprite import Anim, Sprite, CompoundSprite
 
 from ui import UI
 
@@ -30,6 +30,6 @@ def _add_plants(game: Game):
 def _add_base(game):
     base = Sprite("base", coord(1, 1), cols=8, rows=7)
     base.set_position(coord(16, 30))
-    base.add_animation("loop", Animation(coord(1, 1), 4))
+    base.add_animation("loop", Anim(coord(1, 1), 4))
     base.activate_animation("loop")
     game.add_sprite(base)

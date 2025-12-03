@@ -3,7 +3,7 @@ from pyke_pyxel import GameSettings, log_debug, log_error
 from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
-from pyke_pyxel.sprite import Animation, Sprite
+from pyke_pyxel.sprite import Anim, Sprite
 from td.state.stats import STATS
 
 
@@ -17,11 +17,11 @@ class Enemy:
 
         sprite = Sprite(type, from_frame, cols, rows)
         
-        sprite.add_animation("loop", Animation(from_frame, animation_frame_count))
+        sprite.add_animation("loop", Anim(from_frame, animation_frame_count))
         sprite.activate_animation("loop")
 
-        sprite.add_animation("kill", Animation(coord(5,9), 2))
-        sprite.add_animation("die", Animation(coord(7,9), 2))
+        sprite.add_animation("kill", Anim(coord(5,9), 2, loop=False))
+        sprite.add_animation("die", Anim(coord(7,9), 2, loop=False))
         self._sprite = sprite
 
         self.power = stats.power

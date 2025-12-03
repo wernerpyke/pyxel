@@ -1,6 +1,7 @@
 from typing import Optional
 from pyke_pyxel import coord
-from ._sprite import Animation, Sprite
+from ._sprite import Sprite
+from ._anim import Anim
 
 OPEN: int = 0
 CLOSED: int = 1
@@ -13,7 +14,7 @@ class OpenableSprite(Sprite):
     The OpenableSprite exposes simple open/close methods and manages an
     internal status value that determines which frame is shown.
     """
-    def __init__(self, name: str, openFrame: coord, closedFrame: coord, openingAnimation: Animation):
+    def __init__(self, name: str, openFrame: coord, closedFrame: coord, openingAnimation: Anim):
         super().__init__(name, openFrame)
         self._openFrame = openFrame
         self._closedFrame = closedFrame
@@ -57,14 +58,14 @@ class MovableSprite(Sprite):
         super().__init__(name, idleFrame)
         self.movementSpeed = movement_speed
 
-    def set_up_animation(self, start_frame: coord, frame_count: int, flip: Optional[bool] = False):
-        self.add_animation("up", Animation(start_frame, frame_count, flip))
+    def set_up_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
+        self.add_animation("up", Anim(start_frame, frame_count, flip=flip))
 
-    def set_down_animation(self, start_frame: coord, frame_count: int, flip: Optional[bool] = False):
-        self.add_animation("down", Animation(start_frame, frame_count, flip))
+    def set_down_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
+        self.add_animation("down", Anim(start_frame, frame_count, flip=flip))
 
-    def set_left_animation(self, start_frame: coord, frame_count: int, flip: Optional[bool] = False):
-        self.add_animation("left", Animation(start_frame, frame_count, flip))
+    def set_left_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
+        self.add_animation("left", Anim(start_frame, frame_count, flip=flip))
 
-    def set_right_animation(self, start_frame: coord, frame_count: int, flip: Optional[bool] = False):
-        self.add_animation("right", Animation(start_frame, frame_count, flip))
+    def set_right_animation(self, start_frame: coord, frame_count: int, flip: bool = False):
+        self.add_animation("right", Anim(start_frame, frame_count, flip=flip))
