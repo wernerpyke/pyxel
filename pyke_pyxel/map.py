@@ -50,7 +50,7 @@ class Map:
         if the sprite is able to move there (i.e., the location is either `FREE` or `OPEN`).
         
         Args:
-            coord (Coord): The coordinate to check for sprite movement.
+            coord (coord): The coordinate to check for sprite movement.
         
         Returns:
             bool: True if the location is `FREE` or `OPEN`, False otherwise.
@@ -67,7 +67,7 @@ class Map:
         - assigning the provided sprite to its sprite attribute
 
         Args:
-            coord (Coord): The coordinate of the location to mark as blocked.
+            coord (coord): The coordinate of the location to mark as blocked.
             sprite (Sprite): The sprite to place on the blocked location (e.g. an obstacle graphic).
         """
         location = self.location_at(coord)
@@ -79,7 +79,7 @@ class Map:
         Mark a location as an openable object with the specified status.
         
         Args:
-            coord (Coord): The coordinate of the location to mark.
+            coord (coord): The coordinate of the location to mark.
             sprite (OpenableSprite): The sprite to assign to the openable object.
             closed (bool): Whether the openable object is closed (True) or open (False).
         """

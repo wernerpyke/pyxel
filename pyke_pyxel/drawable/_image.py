@@ -9,8 +9,8 @@ class Image(Drawable):
 
     Parameters
     ----------
-    frame : Coord
-        The `Coord` of the top-left corner of the image's graphic in the resource image.
+    frame : coord
+        The `coord` of the top-left corner of the image's graphic in the resource image.
     cols : int, optional
         The number of columns the image graphic occupies, by default 1.
     rows : int, optional
@@ -83,8 +83,8 @@ class ImageFactory:
 
         Parameters
         ----------
-        position : Coord
-            The `Coord` of the top-left corner of the image's graphic on the Pyxel resource sheet.
+        position : coord
+            The `coord` of the top-left corner of the image's graphic on the Pyxel resource sheet.
 
         Returns
         -------

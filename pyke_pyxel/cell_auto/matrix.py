@@ -136,7 +136,7 @@ class Matrix:
         m = Matrix(80, 60)
         c = m.cell_at(10, 5)
         neighs = m.neighbours(c)
-        line = m.cells_in_line(Coord(0, 0), Coord(10, 5))
+        line = m.cells_in_line(coord(0, 0), coord(10, 5))
     """
     def __init__(self, width: int = 0, height: int = 0):
         self._width = width

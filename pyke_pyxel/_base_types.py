@@ -64,7 +64,7 @@ class COLOURS:
 class coord:
     """A grid-aware coordinate representing a tile and its pixel position.
 
-    Coord stores both a grid location (column and row, 1-indexed) and the
+    coord stores both a grid location (column and row, 1-indexed) and the
     corresponding top-left pixel coordinates (x, y) for a square tile of
     a given size. It provides helpers for creating coordinates from pixel
     centers or raw x/y, testing containment/collision, cloning and moving
@@ -72,7 +72,7 @@ class coord:
     """
 
     def __init__(self, col: int, row: int, size: Optional[int] = None):
-        """Create a Coord where col and row are 1-indexed
+        """Create a coord where col and row are 1-indexed
         Parameters:
         - col (int): column
         - row (int): row
@@ -80,9 +80,9 @@ class coord:
         """
 
         if col < 1:
-            raise ValueError("Coord() col values must be >= 1")
+            raise ValueError("coord() col values must be >= 1")
         if row < 1:
-            raise ValueError("Coord() row values must be >= 1")
+            raise ValueError("coord() row values must be >= 1")
 
         self._col: int = col
         self._row: int = row
@@ -97,9 +97,9 @@ class coord:
 
     @staticmethod
     def with_center(x: int, y: int, size: Optional[int] = None) -> "coord":
-        """Create a Coord where (x, y) are treated as the visual center.
+        """Create a coord where (x, y) are treated as the visual center.
 
-        The returned Coord will have its internal pixel `x, y` set so that
+        The returned coord will have its internal pixel `x, y` set so that
         the tile's center is at the given coordinates. Grid column/row are
         calculated from the center position.
         """
@@ -116,7 +116,7 @@ class coord:
 
     @staticmethod
     def with_xy(x: int, y: int, size: Optional[int] = None) -> "coord":
-        """Create a Coord with the provided top-left pixel coordinates.
+        """Create a coord with the provided top-left pixel coordinates.
 
         The provided x and y are used directly as the tile's top-left
         pixel coordinates and the grid column/row are computed from them.
@@ -132,7 +132,7 @@ class coord:
         return c
 
     def is_different_grid_location(self, coord: "coord"):
-        """Return True when this Coord is on a different grid tile than `coord`.
+        """Return True when this coord is on a different grid tile than `coord`.
 
         Comparison is based on grid column and row (1-indexed), not pixel
         offsets.
@@ -141,7 +141,7 @@ class coord:
         return self._col != coord._col or self._row != coord._row
 
     def is_same_grid_location(self, coord: "coord"):
-        """Return True when this Coord is on the same grid tile as `coord`."""
+        """Return True when this coord is on the same grid tile as `coord`."""
 
         return self._col == coord._col and self._row == coord._row
 
@@ -184,9 +184,9 @@ class coord:
         return True
 
     def move_by(self, x: int = 0, y: int = 0):
-        """Move this Coord by (x, y) pixels and update the grid location.
+        """Move this coord by (x, y) pixels and update the grid location.
 
-        This mutates the Coord in-place. Grid column/row are recalculated
+        This mutates the coord in-place. Grid column/row are recalculated
         from the new pixel position.
         """
 
@@ -196,13 +196,13 @@ class coord:
         self._row = math.floor(self.y / self.size) + 1
 
     def clone(self):
-        """Return a shallow copy of this Coord (same grid location and size)."""
+        """Return a shallow copy of this coord (same grid location and size)."""
         # Use self._x/_y rather than self._col/_row
         # to avoid prior rounding of _col/_row
         return coord.with_xy(self._x, self._y, self.size)
 
     def clone_by(self, x: int, y: int, direction: Optional[str] = None):
-        """Return a new Coord offset by (x, y) pixels from this one.
+        """Return a new coord offset by (x, y) pixels from this one.
 
         When a `direction` is provided ("up", "down", "left", "right")
         the resulting grid column/row are adjusted so the cloned tile maps
@@ -258,7 +258,7 @@ class coord:
         )
 
     def distance_to(self, coord: "coord") -> float:
-        """Return the distance between this Coord and the provided Coord"""
+        """Return the distance between this coord and the provided coord"""
         delta_x = self._x - coord._x
         delta_y = self._y - coord._y
         

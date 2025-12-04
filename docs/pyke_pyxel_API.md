@@ -41,6 +41,7 @@
     * [map](#pyke_pyxel.game.Game.map)
     * [hud](#pyke_pyxel.game.Game.hud)
     * [fx](#pyke_pyxel.game.Game.fx)
+    * [keyboard](#pyke_pyxel.game.Game.keyboard)
     * [update](#pyke_pyxel.game.Game.update)
     * [draw](#pyke_pyxel.game.Game.draw)
 * [game](#pyke_pyxel.rpg.game)
@@ -123,8 +124,11 @@
     * [set\_position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_position)
     * [position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.position)
 * [\_anim](#pyke_pyxel.sprite._anim)
-  * [Anim](#pyke_pyxel.sprite._anim.Anim)
+  * [Animation](#pyke_pyxel.sprite._anim.Animation)
+    * [\_\_init\_\_](#pyke_pyxel.sprite._anim.Animation.__init__)
   * [AnimationFactory](#pyke_pyxel.sprite._anim.AnimationFactory)
+    * [\_\_init\_\_](#pyke_pyxel.sprite._anim.AnimationFactory.__init__)
+    * [at](#pyke_pyxel.sprite._anim.AnimationFactory.at)
 * [\_text\_sprite](#pyke_pyxel.sprite._text_sprite)
   * [TextSprite](#pyke_pyxel.sprite._text_sprite.TextSprite)
     * [set\_position](#pyke_pyxel.sprite._text_sprite.TextSprite.set_position)
@@ -139,6 +143,12 @@
     * [remove\_button](#pyke_pyxel.hud.HUD.remove_button)
     * [add\_bg](#pyke_pyxel.hud.HUD.add_bg)
     * [remove\_bg](#pyke_pyxel.hud.HUD.remove_bg)
+* [\_keyboard](#pyke_pyxel._keyboard)
+  * [Keyboard](#pyke_pyxel._keyboard.Keyboard)
+    * [was\_pressed](#pyke_pyxel._keyboard.Keyboard.was_pressed)
+    * [is\_down](#pyke_pyxel._keyboard.Keyboard.is_down)
+    * [send\_signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.send_signal_for_key)
+    * [remove\_signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.remove_signal_for_key)
 * [math](#pyke_pyxel.math)
   * [RandomChoice](#pyke_pyxel.math.RandomChoice)
     * [set](#pyke_pyxel.math.RandomChoice.set)
@@ -412,7 +422,7 @@ Returns the current position of the drawable.
 
 **Returns**:
 
-- `Coord` - The coordinate of the drawable's top-left corner.
+- `coord` - The coordinate of the drawable's top-left corner.
 
 <a id="pyke_pyxel.drawable._drawable.Drawable.set_position"></a>
 
@@ -426,7 +436,7 @@ Sets the position of the drawable.
 
 **Arguments**:
 
-- `position` _Coord_ - The new coordinate for the drawable's top-left corner.
+- `position` _coord_ - The new coordinate for the drawable's top-left corner.
 
 <a id="pyke_pyxel.drawable._image"></a>
 
@@ -444,8 +454,8 @@ Represents an image in the Pyxel resources image bank that can be positioned and
 
 Parameters
 ----------
-frame : Coord
-    The `Coord` of the top-left corner of the image's graphic in the resource image.
+frame : coord
+    The `coord` of the top-left corner of the image's graphic in the resource image.
 cols : int, optional
     The number of columns the image graphic occupies, by default 1.
 rows : int, optional
@@ -484,8 +494,8 @@ Create an `Image` instance at the given position.
 
 Parameters
 ----------
-position : Coord
-    The `Coord` of the top-left corner of the image's graphic on the Pyxel resource sheet.
+position : coord
+    The `coord` of the top-left corner of the image's graphic on the Pyxel resource sheet.
 
 Returns
 -------
@@ -523,8 +533,6 @@ Signals:
 ```python
 def __init__(settings: GameSettings, title: str, resources: str)
 ```
-
-Initialize the Game instance.
 
 **Arguments**:
 
@@ -617,13 +625,13 @@ Set a simplified version of standard Pyxel tilemaps as a background layer.
 The tilemap is horizontally and vertically repeated to fill up the screen width/height.
 
 For example:
-`game.set_tilemap(Coord(10, 8), 4, 6)`
+`game.set_tilemap(coord(10, 8), 4, 6)`
 will fetch a tilemap starting at column 10 and row 8 of the resource sheet and
 load 4 columns and 6 rows which will then be repeated to fill the screen.
 
 **Arguments**:
 
-  resource_position : Coord
+  resource_position : coord
   The col/row position of the tilemap in the loaded resource sheet
   tiles_wide : int
   The width of the tilemap on the resource sheet
@@ -712,6 +720,17 @@ def fx() -> FX
 ```
 
 Returns the `FX` instance for this game
+
+<a id="pyke_pyxel.game.Game.keyboard"></a>
+
+#### keyboard
+
+```python
+@property
+def keyboard() -> Keyboard
+```
+
+Returns the `Keyboard` instance for this game
 
 <a id="pyke_pyxel.game.Game.update"></a>
 
@@ -806,7 +825,7 @@ if the sprite is able to move there (i.e., the location is either `FREE` or `OPE
 
 **Arguments**:
 
-- `coord` _Coord_ - The coordinate to check for sprite movement.
+- `coord` _coord_ - The coordinate to check for sprite movement.
   
 
 **Returns**:
@@ -829,7 +848,7 @@ This updates the Location object returned by self.location_at(coord) by:
 
 **Arguments**:
 
-- `coord` _Coord_ - The coordinate of the location to mark as blocked.
+- `coord` _coord_ - The coordinate of the location to mark as blocked.
 - `sprite` _Sprite_ - The sprite to place on the blocked location (e.g. an obstacle graphic).
 
 <a id="pyke_pyxel.map.Map.mark_openable"></a>
@@ -844,7 +863,7 @@ Mark a location as an openable object with the specified status.
 
 **Arguments**:
 
-- `coord` _Coord_ - The coordinate of the location to mark.
+- `coord` _coord_ - The coordinate of the location to mark.
 - `sprite` _OpenableSprite_ - The sprite to assign to the openable object.
 - `closed` _bool_ - Whether the openable object is closed (True) or open (False).
 
@@ -1211,7 +1230,7 @@ Examples
     m = Matrix(80, 60)
     c = m.cell_at(10, 5)
     neighs = m.neighbours(c)
-    line = m.cells_in_line(Coord(0, 0), Coord(10, 5))
+    line = m.cells_in_line(coord(0, 0), coord(10, 5))
 
 <a id="pyke_pyxel.cell_auto.matrix.Matrix.clear"></a>
 
@@ -1435,38 +1454,37 @@ class Sprite()
 
 A drawable sprite with optional animations.
 
-A Sprite contains a set of named Animation objects, a current
-active_frame to draw, and a position. Animations may be started,
-paused, resumed and looped. Sprites are lightweight containers for
-animation state and drawing metadata.
+A Sprite contains a set of named Animation objects, a current active_frame
+to draw, and a position. Animations may be started, paused, resumed and
+looped. Sprites are lightweight containers for animation state and drawing
+metadata.
 
-Parameters
-----------
-name : str
-    Logical name for the sprite.
-default_frame : Coord
-    The frame to use when no animation is active (idle frame).
-cols, rows : int
-    Width/height in tiles for framed sprites (used when advancing frames).
-resource_image_index : int
-    Index of the image resource (if multiple images are used).
+**Arguments**:
+
+- `name` _str_ - Logical name for the sprite.
+- `default_frame` _coord_ - The frame to use when no animation is active
+  (idle frame).
+- `cols` _int_ - Width in tiles for framed sprites (used when advancing
+  frames).
+- `rows` _int_ - Height in tiles for framed sprites (used when advancing
+  frames).
+- `resource_image_index` _int_ - Index of the image resource (if multiple
+  images are used).
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.add_animation"></a>
 
 #### add\_animation
 
 ```python
-def add_animation(name: str, animation: Anim)
+def add_animation(name: str, animation: Animation)
 ```
 
 Add an animation to the sprite.
 
-Parameters
-----------
-name : str
-    The name to associate with the animation.
-animation : Animation
-    The Animation object to add.
+**Arguments**:
+
+- `name` _str_ - The name to associate with the animation.
+- `animation` _Animation_ - The Animation object to add.
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.activate_animation"></a>
 
@@ -1505,7 +1523,7 @@ Sets the position of the sprite.
 
 **Arguments**:
 
-- `position` _Coord_ - The new coordinate for the sprite's top-left corner.
+- `position` _coord_ - The new coordinate for the sprite's top-left corner.
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.position"></a>
 
@@ -1520,7 +1538,7 @@ Returns the current position of the sprite.
 
 **Returns**:
 
-- `Coord` - The coordinate of the sprite's top-left corner.
+- `coord` - The coordinate of the sprite's top-left corner.
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.width"></a>
 
@@ -1556,7 +1574,7 @@ Returns the height of the sprite in pixels.
 class CompoundSprite()
 ```
 
-A multi-tile sprite composed of a grid of `Coord` tiles with optional overlay graphics.
+A multi-tile sprite composed of a grid of `coord` tiles with optional overlay graphics.
 
 CompoundSprite manages a matrix of tile coordinates (cols x rows)
 and provides helpers to fill tiles or set individual tiles. Useful for
@@ -1646,7 +1664,7 @@ Sets the position of the sprite.
 
 **Arguments**:
 
-- `position` _Coord_ - The new coordinate for the sprite's top-left corner.
+- `position` _coord_ - The new coordinate for the sprite's top-left corner.
 
 <a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.position"></a>
 
@@ -1661,34 +1679,37 @@ Returns the current position of the sprite.
 
 **Returns**:
 
-- `Coord` - The coordinate of the sprite's top-left corner.
+- `coord` - The coordinate of the sprite's top-left corner.
 
 <a id="pyke_pyxel.sprite._anim"></a>
 
 # \_anim
 
-<a id="pyke_pyxel.sprite._anim.Anim"></a>
+<a id="pyke_pyxel.sprite._anim.Animation"></a>
 
-## Anim Objects
+## Animation Objects
 
 ```python
-class Anim()
+class Animation()
 ```
 
 An animation for a Sprite.
 
-Parameters
-----------
-start_frame: coord
-    The position of the initial frame of the animation
-frames: int
-    The number of frames in the animation
-loop: bool
-    Whether the animation should loop or not
-flip: bool
-    Whether the animation image should be horizontally flipped
-fps: int
-    The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
+<a id="pyke_pyxel.sprite._anim.Animation.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None)
+```
+
+**Arguments**:
+
+- `start_frame` _coord_ - The position of the initial frame of the animation
+- `frames` _int_ - The number of frames in the animation
+- `loop` _bool_ - Whether the animation should loop or not
+- `flip` _bool_ - Whether the animation image should be horizontally flipped
+- `fps` _int_ - The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
 
 <a id="pyke_pyxel.sprite._anim.AnimationFactory"></a>
 
@@ -1700,12 +1721,34 @@ class AnimationFactory()
 
 Convenience class to create multiple `Animation` instances with the same number of frames and FPS.
 
-Parameters
-----------
-frames : int
-    The number of frames the created animations will have
-fps   : int
-    The FPS of the created animations
+<a id="pyke_pyxel.sprite._anim.AnimationFactory.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(frames: int, fps: int|None = None)
+```
+
+**Arguments**:
+
+- `frames` _int_ - The number of frames the created animations will have
+- `fps` _int_ - The FPS of the created animations
+
+<a id="pyke_pyxel.sprite._anim.AnimationFactory.at"></a>
+
+#### at
+
+```python
+def at(position: coord, loop: bool = True, flip: bool = False) -> Animation
+```
+
+Create an `Animation` instance at the given position.
+
+**Arguments**:
+
+- `position` _coord_ - The `coord` of the top-left corner of the animation's graphic on the Pyxel resource sheet.
+- `loop` _bool_ - Whether the animation should loop
+- `flip` _bool_ - Whether the animation image should be horizontally flipped
 
 <a id="pyke_pyxel.sprite._text_sprite"></a>
 
@@ -1739,7 +1782,7 @@ Sets the position of the sprite.
 
 **Arguments**:
 
-- `position` _Coord_ - The new coordinate for the sprite's top-left corner.
+- `position` _coord_ - The new coordinate for the sprite's top-left corner.
 
 <a id="pyke_pyxel.sprite._text_sprite.TextSprite.position"></a>
 
@@ -1754,7 +1797,7 @@ Returns the current position of the sprite.
 
 **Returns**:
 
-- `Coord` - The coordinate of the sprite's top-left corner.
+- `coord` - The coordinate of the sprite's top-left corner.
 
 <a id="pyke_pyxel.sprite._text_sprite.TextSprite.set_text"></a>
 
@@ -1865,6 +1908,85 @@ Remove a background Drawable from the HUD.
 
 Behavior:
 - If the item is not present, the method does nothing (no exception raised).
+
+<a id="pyke_pyxel._keyboard"></a>
+
+# \_keyboard
+
+<a id="pyke_pyxel._keyboard.Keyboard"></a>
+
+## Keyboard Objects
+
+```python
+class Keyboard()
+```
+
+Access keyboard events and status.
+
+In order to use the correct pyxel key mapping it is necessary to import pyxel.
+For example:
+>>> import pyxel
+>>>
+>>> if game.keyboard.was_pressed(pyxel.KEY_UP):
+>>>     print("UP")
+
+<a id="pyke_pyxel._keyboard.Keyboard.was_pressed"></a>
+
+#### was\_pressed
+
+```python
+def was_pressed(key: int) -> bool
+```
+
+Return True if the provided key was pressed down this frame.
+
+**Arguments**:
+
+- `key(int)` - The `pyxel.KEY_*` value of the key to check
+
+<a id="pyke_pyxel._keyboard.Keyboard.is_down"></a>
+
+#### is\_down
+
+```python
+def is_down(key: int) -> bool
+```
+
+Return True if the provided key is pressed and held down this frame.
+
+**Arguments**:
+
+- `key(int)` - The `pyxel.KEY_*` value of the key to check
+
+<a id="pyke_pyxel._keyboard.Keyboard.send_signal_for_key"></a>
+
+#### send\_signal\_for\_key
+
+```python
+def send_signal_for_key(key: int, signal: str)
+```
+
+Send a signal when a key is pressed. If the key is pressed down the signal will be emitted once
+and then only emitted again if the key is pressed again.
+
+**Arguments**:
+
+- `key(int)` - The `pyxel.KEY_*` value of the key to connect the signal to
+- `signal(str)` - The name of the signal to emit when the key is pressed down
+
+<a id="pyke_pyxel._keyboard.Keyboard.remove_signal_for_key"></a>
+
+#### remove\_signal\_for\_key
+
+```python
+def remove_signal_for_key(key: int)
+```
+
+Disconnect a signal from a key press.
+
+**Arguments**:
+
+- `key(int)` - The `pyxel.KEY_*` value of the key to disconnect the signal from
 
 <a id="pyke_pyxel.math"></a>
 
@@ -1991,7 +2113,7 @@ Parameters
 ----------
 colour : int
     Colour index/value to use for the splatter.
-position : Coord
+position : coord
     The coordinate where the splatter effect should appear.
 
 <a id="pyke_pyxel._base_types"></a>
@@ -2029,7 +2151,7 @@ class coord()
 
 A grid-aware coordinate representing a tile and its pixel position.
 
-Coord stores both a grid location (column and row, 1-indexed) and the
+coord stores both a grid location (column and row, 1-indexed) and the
 corresponding top-left pixel coordinates (x, y) for a square tile of
 a given size. It provides helpers for creating coordinates from pixel
 centers or raw x/y, testing containment/collision, cloning and moving
@@ -2043,7 +2165,7 @@ in pixel space, and deriving mid/min/max bounding values.
 def __init__(col: int, row: int, size: Optional[int] = None)
 ```
 
-Create a Coord where col and row are 1-indexed
+Create a coord where col and row are 1-indexed
 
 **Arguments**:
 
@@ -2060,9 +2182,9 @@ Create a Coord where col and row are 1-indexed
 def with_center(x: int, y: int, size: Optional[int] = None) -> "coord"
 ```
 
-Create a Coord where (x, y) are treated as the visual center.
+Create a coord where (x, y) are treated as the visual center.
 
-The returned Coord will have its internal pixel `x, y` set so that
+The returned coord will have its internal pixel `x, y` set so that
 the tile's center is at the given coordinates. Grid column/row are
 calculated from the center position.
 
@@ -2075,7 +2197,7 @@ calculated from the center position.
 def with_xy(x: int, y: int, size: Optional[int] = None) -> "coord"
 ```
 
-Create a Coord with the provided top-left pixel coordinates.
+Create a coord with the provided top-left pixel coordinates.
 
 The provided x and y are used directly as the tile's top-left
 pixel coordinates and the grid column/row are computed from them.
@@ -2088,7 +2210,7 @@ pixel coordinates and the grid column/row are computed from them.
 def is_different_grid_location(coord: "coord")
 ```
 
-Return True when this Coord is on a different grid tile than `coord`.
+Return True when this coord is on a different grid tile than `coord`.
 
 Comparison is based on grid column and row (1-indexed), not pixel
 offsets.
@@ -2101,7 +2223,7 @@ offsets.
 def is_same_grid_location(coord: "coord")
 ```
 
-Return True when this Coord is on the same grid tile as `coord`.
+Return True when this coord is on the same grid tile as `coord`.
 
 <a id="pyke_pyxel._base_types.coord.is_at"></a>
 
@@ -2173,9 +2295,9 @@ The bounding box is inclusive on both edges (min <= value <= max).
 def move_by(x: int = 0, y: int = 0)
 ```
 
-Move this Coord by (x, y) pixels and update the grid location.
+Move this coord by (x, y) pixels and update the grid location.
 
-This mutates the Coord in-place. Grid column/row are recalculated
+This mutates the coord in-place. Grid column/row are recalculated
 from the new pixel position.
 
 <a id="pyke_pyxel._base_types.coord.clone"></a>
@@ -2186,7 +2308,7 @@ from the new pixel position.
 def clone()
 ```
 
-Return a shallow copy of this Coord (same grid location and size).
+Return a shallow copy of this coord (same grid location and size).
 
 <a id="pyke_pyxel._base_types.coord.clone_by"></a>
 
@@ -2196,7 +2318,7 @@ Return a shallow copy of this Coord (same grid location and size).
 def clone_by(x: int, y: int, direction: Optional[str] = None)
 ```
 
-Return a new Coord offset by (x, y) pixels from this one.
+Return a new coord offset by (x, y) pixels from this one.
 
 When a `direction` is provided ("up", "down", "left", "right")
 the resulting grid column/row are adjusted so the cloned tile maps
@@ -2224,7 +2346,7 @@ tolerance to reduce false positives on exact-edge overlaps.
 def distance_to(coord: "coord") -> float
 ```
 
-Return the distance between this Coord and the provided Coord
+Return the distance between this coord and the provided coord
 
 <a id="pyke_pyxel._base_types.coord.x"></a>
 

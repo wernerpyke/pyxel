@@ -7,21 +7,16 @@ from pyke_pyxel._base_types import GameSettings, coord
 class Animation:
     """
     An animation for a Sprite.
-
-    Parameters
-    ----------
-    start_frame: coord
-        The position of the initial frame of the animation
-    frames: int
-        The number of frames in the animation
-    loop: bool
-        Whether the animation should loop or not
-    flip: bool
-        Whether the animation image should be horizontally flipped
-    fps: int
-        The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
     """
     def __init__(self, start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None):
+        """
+        Args:
+            start_frame (coord): The position of the initial frame of the animation
+            frames (int): The number of frames in the animation
+            loop (bool): Whether the animation should loop or not
+            flip (bool): Whether the animation image should be horizontally flipped
+            fps (int): The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
+        """
         self._name = ""
         self._start_frame = start_frame
         self._frames = frames
@@ -76,35 +71,23 @@ class Animation:
         return coord(self._current_col, self._start_frame._row)
 
 class AnimationFactory:
-    """
-    Convenience class to create multiple `Animation` instances with the same number of frames and FPS.
-
-    Parameters
-    ----------
-    frames : int
-        The number of frames the created animations will have
-    fps   : int
-        The FPS of the created animations
-    """
+    """Convenience class to create multiple `Animation` instances with the same number of frames and FPS."""
     def __init__(self, frames: int, fps: int|None = None):
+        """
+        Args:
+            frames (int): The number of frames the created animations will have
+            fps (int): The FPS of the created animations
+        """
         self._frames = frames
         self._fps = fps
 
-    """
-    Create an `Animation` instance at the given position.
-
-    Parameters
-    ----------
-    position : coord
-        The `coord` of the top-left corner of the animation's graphic on the Pyxel resource sheet.
-    loop: bool
-        Whether the animation should loop
-    flip: bool
-        Whether the animation image should be horizontally flipped
-    Returns
-    -------
-    Animation
-        The created `Animation` instance.
-    """
     def at(self, position: coord, loop: bool = True, flip: bool = False) -> Animation:
+        """
+        Create an `Animation` instance at the given position.
+
+        Args:
+            position (coord): The `coord` of the top-left corner of the animation's graphic on the Pyxel resource sheet.
+            loop (bool): Whether the animation should loop
+            flip (bool): Whether the animation image should be horizontally flipped
+        """
         return Animation(position, frames=self._frames, fps=self._fps, loop=loop, flip=flip)

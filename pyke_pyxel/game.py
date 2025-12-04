@@ -1,8 +1,10 @@
 from typing import Optional
 import pyxel
 
+
 from ._base_types import GameSettings, coord, GameSettings
 from ._log import log_debug
+from ._keyboard import Keyboard
 from .drawable._tilemap import TileMap
 from .signals import Signals
 from .map import Map
@@ -27,8 +29,7 @@ class Game:
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
         """
-        Initialize the Game instance.
-        Parameters:
+        Args:
             settings (GameSettings): Configuration object containing debug flag, window and tile sizes,
                 and FPS settings (game and animation). Also used to determine whether mouse input is enabled.
             title (str): Window title passed to pyxel.init.
@@ -60,6 +61,8 @@ class Game:
 
         self._hud: Optional[HUD] = None
         self._fx: Optional[FX] = None
+
+        self._keyboard = Keyboard()
 
         Signals.connect("sprite_added", self._sprite_added)
         Signals.connect("sprite_removed", self._sprite_removed)
@@ -158,12 +161,12 @@ class Game:
         The tilemap is horizontally and vertically repeated to fill up the screen width/height.
 
         For example:
-            `game.set_tilemap(Coord(10, 8), 4, 6)`
+            `game.set_tilemap(coord(10, 8), 4, 6)`
             will fetch a tilemap starting at column 10 and row 8 of the resource sheet and 
             load 4 columns and 6 rows which will then be repeated to fill the screen.
             
         Parameters:
-        resource_position : Coord
+        resource_position : coord
             The col/row position of the tilemap in the loaded resource sheet
         tiles_wide : int
             The width of the tilemap on the resource sheet
@@ -222,6 +225,11 @@ class Game:
         if self._fx == None:
             self._fx = FX(self._settings)
         return self._fx
+    
+    @property
+    def keyboard(self) -> Keyboard:
+        """Returns the `Keyboard` instance for this game"""
+        return self._keyboard
 
     #
     # Signals
@@ -249,8 +257,9 @@ class Game:
             - MOUSE.DOWN: Emitted on left mouse button press (if mouse_enabled).
             - MOUSE.UP: Emitted on left mouse button release (if mouse_enabled).
         """
-        if not self._paused:
-            Signals.send(Signals.GAME.UPDATE, self)
+
+        # keyboard
+        self._keyboard._update(self)
 
         # mouse
         if self._send_mouse_events:
@@ -266,11 +275,12 @@ class Game:
             if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
                 Signals.send(Signals.MOUSE.UP, self)
 
-        if self._paused:
+        if not self._paused:
+            Signals.send(Signals.GAME.UPDATE, self)
+        else:
             return
 
         # Sprite Animations
-        
         if self._animation_tick < self._frames_per_animation_tick:
             self._animation_tick += 1
         else:

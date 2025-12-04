@@ -43,7 +43,7 @@ class FX:
         ----------
         colour : int
             Colour index/value to use for the splatter.
-        position : Coord
+        position : coord
             The coordinate where the splatter effect should appear.
         """
         splatter = _SplatterEffect(position, colour)

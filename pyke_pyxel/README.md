@@ -10,4 +10,4 @@
 - In `pyke_pyxel.fx`:
     - Move the circular wipe code out to either a class or functions
 - In `pyke_pyxel.button`:
-    - Fix `Coord.contains()` dependency on tile width (currently calculated in Button). Consider allowing `Coord()` to be created with col/row tile count.
+    - Fix `coord.contains()` dependency on tile width (currently calculated in Button). Consider allowing `coord()` to be created with col/row tile count.

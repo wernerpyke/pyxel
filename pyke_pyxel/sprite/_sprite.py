@@ -8,21 +8,21 @@ from ._anim import Animation
 class Sprite:
     """A drawable sprite with optional animations.
 
-    A Sprite contains a set of named Animation objects, a current
-    active_frame to draw, and a position. Animations may be started,
-    paused, resumed and looped. Sprites are lightweight containers for
-    animation state and drawing metadata.
+    A Sprite contains a set of named Animation objects, a current active_frame
+    to draw, and a position. Animations may be started, paused, resumed and
+    looped. Sprites are lightweight containers for animation state and drawing
+    metadata.
 
-    Parameters
-    ----------
-    name : str
-        Logical name for the sprite.
-    default_frame : Coord
-        The frame to use when no animation is active (idle frame).
-    cols, rows : int
-        Width/height in tiles for framed sprites (used when advancing frames).
-    resource_image_index : int
-        Index of the image resource (if multiple images are used).
+    Args:
+        name (str): Logical name for the sprite.
+        default_frame (coord): The frame to use when no animation is active
+            (idle frame).
+        cols (int): Width in tiles for framed sprites (used when advancing
+            frames).
+        rows (int): Height in tiles for framed sprites (used when advancing
+            frames).
+        resource_image_index (int): Index of the image resource (if multiple
+            images are used).
     """
     def __init__(self, name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
         self._id: int = 0
@@ -45,13 +45,12 @@ class Sprite:
 
     def add_animation(self, name: str, animation: Animation):
         """Add an animation to the sprite.
+        
+        Args:
+            name (str): The name to associate with the animation.
+            animation (Animation): The Animation object to add.
 
-        Parameters
-        ----------
-        name : str
-            The name to associate with the animation.
-        animation : Animation
-            The Animation object to add.
+
         """
         animation._name = name
         self.animations[name] = animation
@@ -83,7 +82,7 @@ class Sprite:
         Sets the position of the sprite.
 
         Args:
-            position (Coord): The new coordinate for the sprite's top-left corner.
+            position (coord): The new coordinate for the sprite's top-left corner.
         """
         self._position = position # .clone()
 
@@ -93,7 +92,7 @@ class Sprite:
         Returns the current position of the sprite.
 
         Returns:
-            Coord: The coordinate of the sprite's top-left corner.
+            coord: The coordinate of the sprite's top-left corner.
         """
         return self._position
     
@@ -142,4 +141,3 @@ class Sprite:
                 w=width,
                 h=self._height,
                 colkey=settings.colours.sprite_transparency)
-

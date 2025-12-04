@@ -43,7 +43,7 @@ class Drawable:
         Returns the current position of the drawable.
 
         Returns:
-            Coord: The coordinate of the drawable's top-left corner.
+            coord: The coordinate of the drawable's top-left corner.
         """
         if not self._position:
             raise ValueError(f"Drawable position not set via .set_position()")
@@ -55,7 +55,7 @@ class Drawable:
         Sets the position of the drawable.
 
         Args:
-            position (Coord): The new coordinate for the drawable's top-left corner.
+            position (coord): The new coordinate for the drawable's top-left corner.
         """
         self._position = position
 

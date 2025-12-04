@@ -2,7 +2,7 @@ import pyxel
 from pyke_pyxel import coord, GameSettings, log_error
 
 class CompoundSprite:
-    """A multi-tile sprite composed of a grid of `Coord` tiles with optional overlay graphics.
+    """A multi-tile sprite composed of a grid of `coord` tiles with optional overlay graphics.
 
     CompoundSprite manages a matrix of tile coordinates (cols x rows)
     and provides helpers to fill tiles or set individual tiles. Useful for
@@ -156,7 +156,7 @@ class CompoundSprite:
         Sets the position of the sprite.
 
         Args:
-            position (Coord): The new coordinate for the sprite's top-left corner.
+            position (coord): The new coordinate for the sprite's top-left corner.
         """
         self._position = position
 
@@ -166,6 +166,6 @@ class CompoundSprite:
         Returns the current position of the sprite.
 
         Returns:
-            Coord: The coordinate of the sprite's top-left corner.
+            coord: The coordinate of the sprite's top-left corner.
         """
         return self._position

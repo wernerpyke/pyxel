@@ -27,7 +27,7 @@ class TextSprite:
         Sets the position of the sprite.
 
         Args:
-            position (Coord): The new coordinate for the sprite's top-left corner.
+            position (coord): The new coordinate for the sprite's top-left corner.
         """
         self._position = position
 
@@ -37,7 +37,7 @@ class TextSprite:
         Returns the current position of the sprite.
 
         Returns:
-            Coord: The coordinate of the sprite's top-left corner.
+            coord: The coordinate of the sprite's top-left corner.
         """
         return self._position
 
