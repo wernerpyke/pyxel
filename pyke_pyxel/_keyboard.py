@@ -16,6 +16,7 @@ class Keyboard:
 
     def __init__(self) -> None:
         self.signals: dict[int, tuple[str, bool]] = {}
+        self.to_remove: list[int] = []
 
     def was_pressed(self, key: int) -> bool:
         """
@@ -53,21 +54,27 @@ class Keyboard:
         Args:
             key(int): The `pyxel.KEY_*` value of the key to disconnect the signal from
         """
-        if self.signals.get(key):
-            del self.signals[key]
+        if self.signals[key]:
+            self.to_remove.append(key)
 
     def _update(self, game):
         for k in self.signals:
-            v = self.signals[k]
-            signal = v[0]
-            has_been_sent = v[1]
-            if has_been_sent:
-                if pyxel.btnr(k):
-                    self.signals[k] = (signal, False) # reset the signal
-            else:
-                if pyxel.btnp(k):
-                    Signals.send(signal, game)
-                    self.signals[k] = (signal, True) # flag the signal as sent
+            if v := self.signals[k]:
+                signal = v[0]
+                has_been_sent = v[1]
+                
+                if has_been_sent:
+                    if pyxel.btnr(k):
+                        self.signals[k] = (signal, False) # reset the signal
+                else:
+                    if pyxel.btnp(k):
+                        Signals.send(signal, game)
+                        self.signals[k] = (signal, True) # flag the signal as sent
+
+        for k in self.to_remove:
+            if self.signals[k]:
+                del self.signals[k]
+        self.to_remove.clear()
                     
             
 
