@@ -7,8 +7,10 @@ a simple column/row coordinate (`coord`) and `Map` model,
 `Sprite` classes and utilities for animated characters, `HUD` helpers for on-screen status, 
 `FX` utilities for transient visual effects, and a `Signals` mechanism for decoupled event handling.
 
-1) ***Game: the application shell***
 --------------------------------
+
+## Game: the application shell
+
 Start with `Game` — it provides the application lifecycle (initialization,
 update, draw) and a place to register screens or states. A typical pattern is to instantiate `Game` and 
 register a title screen, gameplay screen and a pause/menu screen. 
@@ -42,8 +44,10 @@ game = Game(settings=settings,
 game.start()
 ```
 
-2) ***Signals: decoupled messaging***
 --------------------------------
+
+## Signals: decoupled messaging
+
 `Signals` implements a simple pub/sub mechanism so parts of your game can
 communicate without direct references. For example, the player sprite can emit
 an "item_collected" signal with a payload, any interested HUD or inventory
@@ -96,8 +100,10 @@ Signals.send("another_signal", sender_object, parameter_value)
 
 ```
 
-3) ***coord and Map: grid math and spatial queries***
 -----------------------------------------------
+
+## coord and Map: grid math and spatial queries
+
 Each game represents its world using a square grid of columns and rows.
 Each column/row is represented by a `coord` which makes positioning and moving sprites simple. 
 `coord` also stores an internal `x`/`y` representation including useful properties `x`, `y`, `mid_x`, `mid_y`, `min_x`, `max_x`, 
@@ -129,8 +135,28 @@ def game_update(game: Game):
 
 ```
 
-4) ***Sprite: characters, objects and animations***
+The `Game` object models a lifecycle which is illustrated below:
+- `START` with `game.start()`
+  - send `Signals.GAME.WILL_START`
+  - start `pyxel` engine
+- `UPDATE LOOP`
+  - `USER INPUT`
+    - send `Keyboard` signals as set by `game.keyboard.signal_for_key()`
+    - send mouse signal `Signals.MOUSE.MOVE`, `Signals.MOUSE.DOWN`, `Signals.MOUSE.UP`
+  - `UPDATE LOGIC` If not paused by `game.pause()`
+    - send `Signals.GAME.UPDATE`
+    - update animation frames
+  - `DRAW`
+    - background & tilemap
+    - sprites
+    - HUD
+    - FX
+  
+The Update loop runs once per frame as determined by the FPS setting in `GameSettings.fps.game`.
+
 ---------------------------------------------
+
+## Sprite: characters, objects and animations
 `Sprite` is the primary building block for visible entities. Sprites hold a
 current frame and a dictionary of named `Animation` objects. Use `add_animation`
 to register walk, attack, or idle animations, and `activate_animation` to start
@@ -164,8 +190,62 @@ def game_update(game: Game):
     my_sprite.position.c2.move_by(y=1)
 ```
 
-5) ***HUD & UI: present game state to the player***
+---------------------------------
+
+## User Input
+
+Setting `mouse_enabled = True` in `GameSettings` will cause the game to emit the following signals: `Signals.MOUSE.MOVE`, `Signals.MOUSE.DOWN` and `Signals.MOUSE.UP`. These can be received by connecting to the relevant signals.
+
+For example:
+```
+
+# Remember to set mouse_enabled = True in GameSettings
+
+def mouse_move(game: Game, value: tuple[int, int]):
+    x, y = value[0], value[1]
+    # do something
+
+def mouse_down(game: Game, value: tuple[int, int]):
+    x, y = value[0], value[1]
+    # do something
+
+def mouse_up(game: Game):
+    # do something
+
+Signals.connect(Signals.MOUSE.MOVE, mouse_move)
+Signals.connect(Signals.MOUSE.DOWN, mouse_down)
+Signals.connect(Signals.MOUSE.UP, mouse_up)
+
+```
+
+
+
+Keyboard input can be processed through the `game.keyboard` object. There are two options, either:
+- check keys in your own handler functions
+- register signals to be sent when a key is pressed.
+
+To check the keyboard in your handler functions:
+```
+def game_update(game: Game):
+    if game.keyboard.is_down(pyxel.KEY_Z):
+        # do something
+
+```
+
+To register a signal for a key press event:
+```
+def jump_key_pressed(game: Game):
+    # do something
+
+Signals.connect("z_key_pressed", jump_key_pressed)
+
+def game_start(game: Game):
+    game.keyboard.signal_for_key(pyxel.KEY_Z, "z_key_pressed")
+```
+
 ----------------------------------------
+
+## HUD & UI: present game state to the player
 The `HUD` utilities make it easy to display player health, inventory, scores and
 other overlays. A HUD is typically updated from the same game state that drives
 your logic and drawn last so it appears above world sprites. 
@@ -200,35 +280,9 @@ def game_started(game: Game):
 
 ```
 
-6) ***Mouse Input***
 ---------------------------------
 
-Setting `mouse_enabled = True` in `GameSettings` will cause the game to emit the following signals: `Signals.MOUSE.MOVE`, `Signals.MOUSE.DOWN` and `Signals.MOUSE.UP`. These can be received by connecting to the relevant signals.
-
-For example:
-```
-
-# Remember to set mouse_enabled = True in GameSettings
-
-def mouse_move(game: Game, value: tuple[int, int]):
-    x, y = value[0], value[1]
-    # do something
-
-def mouse_down(game: Game, value: tuple[int, int]):
-    x, y = value[0], value[1]
-    # do something
-
-def mouse_up(game: Game):
-    # do something
-
-Signals.connect(Signals.MOUSE.MOVE, mouse_move)
-Signals.connect(Signals.MOUSE.DOWN, mouse_down)
-Signals.connect(Signals.MOUSE.UP, mouse_up)
-
-```
-
-7) ***FX: short-lived visual effects***
----------------------------------
+## FX: short-lived visual effects
 Use `FX` helpers for transient effects and animated overlays. FX objects are lightweight and intended to be created
 on-the-fly by gameplay events (e.g. an sprite collision spawns a splatter FX instance which lives
 for its duration and then disappears).

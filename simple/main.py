@@ -54,19 +54,20 @@ Signals.connect(Signals.MOUSE.DOWN, mouse_down)
 # Keyboard
 
 def q_key_pressed(game: Game):
-    position = coord.with_center(game.map.center_x, game.map.center_y)
-    STATE.destination = position
+    map = game.map
+    STATE.destination = coord.with_center(map.center_x, map.center_y)
 
     text.set_text("Click again")
 
 Signals.connect("q_key_pressed", q_key_pressed)
-game.keyboard.send_signal_for_key(pyxel.KEY_Q, "q_key_pressed")
+game.keyboard.signal_for_key(pyxel.KEY_Q, "q_key_pressed")
 
 # Game Start and Loop handlers
 
 def game_start(game: Game):
     # Walker
-    position = coord.with_center(game.map.center_x, game.map.center_y)
+    map = game.map
+    position = coord.with_center(map.center_x, map.center_y)
     sprite.set_position(position)
     game.add_sprite(sprite)
 

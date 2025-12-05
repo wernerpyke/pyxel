@@ -36,7 +36,7 @@ class Keyboard:
         """
         return pyxel.btn(key)
     
-    def send_signal_for_key(self, key: int, signal: str):
+    def signal_for_key(self, key: int, signal: str):
         """
         Send a signal when a key is pressed. If the key is pressed down the signal will be emitted once
         and then only emitted again if the key is pressed again.
@@ -58,6 +58,11 @@ class Keyboard:
             self.to_remove.append(key)
 
     def _update(self, game):
+        for k in self.to_remove:
+            if self.signals[k]:
+                del self.signals[k]
+        self.to_remove.clear()
+
         for k in self.signals:
             if v := self.signals[k]:
                 signal = v[0]
@@ -70,11 +75,6 @@ class Keyboard:
                     if pyxel.btnp(k):
                         Signals.send(signal, game)
                         self.signals[k] = (signal, True) # flag the signal as sent
-
-        for k in self.to_remove:
-            if self.signals[k]:
-                del self.signals[k]
-        self.to_remove.clear()
                     
             
 

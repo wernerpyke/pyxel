@@ -147,7 +147,7 @@
   * [Keyboard](#pyke_pyxel._keyboard.Keyboard)
     * [was\_pressed](#pyke_pyxel._keyboard.Keyboard.was_pressed)
     * [is\_down](#pyke_pyxel._keyboard.Keyboard.is_down)
-    * [send\_signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.send_signal_for_key)
+    * [signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.signal_for_key)
     * [remove\_signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.remove_signal_for_key)
 * [math](#pyke_pyxel.math)
   * [RandomChoice](#pyke_pyxel.math.RandomChoice)
@@ -1958,12 +1958,12 @@ Return True if the provided key is pressed and held down this frame.
 
 - `key(int)` - The `pyxel.KEY_*` value of the key to check
 
-<a id="pyke_pyxel._keyboard.Keyboard.send_signal_for_key"></a>
+<a id="pyke_pyxel._keyboard.Keyboard.signal_for_key"></a>
 
-#### send\_signal\_for\_key
+#### signal\_for\_key
 
 ```python
-def send_signal_for_key(key: int, signal: str)
+def signal_for_key(key: int, signal: str)
 ```
 
 Send a signal when a key is pressed. If the key is pressed down the signal will be emitted once
