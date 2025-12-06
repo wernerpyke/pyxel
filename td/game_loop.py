@@ -79,6 +79,7 @@ def _process_update_queue(game: CellAutoGame):
                 UI.show_power_up(game)
             case "ui_hide_power_up":
                 UI.hide_power_up(game)
+                UI.life_meter.set_percentage(STATE.health_percentage)
             case _:
                 log_error(f"game_loop._process_update_queue() unrecognised type:{u.type}")
     update_queue.clear()

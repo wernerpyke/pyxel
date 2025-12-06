@@ -11,13 +11,12 @@ class Signals:
     
     Attributes:
         GAME: Dataclass containing game-level signal constants
-            - WILL_START: Signal emitted before game initialization
-            - UPDATE: Signal emitted on each game update cycle
-            - SPRITE_REMOVED: Signal emitted when a sprite is removed from the game
+            - WILL_START: Signal emitted before game initialization, Game instance is passed as the sender
+            - UPDATE: Signal emitted on each game update cycle, Game instance is passed as the sender
         MOUSE: Dataclass containing mouse input signal constants
-            - DOWN: Signal emitted on mouse button down
+            - DOWN: Signal emitted on mouse button down, Game instance and a tuple (x, y) is passed
             - UP: Signal emitted on mouse button up
-            - MOVE: Signal emitted on mouse movement
+            - MOVE: Signal emitted on mouse movement, Game instance and a tuple (x, y) is passed
         
     RPG-Specific Attributes:   
         PLAYER: Dataclass containing player-related signal constants
@@ -27,12 +26,11 @@ class Signals:
         ENEMY: Dataclass containing enemy-related signal constants
             - BLOCKED: Signal emitted when enemy movement is blocked
     """
-    
+
     @dataclass
     class GAME:
         WILL_START = "game_will_start"
         UPDATE = "game_update"
-        SPRITE_REMOVED = "sprite_removed"
 
     @dataclass
     class MOUSE:
@@ -82,6 +80,9 @@ class Signals:
         """
         signal(name).send(sender, value=value)
 
+
+    # TODO - the below are RPG-specific, move them
+    
     @staticmethod
     def _sprite_added(sprite):
         signal("sprite_added").send(sprite)

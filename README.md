@@ -19,8 +19,9 @@ A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://gith
     - Consider moving to an approach in which a Sprite is flagged for deletion and then deleted in `update()` rather than removed from the array immediately. The current approach might be a cause for weird callback-type bugs.
 - In `pyke_pyxel.sprite.CompoundSprite`:
     - Support animations, would mean caching multiple images (one per frame)
-- In `pyke_pyxel.draw.compound_sprite`:
     - Support horizontal flipping
+- In `pyke_pyxel.fx`
+    - Should FX have its own separate `_update()` so that FX are not updated if `game.pause()`?
 
 
 ---

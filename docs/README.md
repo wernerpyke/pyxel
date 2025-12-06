@@ -71,7 +71,7 @@ def game_update(game: Game):
     # This is called once per frame
     pass
 
-Signals.connect(Signals.GAME.WILL_START, game_star)
+Signals.connect(Signals.GAME.WILL_START, game_start)
 Signals.connect(Signals.GAME.UPDATE, game_update)
 
 game.start()
@@ -136,23 +136,24 @@ def game_update(game: Game):
 ```
 
 The `Game` object models a lifecycle which is illustrated below:
-- `START` with `game.start()`
+- **START** with `game.start()`
   - send `Signals.GAME.WILL_START`
   - start `pyxel` engine
-- `UPDATE LOOP`
-  - `USER INPUT`
+- **UPDATE LOOP** once per frame
+  - **USER INPUT**
     - send `Keyboard` signals as set by `game.keyboard.signal_for_key()`
     - send mouse signal `Signals.MOUSE.MOVE`, `Signals.MOUSE.DOWN`, `Signals.MOUSE.UP`
-  - `UPDATE LOGIC` If not paused by `game.pause()`
+  - **UPDATE LOGIC** unless paused by `game.pause()`
     - send `Signals.GAME.UPDATE`
     - update animation frames
-  - `DRAW`
+  - **DRAW**
     - background & tilemap
     - sprites
     - HUD
     - FX
   
-The Update loop runs once per frame as determined by the FPS setting in `GameSettings.fps.game`.
+The update loop runs once per frame as determined by the FPS setting in `GameSettings.fps.game`.
+If the game is paused via `game.pause()` then user input and draw is still processed but the update signal is not sent and sprite animation frames are not advanced
 
 ---------------------------------------------
 

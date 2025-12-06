@@ -57,6 +57,7 @@ class FX:
         self._effects.clear()
 
     def _draw(self):
+        # TODO - should FX have its own separate _update() so that FX are not updated if game.pause()?
         for effect in self._effects:
             effect._draw()
             if not effect._active:
