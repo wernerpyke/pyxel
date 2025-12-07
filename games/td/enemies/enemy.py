@@ -4,7 +4,7 @@ from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.matrix import Cell
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation, Sprite
-from td.state.stats import STATS
+from games.td.state.stats import STATS
 
 
 class Enemy:

@@ -3,8 +3,8 @@ from pyke_pyxel.drawable import Image, Rect, Button
 from pyke_pyxel.game import Game
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import CompoundSprite
-from td.state import STATE
-from td.state.stats import STATS, WeaponPowerUp
+from games.td.state import STATE
+from games.td.state.stats import STATS, WeaponPowerUp
 from ._text import HUD_font
 
 image = Image(coord(1, 19), cols=20, rows=3, image_index=1)

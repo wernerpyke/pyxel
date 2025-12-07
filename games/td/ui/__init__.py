@@ -1,7 +1,7 @@
 from pyke_pyxel import coord
 from pyke_pyxel.game import Game
 
-from td.state import STATE
+from games.td.state import STATE
 
 from ._ui import _UI
 from . import title_screen

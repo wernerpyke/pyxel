@@ -5,12 +5,12 @@ from pyke_pyxel import coord, log_error
 from pyke_pyxel._base_types import COLOURS
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
-from td.enemies.enemy import Enemy
-from td.enemies.bat import Bat
-from td.enemies.mage import Mage
-from td.enemies.orb import Orb
-from td.enemies.skeleton import Skeleton
-from td.enemies.tank import Tank
+from games.td.enemies.enemy import Enemy
+from games.td.enemies.bat import Bat
+from games.td.enemies.mage import Mage
+from games.td.enemies.orb import Orb
+from games.td.enemies.skeleton import Skeleton
+from games.td.enemies.tank import Tank
 from ._levels import EnemyLevel
 
 launch_locations = [

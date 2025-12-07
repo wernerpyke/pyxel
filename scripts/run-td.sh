@@ -7,7 +7,7 @@ set -euo pipefail
 # Resolve repo root (script is located in scripts/)
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
-TARGET="$REPO_ROOT/td/main.py"
+TARGET="$REPO_ROOT/games/td/main.py"
 
 if [ ! -f "$TARGET" ]; then
   echo "Error: target script not found: $TARGET" >&2

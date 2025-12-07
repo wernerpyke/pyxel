@@ -3,7 +3,7 @@ from typing import Any, Optional
 from pyke_pyxel import COLOURS, coord, log_error, log_debug
 from pyke_pyxel.cell_auto.game import CellAutoGame
 
-from td.state import STATE
+from games.td.state import STATE
 from game_load import load_level
 
 from ui import UI

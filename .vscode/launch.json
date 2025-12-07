@@ -8,21 +8,21 @@
             "name": "Simple",
             "type": "debugpy",
             "request": "launch",
-            "program": "simple/main.py",
+            "program": "games/simple/main.py",
             "console": "integratedTerminal"
         },
         {
             "name": "RPG",
             "type": "debugpy",
             "request": "launch",
-            "program": "rpg/main.py",
+            "program": "games/rpg/main.py",
             "console": "integratedTerminal"
         },
         {
             "name": "TD",
             "type": "debugpy",
             "request": "launch",
-            "program": "td/main.py",
+            "program": "games/td/main.py",
             "console": "integratedTerminal"
         }
     ]

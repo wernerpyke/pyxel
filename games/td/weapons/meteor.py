@@ -4,7 +4,7 @@ import math
 from pyke_pyxel import COLOURS, coord, log_error, log_debug
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
 
-from td.weapons.weapon import Weapon
+from .weapon import Weapon
 
 class Meteor(Weapon):
     def __init__(self, location_id: str, position: coord) -> None:

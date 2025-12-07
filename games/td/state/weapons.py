@@ -6,12 +6,13 @@ from pyke_pyxel import coord, log_debug, log_error
 from pyke_pyxel.cell_auto.matrix import Matrix
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
-from td.state.stats import STATS, WeaponPowerUp
-from td.weapons.bolt import Bolt
-from td.weapons.star import Star
-from td.weapons.fungus import Fungus
-from td.weapons.meteor import Meteor
-from td.weapons.weapon import Weapon
+
+from games.td.state.stats import STATS, WeaponPowerUp
+from games.td.weapons.bolt import Bolt
+from games.td.weapons.star import Star
+from games.td.weapons.fungus import Fungus
+from games.td.weapons.meteor import Meteor
+from games.td.weapons.weapon import Weapon
 
 from .enemies import GameEnemies
 

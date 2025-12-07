@@ -5,8 +5,8 @@ from pyke_pyxel.game import Game
 from pyke_pyxel.sprite import Sprite, TextSprite
 from pyke_pyxel.drawable import Button, ImageFactory, Image
 
-from td.state import STATE
-from td.state.weapons import WeaponLocation
+from games.td.state import STATE
+from games.td.state.weapons import WeaponLocation
 
 from .life_meter import LifeMeter
 from . import title_screen

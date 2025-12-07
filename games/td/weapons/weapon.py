@@ -1,6 +1,6 @@
 from pyke_pyxel import coord, log_error, log_debug
 from pyke_pyxel.cell_auto.matrix import Cell, Matrix
-from td.state.stats import STATS
+from games.td.state.stats import STATS
 
 
 class Weapon:
