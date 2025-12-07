@@ -1,6 +1,6 @@
 # 🕹️ Pixel-art Games with Pyxel (and pixel art)
 
-A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://github.com/kitao/pyxel) with two example games.
+A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://github.com/kitao/pyxel) with example games.
 
 ---
 
@@ -13,9 +13,9 @@ A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://gith
 
 ---
 
-<img src="docs/screenshots/td1.png" width="350">
-<img src="docs/screenshots/td2.png" width="350">
-<img src="docs/screenshots/td3.png" width="350">
+| Maw | Gate | of Hell |
+| :--- | :--- | :--- |
+| <img src="docs/screenshots/td1.png" width="240"> | <img src="docs/screenshots/td2.png" width="240"> |  <img src="docs/screenshots/td3.png" width="240"> |
 
 ---
 
