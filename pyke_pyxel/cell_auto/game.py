@@ -32,7 +32,7 @@ class CellAutoGame(Game):
 
     # Lifecycle methods
 
-    def draw(self):
+    def _draw(self):
         super()._draw_background()
 
         self._matrix._draw()

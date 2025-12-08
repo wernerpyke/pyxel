@@ -96,7 +96,7 @@ class Game:
             Signals.GAME.WILL_START: Sent before the game loop starts.
         """
         Signals.send(Signals.GAME.WILL_START, self)
-        pyxel.run(self.update, self.draw)
+        pyxel.run(self._update, self._draw)
 
     def clear_all(self):
         """Clear all sprites, TileMap, HUD and FX"""
@@ -247,7 +247,7 @@ class Game:
 
     # ===== PYXEL =====
 
-    def update(self):
+    def _update(self):
         """
         Pyxel lifecycle handler. Updates the game state for each frame.
 
@@ -257,7 +257,6 @@ class Game:
             - MOUSE.DOWN: Emitted on left mouse button press (if mouse_enabled).
             - MOUSE.UP: Emitted on left mouse button release (if mouse_enabled).
         """
-
         # keyboard
         self._keyboard._update(self)
 
@@ -275,12 +274,13 @@ class Game:
             if pyxel.btnr(pyxel.MOUSE_BUTTON_LEFT):
                 Signals.send(Signals.MOUSE.UP, self)
 
-        if not self._paused:
-            Signals.send(Signals.GAME.UPDATE, self)
-        else:
+        if self._paused:
             return
+        
+        Signals.send(Signals.GAME.UPDATE, self)
+        self._update_animations()
 
-        # Sprite Animations
+    def _update_animations(self):
         if self._animation_tick < self._frames_per_animation_tick:
             self._animation_tick += 1
         else:
@@ -290,7 +290,7 @@ class Game:
                     sprite._update_frame()
                 # TODO support CompoundSprite animations?
 
-    def draw(self):    
+    def _draw(self):    
         """
         Pyxel lifecycle handler. Render the current frame by drawing all visual components in order.
         Draws the background, sprites, HUD, and active visual effects.

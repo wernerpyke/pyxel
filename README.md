@@ -7,9 +7,10 @@ A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://gith
 ## 🎯 Project Structure
 - [pyke_pyxel](pyke_pyxel/): a semi-reusable, Sprite- and Map-based game engine on top of Pyxel
     - with an [overview](docs/README.md) and basic [API Documentation](docs/pyke_pyxel_API.md)
-- [simple](games/simple/): hello world
-- [td](games/td/): a tower defence game
-- [rpg](games/rpg/): prototype for a room-based RPG
+- `games`
+  - [simple](games/simple/): hello world
+  - [td](games/td/): "Maw: Gate of Hell": a tower defence game
+  - [rpg](games/rpg/): prototype for a room-based RPG
 
 ---
 
@@ -28,7 +29,6 @@ A simple Sprite- and Map-based Python game engine on top of [Pyxel](https://gith
     - Support horizontal flipping
 - In `pyke_pyxel.fx`
     - Should FX have its own separate `_update()` so that FX are not updated if `game.pause()`?
-
 
 ---
 

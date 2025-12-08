@@ -1,4 +1,6 @@
 import math
+import enum
+
 from dataclasses import dataclass
 from typing import Optional
 
@@ -35,8 +37,8 @@ class GameSettings:
             cls._instance = GameSettings()
         return cls._instance
 
-@dataclass
-class DIRECTION:
+
+class DIRECTION(enum.Enum):
     UP = "up"
     DOWN = "down"
     LEFT = "left"
@@ -201,7 +203,7 @@ class coord:
         # to avoid prior rounding of _col/_row
         return coord.with_xy(self._x, self._y, self.size)
 
-    def clone_by(self, x: int, y: int, direction: Optional[str] = None):
+    def clone_by(self, x: int, y: int, direction: DIRECTION|None = None):
         """Return a new coord offset by (x, y) pixels from this one.
 
         When a `direction` is provided ("up", "down", "left", "right")
@@ -212,16 +214,16 @@ class coord:
 
         cloned = coord.with_xy(self._x + x, self._y + y, self.size)
         match direction:
-            case "up":
+            case DIRECTION.UP:
                 cloned._col = math.floor(self.mid_x / self.size) + 1
                 cloned._row = math.floor(cloned.y / self.size) + 1
-            case "down":
+            case DIRECTION.DOWN:
                 cloned._col = math.floor(self.mid_x / self.size) + 1
                 cloned._row = math.floor((cloned.y + self.size) / self.size) + 1
-            case "left":
+            case DIRECTION.LEFT:
                 cloned._col = math.floor(cloned.x / self.size) + 1
                 cloned._row = math.floor(self.mid_y / self.size) + 1
-            case "right":
+            case DIRECTION.RIGHT:
                 cloned._col = math.floor((cloned.x + self.size) / self.size) + 1
                 cloned._row = math.floor(self.mid_y / self.size) + 1
             case _:

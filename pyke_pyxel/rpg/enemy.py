@@ -8,8 +8,8 @@ class Enemy(MovableActor):
     def __init__(self, sprite: MovableSprite):
         super().__init__(sprite)
 
-    def move(self, direction: str, map: Map):
-        if not super().move(direction, map):
-            sprite = map.sprite_at(self._moveTo)
+    def _move(self, map: Map):
+        if not super()._move(map):
+            sprite = map.sprite_at(self._move_to)
             if sprite:
                 Signals.send_with(Signals.ENEMY.BLOCKED, self, sprite)

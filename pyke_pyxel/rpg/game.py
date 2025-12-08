@@ -1,15 +1,13 @@
-from typing import Callable, Optional
-
-import pyxel
+from typing import Callable
 
 from pyke_pyxel.rpg.actor import Actor
 from pyke_pyxel.rpg.enemy import Enemy
 
-from pyke_pyxel import DIRECTION, log_debug, GameSettings
+from pyke_pyxel import log_debug, GameSettings
 from pyke_pyxel.game import Game
 from .player import Player
 from pyke_pyxel.signals import Signals
-from pyke_pyxel.sprite import Sprite, MovableSprite
+from pyke_pyxel.sprite import MovableSprite
 from .room import Room
 
 class RPGGame(Game):
@@ -17,11 +15,6 @@ class RPGGame(Game):
     def __init__(self, settings: GameSettings, title: str, resources: str):
         """
         Specialised sub-class of `pyke_pyxel.Game` which adds basic room- and actor-based RPG mechanics.
-
-        Keyboard:
-        - Direction arrows: movement up, down, left, right
-        - Z-key: player attack (e.g. projectile)
-        - X-key: player interaction (e.g. open door)
         
         Attributes:
             player (Player): The player character. Use set_player() to assign the player instance.
@@ -37,7 +30,6 @@ class RPGGame(Game):
         self._player: Player
         self._room = Room(self._map)
 
-        self._movement_tick: bool = False
         self._actors: list[Actor] = []
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
@@ -54,36 +46,20 @@ class RPGGame(Game):
 
         return self._player
     
-    def update(self):
-        if self._paused:
-            super().update()
-            return
+    def _update(self):
 
         # Keyboard
-        if pyxel.btnp(pyxel.KEY_X):
-            self._player.interact(self._map)
-        elif pyxel.btnp(pyxel.KEY_Z):
-            Signals.send(Signals.PLAYER.ATTACK, self._player)
-        
-        # movement
-        self._movement_tick = not self._movement_tick
+        self._keyboard._update(self)
+
+        if self._paused:
+            return
+
+        Signals.send(Signals.GAME.UPDATE, self)
 
         for actor in self._actors:
-            actor._update(self._map, self._movement_tick)
+            actor._update(self._map)
 
-        if self._movement_tick:
-            if pyxel.btn(pyxel.KEY_UP):
-                self._player.move(DIRECTION.UP, self._map)
-            elif pyxel.btn(pyxel.KEY_DOWN):
-                self._player.move(DIRECTION.DOWN, self._map)
-            elif pyxel.btn(pyxel.KEY_LEFT):
-                self._player.move(DIRECTION.LEFT, self._map)
-            elif pyxel.btn(pyxel.KEY_RIGHT):
-                self._player.move(DIRECTION.RIGHT, self._map)
-            else:
-                self._player.stop_moving()
-
-        super().update()
+        self._update_animations()
 
     def clear_all(self):
         super().clear_all()
@@ -91,6 +67,7 @@ class RPGGame(Game):
         self.player = None # type: ignore
 
     def _enemy_added(self, enemy: Enemy):
+        enemy._id = self._actors.__len__()
         self._actors.append(enemy)
 
     def _enemy_removed(self, enemy: Enemy):

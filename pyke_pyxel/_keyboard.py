@@ -27,6 +27,15 @@ class Keyboard:
         """
         return pyxel.btnp(key)
     
+    def was_released(self, key: int) -> bool:
+        """
+        Return True if the provided key was pressed down this frame.
+        
+        Args:
+            key(int): The `pyxel.KEY_*` value of the key to check
+        """
+        return pyxel.btnr(key)
+    
     def is_down(self, key: int) -> bool:
         """
         Return True if the provided key is pressed and held down this frame.

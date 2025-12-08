@@ -38,17 +38,6 @@ class Signals:
         UP = "mouse_up"
         MOVE = "mouse_move"
 
-    # TODO - the below are RPG-specific signals, move them
-    @dataclass
-    class PLAYER:
-        BLOCKED = "player_blocked"
-        INTERACT_OPENABLE = "player_interact_openable"
-        ATTACK = "attack"
-
-    @dataclass
-    class ENEMY:
-        BLOCKED = "enemy_blocked"
-
     @staticmethod
     def connect(name: str, listener: Callable):
         """Connect a listener callback to a named signal"""
@@ -81,8 +70,6 @@ class Signals:
         signal(name).send(sender, value=value)
 
 
-    # TODO - the below are RPG-specific, move them
-    
     @staticmethod
     def _sprite_added(sprite):
         signal("sprite_added").send(sprite)
@@ -91,12 +78,12 @@ class Signals:
     def _sprite_removed(sprite):
         signal("sprite_removed").send(sprite)
 
+
     # TODO - the below are RPG-specific signals, move them
-    @staticmethod
-    def _enemy_added(sprite):
-        signal("enemy_added").send(sprite)
+    @dataclass
+    class PLAYER:
+        BLOCKED = "player_blocked"
 
-    @staticmethod
-    def _enemy_removed(sprite):
-        signal("enemy_removed").send(sprite)
-
+    @dataclass
+    class ENEMY:
+        BLOCKED = "enemy_blocked"

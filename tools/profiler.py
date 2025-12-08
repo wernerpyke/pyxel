@@ -18,12 +18,12 @@ class ProfileGame(CellAutoGame):
     def start(self):
         super().start()
 
-    def update(self):
+    def _update(self):
         # time.sleep(0.0001)  # Simulate a small delay
-        super().update()
+        super()._update()
 
-    def draw(self):
-        super().draw()
+    def _draw(self):
+        super()._draw()
         self._profile()
         
     def _profile(self):

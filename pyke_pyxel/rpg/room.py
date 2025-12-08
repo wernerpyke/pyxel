@@ -5,6 +5,8 @@ from pyke_pyxel.sprite import Sprite, OpenableSprite, MovableSprite
 from pyke_pyxel.signals import Signals
 from .enemy import Enemy
 
+from . import _signals
+
 class Room:
 
     def __init__(self, map: Map) -> None:
@@ -37,6 +39,6 @@ class Room:
         enemy.set_position(col, row)
 
         Signals._sprite_added(sprite)
-        Signals._enemy_added(enemy)
+        _signals._enemy_added(enemy)
 
         return enemy

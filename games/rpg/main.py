@@ -10,15 +10,18 @@ import config
 # ==================================
 
 Signals.connect(Signals.GAME.WILL_START, game_loop.game_started)
+Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
 
 Signals.connect(Signals.PLAYER.BLOCKED, game_loop.player_blocked_by)
-Signals.connect(Signals.PLAYER.INTERACT_OPENABLE, game_loop.player_interacts_with)
-Signals.connect(Signals.PLAYER.ATTACK, game_loop.player_attacks)
 
 Signals.connect(Signals.ENEMY.BLOCKED, game_loop.enemy_blocked_by)
 
 settings = GameSettings()
 settings.debug = True
+
+settings.fps.game = 30
+settings.fps.animation = 8
+
 settings.size.window = 160
 
 game = RPGGame(
