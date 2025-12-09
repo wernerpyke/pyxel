@@ -4,7 +4,7 @@ import pyxel
 from pyke_pyxel import log_info, DIRECTION
 from pyke_pyxel.map import Map
 from pyke_pyxel.sprite import Sprite, OpenableSprite
-from pyke_pyxel.rpg import RPGGame, Enemy
+from pyke_pyxel.rpg import RPGGame, Enemy, Player
 from config import PROJECTILE, ENEMY
 
 # -- ======  Helper Functions ======= --
@@ -29,7 +29,7 @@ def game_update(game: RPGGame):
                player_interacts_with(openable, game.map)
             
      elif keyboard.was_pressed(pyxel.KEY_Z):
-           player.launch_projectile(PROJECTILE.FIREBALL, 60, player.current_direction)
+          player.launch_projectile(PROJECTILE.FIREBALL, 60, player.facing_dir)
 
      # TODO - move the below to a default helper is pyke_pyxel.rpg
      if keyboard.was_pressed(pyxel.KEY_UP):
@@ -49,8 +49,11 @@ def game_update(game: RPGGame):
      elif keyboard.was_released(pyxel.KEY_RIGHT):
           player.stop_moving()
 
-def player_blocked_by(sprite: Sprite):
-    log_info(f"PLAYER BLOCKED BY {sprite.name} AT {sprite.position}")
+def player_blocked_by(player: Player, value):
+     if value:
+          log_info(f"PLAYER BLOCKED BY {value.name} AT {value.position}")
+     else:
+          log_info("PLAYER BLOCKED BY EDGE")
 
 def player_interacts_with(sprite: OpenableSprite, map: Map):     
      if sprite.is_open: 

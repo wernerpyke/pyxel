@@ -42,11 +42,27 @@
     * [hud](#pyke_pyxel.game.Game.hud)
     * [fx](#pyke_pyxel.game.Game.fx)
     * [keyboard](#pyke_pyxel.game.Game.keyboard)
-    * [update](#pyke_pyxel.game.Game.update)
-    * [draw](#pyke_pyxel.game.Game.draw)
 * [game](#pyke_pyxel.rpg.game)
   * [RPGGame](#pyke_pyxel.rpg.game.RPGGame)
     * [\_\_init\_\_](#pyke_pyxel.rpg.game.RPGGame.__init__)
+    * [set\_player](#pyke_pyxel.rpg.game.RPGGame.set_player)
+    * [clear\_all](#pyke_pyxel.rpg.game.RPGGame.clear_all)
+    * [player](#pyke_pyxel.rpg.game.RPGGame.player)
+    * [room](#pyke_pyxel.rpg.game.RPGGame.room)
+* [player](#pyke_pyxel.rpg.player)
+  * [Player](#pyke_pyxel.rpg.player.Player)
+    * [adjacent\_openable](#pyke_pyxel.rpg.player.Player.adjacent_openable)
+* [actor](#pyke_pyxel.rpg.actor)
+  * [MovableActor](#pyke_pyxel.rpg.actor.MovableActor)
+    * [set\_position](#pyke_pyxel.rpg.actor.MovableActor.set_position)
+    * [start\_moving](#pyke_pyxel.rpg.actor.MovableActor.start_moving)
+    * [stop\_moving](#pyke_pyxel.rpg.actor.MovableActor.stop_moving)
+    * [is\_moving](#pyke_pyxel.rpg.actor.MovableActor.is_moving)
+* [room](#pyke_pyxel.rpg.room)
+  * [Room](#pyke_pyxel.rpg.room.Room)
+    * [add\_wall](#pyke_pyxel.rpg.room.Room.add_wall)
+    * [add\_door](#pyke_pyxel.rpg.room.Room.add_door)
+    * [add\_enemy](#pyke_pyxel.rpg.room.Room.add_enemy)
 * [map](#pyke_pyxel.map)
   * [Map](#pyke_pyxel.map.Map)
     * [sprite\_can\_move\_to](#pyke_pyxel.map.Map.sprite_can_move_to)
@@ -102,16 +118,31 @@
     * [\_\_init\_\_](#pyke_pyxel.cell_auto.game.CellAutoGame.__init__)
 * [\_rpg\_sprites](#pyke_pyxel.sprite._rpg_sprites)
   * [OpenableSprite](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite)
+    * [\_\_init\_\_](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite.__init__)
+    * [close](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite.close)
+    * [open](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite.open)
+    * [is\_closed](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite.is_closed)
+    * [is\_open](#pyke_pyxel.sprite._rpg_sprites.OpenableSprite.is_open)
   * [MovableSprite](#pyke_pyxel.sprite._rpg_sprites.MovableSprite)
+    * [\_\_init\_\_](#pyke_pyxel.sprite._rpg_sprites.MovableSprite.__init__)
+    * [set\_up\_animation](#pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_up_animation)
+    * [set\_down\_animation](#pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_down_animation)
+    * [set\_left\_animation](#pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_left_animation)
+    * [set\_right\_animation](#pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_right_animation)
 * [\_sprite](#pyke_pyxel.sprite._sprite)
   * [Sprite](#pyke_pyxel.sprite._sprite.Sprite)
+    * [\_\_init\_\_](#pyke_pyxel.sprite._sprite.Sprite.__init__)
     * [add\_animation](#pyke_pyxel.sprite._sprite.Sprite.add_animation)
     * [activate\_animation](#pyke_pyxel.sprite._sprite.Sprite.activate_animation)
     * [deactivate\_animations](#pyke_pyxel.sprite._sprite.Sprite.deactivate_animations)
+    * [link\_sprite](#pyke_pyxel.sprite._sprite.Sprite.link_sprite)
+    * [unlink\_sprite](#pyke_pyxel.sprite._sprite.Sprite.unlink_sprite)
     * [set\_position](#pyke_pyxel.sprite._sprite.Sprite.set_position)
+    * [set\_rotation](#pyke_pyxel.sprite._sprite.Sprite.set_rotation)
     * [position](#pyke_pyxel.sprite._sprite.Sprite.position)
     * [width](#pyke_pyxel.sprite._sprite.Sprite.width)
     * [height](#pyke_pyxel.sprite._sprite.Sprite.height)
+    * [rotation](#pyke_pyxel.sprite._sprite.Sprite.rotation)
 * [\_compound\_sprite](#pyke_pyxel.sprite._compound_sprite)
   * [CompoundSprite](#pyke_pyxel.sprite._compound_sprite.CompoundSprite)
     * [fill](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill)
@@ -146,6 +177,7 @@
 * [\_keyboard](#pyke_pyxel._keyboard)
   * [Keyboard](#pyke_pyxel._keyboard.Keyboard)
     * [was\_pressed](#pyke_pyxel._keyboard.Keyboard.was_pressed)
+    * [was\_released](#pyke_pyxel._keyboard.Keyboard.was_released)
     * [is\_down](#pyke_pyxel._keyboard.Keyboard.is_down)
     * [signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.signal_for_key)
     * [remove\_signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.remove_signal_for_key)
@@ -175,6 +207,7 @@
     * [is\_left\_of](#pyke_pyxel._base_types.coord.is_left_of)
     * [is\_right\_of](#pyke_pyxel._base_types.coord.is_right_of)
     * [contains](#pyke_pyxel._base_types.coord.contains)
+    * [diff](#pyke_pyxel._base_types.coord.diff)
     * [move\_by](#pyke_pyxel._base_types.coord.move_by)
     * [clone](#pyke_pyxel._base_types.coord.clone)
     * [clone\_by](#pyke_pyxel._base_types.coord.clone_by)
@@ -209,13 +242,12 @@ to connect listeners and send signals with optional parameters.
 **Attributes**:
 
 - `GAME` - Dataclass containing game-level signal constants
-  - WILL_START: Signal emitted before game initialization
-  - UPDATE: Signal emitted on each game update cycle
-  - SPRITE_REMOVED: Signal emitted when a sprite is removed from the game
+  - WILL_START: Signal emitted before game initialization, Game instance is passed as the sender
+  - UPDATE: Signal emitted on each game update cycle, Game instance is passed as the sender
 - `MOUSE` - Dataclass containing mouse input signal constants
-  - DOWN: Signal emitted on mouse button down
+  - DOWN: Signal emitted on mouse button down, Game instance and a tuple (x, y) is passed
   - UP: Signal emitted on mouse button up
-  - MOVE: Signal emitted on mouse movement
+  - MOVE: Signal emitted on mouse movement, Game instance and a tuple (x, y) is passed
   
   RPG-Specific Attributes:
 - `PLAYER` - Dataclass containing player-related signal constants
@@ -732,33 +764,6 @@ def keyboard() -> Keyboard
 
 Returns the `Keyboard` instance for this game
 
-<a id="pyke_pyxel.game.Game.update"></a>
-
-#### update
-
-```python
-def update()
-```
-
-Pyxel lifecycle handler. Updates the game state for each frame.
-
-Signals:
-    - GAME.UPDATE: Sent every update.
-    - MOUSE.MOVE: Emitted when mouse position changes (if mouse_enabled).
-    - MOUSE.DOWN: Emitted on left mouse button press (if mouse_enabled).
-    - MOUSE.UP: Emitted on left mouse button release (if mouse_enabled).
-
-<a id="pyke_pyxel.game.Game.draw"></a>
-
-#### draw
-
-```python
-def draw()
-```
-
-Pyxel lifecycle handler. Render the current frame by drawing all visual components in order.
-Draws the background, sprites, HUD, and active visual effects.
-
 <a id="pyke_pyxel.rpg.game"></a>
 
 # game
@@ -781,11 +786,6 @@ def __init__(settings: GameSettings, title: str, resources: str)
 
 Specialised sub-class of `pyke_pyxel.Game` which adds basic room- and actor-based RPG mechanics.
 
-Keyboard:
-- Direction arrows: movement up, down, left, right
-- Z-key: player attack (e.g. projectile)
-- X-key: player interaction (e.g. open door)
-
 **Attributes**:
 
 - `player` _Player_ - The player character. Use set_player() to assign the player instance.
@@ -797,6 +797,200 @@ Keyboard:
 - `settings` _GameSettings_ - The game settings configuration.
 - `title` _str_ - The title of the game window.
 - `resources` _str_ - The path to the resources directory.
+
+<a id="pyke_pyxel.rpg.game.RPGGame.set_player"></a>
+
+#### set\_player
+
+```python
+def set_player(sprite: MovableSprite|Callable[[], MovableSprite]) -> Player
+```
+
+Assigns a player sprite to the game, creating a `Player` instance.
+
+**Arguments**:
+
+- `sprite` _MovableSprite | Callable[[], MovableSprite]_ - The sprite
+  (or a callable that returns a sprite) representing the player.
+  
+
+**Returns**:
+
+- `Player` - The initialized `Player` instance.
+
+<a id="pyke_pyxel.rpg.game.RPGGame.clear_all"></a>
+
+#### clear\_all
+
+```python
+def clear_all()
+```
+
+Clear all sprites, TileMap, HUD and FX
+
+<a id="pyke_pyxel.rpg.game.RPGGame.player"></a>
+
+#### player
+
+```python
+@property
+def player() -> Player
+```
+
+Returns the `Player` instance for this game
+
+<a id="pyke_pyxel.rpg.game.RPGGame.room"></a>
+
+#### room
+
+```python
+@property
+def room() -> Room
+```
+
+Returns the `Room` instance for this game
+
+<a id="pyke_pyxel.rpg.player"></a>
+
+# player
+
+<a id="pyke_pyxel.rpg.player.Player"></a>
+
+## Player Objects
+
+```python
+class Player(MovableActor)
+```
+
+<a id="pyke_pyxel.rpg.player.Player.adjacent_openable"></a>
+
+#### adjacent\_openable
+
+```python
+def adjacent_openable(map: Map) -> OpenableSprite|None
+```
+
+Find an `OpenableSprite` adjacent to the player's current position
+
+<a id="pyke_pyxel.rpg.actor"></a>
+
+# actor
+
+<a id="pyke_pyxel.rpg.actor.MovableActor"></a>
+
+## MovableActor Objects
+
+```python
+class MovableActor(Actor)
+```
+
+<a id="pyke_pyxel.rpg.actor.MovableActor.set_position"></a>
+
+#### set\_position
+
+```python
+def set_position(col: int, row: int)
+```
+
+Set the position of the actor
+
+<a id="pyke_pyxel.rpg.actor.MovableActor.start_moving"></a>
+
+#### start\_moving
+
+```python
+def start_moving(direction: DIRECTION)
+```
+
+Start moving in the provided direction
+
+<a id="pyke_pyxel.rpg.actor.MovableActor.stop_moving"></a>
+
+#### stop\_moving
+
+```python
+def stop_moving()
+```
+
+Stop moving
+
+<a id="pyke_pyxel.rpg.actor.MovableActor.is_moving"></a>
+
+#### is\_moving
+
+```python
+@property
+def is_moving() -> bool
+```
+
+Return True if the actor is moving
+
+<a id="pyke_pyxel.rpg.room"></a>
+
+# room
+
+<a id="pyke_pyxel.rpg.room.Room"></a>
+
+## Room Objects
+
+```python
+class Room()
+```
+
+<a id="pyke_pyxel.rpg.room.Room.add_wall"></a>
+
+#### add\_wall
+
+```python
+def add_wall(sprite: Sprite|Callable[[], Sprite], col: int, row: int)
+```
+
+Add a wall to the map. The related map position will be marked as blocked.
+
+
+**Arguments**:
+
+- `sprite` _Sprite | Callable[[], Sprite]_ - The sprite (or a callable that returns a sprite) representing the wall.
+- `col` _int_ - The column position of the wall
+- `row` _int_ - The row position of the wall
+
+<a id="pyke_pyxel.rpg.room.Room.add_door"></a>
+
+#### add\_door
+
+```python
+def add_door(sprite: OpenableSprite|Callable[[], OpenableSprite], col: int, row: int, closed: bool = True)
+```
+
+Add an openable door to the map. The related map position will be marked as either open or closed.
+
+**Arguments**:
+
+- `sprite` _OpenableSprite | Callable[[], OpenableSprite]_ - The sprite (or a callable that returns a sprite) representing the door.
+- `col` _int_ - The column position of the door
+- `row` _int_ - The row position of the door
+- `closed` _bool_ - whether the door should be closed or open by default
+
+<a id="pyke_pyxel.rpg.room.Room.add_enemy"></a>
+
+#### add\_enemy
+
+```python
+def add_enemy(sprite: MovableSprite|Callable[[], MovableSprite], col: int, row: int) -> Enemy
+```
+
+Add an enemy to the map.
+
+**Arguments**:
+
+- `sprite` _MovableSprite | Callable[[], MovableSprite]_ - The sprite (or a callable that returns a sprite) representing the enemy.
+- `col` _int_ - The column position of the enemy
+- `row` _int_ - The row position of the enemy
+  
+
+**Returns**:
+
+- `Enemy` - The initialized `Enemy` instance.
 
 <a id="pyke_pyxel.map"></a>
 
@@ -1427,6 +1621,62 @@ A Sprite that supports open/close states (e.g., doors, chests).
 The OpenableSprite exposes simple open/close methods and manages an
 internal status value that determines which frame is shown.
 
+<a id="pyke_pyxel.sprite._rpg_sprites.OpenableSprite.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(name: str, open_frame: coord, closed_frame: coord)
+```
+
+**Arguments**:
+
+- `name` _str_ - the logical name of the sprite
+- `open_frame` _coord_ - The frame to use when the sprite is in its open state.
+- `closed_frame` _coord_ - The frame to use when the sprite is in its closed state.
+
+<a id="pyke_pyxel.sprite._rpg_sprites.OpenableSprite.close"></a>
+
+#### close
+
+```python
+def close()
+```
+
+Close the sprite
+
+<a id="pyke_pyxel.sprite._rpg_sprites.OpenableSprite.open"></a>
+
+#### open
+
+```python
+def open()
+```
+
+Open the sprite
+
+<a id="pyke_pyxel.sprite._rpg_sprites.OpenableSprite.is_closed"></a>
+
+#### is\_closed
+
+```python
+@property
+def is_closed() -> bool
+```
+
+Return True if the sprite is closed
+
+<a id="pyke_pyxel.sprite._rpg_sprites.OpenableSprite.is_open"></a>
+
+#### is\_open
+
+```python
+@property
+def is_open() -> bool
+```
+
+Return True if the sprite is open
+
 <a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite"></a>
 
 ## MovableSprite Objects
@@ -1439,6 +1689,63 @@ Sprite with movement-related configuration and convenience setters.
 
 MovableSprite stores a movement speed and provides helper methods to
 create simple directional animations (up/down/left/right).
+
+<a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(name: str, default_frame: coord, speed_px_per_second: int, cols: int = 1, rows: int = 1, resource_image_index: int = 0)
+```
+
+**Arguments**:
+
+- `name` _str_ - Logical name for the sprite.
+- `default_frame` _coord_ - The frame to use when no animation is active (idle frame).
+- `speed_px_per_second` _int_ - The speed of the sprite's movements expressed as pixels per second
+- `cols` _int_ - Width in tiles for framed sprites (used when advancing frames).
+- `rows` _int_ - Height in tiles for framed sprites (used when advancing frames).
+- `resource_image_index` _int_ - Index of the image resource (if multiple images are used).
+
+<a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_up_animation"></a>
+
+#### set\_up\_animation
+
+```python
+def set_up_animation(animation: Animation)
+```
+
+Set the animation to be used when the sprite moves UP
+
+<a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_down_animation"></a>
+
+#### set\_down\_animation
+
+```python
+def set_down_animation(animation: Animation)
+```
+
+Set the animation to be used when the sprite moves DOWN
+
+<a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_left_animation"></a>
+
+#### set\_left\_animation
+
+```python
+def set_left_animation(animation: Animation)
+```
+
+Set the animation to be used when the sprite moves LEFT
+
+<a id="pyke_pyxel.sprite._rpg_sprites.MovableSprite.set_right_animation"></a>
+
+#### set\_right\_animation
+
+```python
+def set_right_animation(animation: Animation)
+```
+
+Set the animation to be used when the sprite moves RIGHT
 
 <a id="pyke_pyxel.sprite._sprite"></a>
 
@@ -1459,17 +1766,21 @@ to draw, and a position. Animations may be started, paused, resumed and
 looped. Sprites are lightweight containers for animation state and drawing
 metadata.
 
+<a id="pyke_pyxel.sprite._sprite.Sprite.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int = 0)
+```
+
 **Arguments**:
 
 - `name` _str_ - Logical name for the sprite.
-- `default_frame` _coord_ - The frame to use when no animation is active
-  (idle frame).
-- `cols` _int_ - Width in tiles for framed sprites (used when advancing
-  frames).
-- `rows` _int_ - Height in tiles for framed sprites (used when advancing
-  frames).
-- `resource_image_index` _int_ - Index of the image resource (if multiple
-  images are used).
+- `default_frame` _coord_ - The frame to use when no animation is active (idle frame).
+- `cols` _int_ - Width in tiles for framed sprites (used when advancing frames).
+- `rows` _int_ - Height in tiles for framed sprites (used when advancing frames).
+- `resource_image_index` _int_ - Index of the image resource (if multiple images are used).
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.add_animation"></a>
 
@@ -1511,6 +1822,35 @@ def deactivate_animations()
 
 Stop any active animation and reset flip state.
 
+<a id="pyke_pyxel.sprite._sprite.Sprite.link_sprite"></a>
+
+#### link\_sprite
+
+```python
+def link_sprite(sprite: "Sprite")
+```
+
+Link another sprite to this sprite.
+The linked sprite's position will be updated whenever this sprite's position is updated.
+
+**Arguments**:
+
+- `sprite` _Sprite_ - The sprite to link.
+
+<a id="pyke_pyxel.sprite._sprite.Sprite.unlink_sprite"></a>
+
+#### unlink\_sprite
+
+```python
+def unlink_sprite(sprite: "Sprite")
+```
+
+Unlink a previously linked sprite.
+
+**Arguments**:
+
+- `sprite` _Sprite_ - The sprite to unlink.
+
 <a id="pyke_pyxel.sprite._sprite.Sprite.set_position"></a>
 
 #### set\_position
@@ -1524,6 +1864,16 @@ Sets the position of the sprite.
 **Arguments**:
 
 - `position` _coord_ - The new coordinate for the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._sprite.Sprite.set_rotation"></a>
+
+#### set\_rotation
+
+```python
+def set_rotation(rotation: float)
+```
+
+Sets the rotation (in degrees) of the sprite.
 
 <a id="pyke_pyxel.sprite._sprite.Sprite.position"></a>
 
@@ -1561,6 +1911,17 @@ def height() -> int
 ```
 
 Returns the height of the sprite in pixels.
+
+<a id="pyke_pyxel.sprite._sprite.Sprite.rotation"></a>
+
+#### rotation
+
+```python
+@property
+def rotation() -> float|None
+```
+
+Returns the rotation of the sprite in degrees.
 
 <a id="pyke_pyxel.sprite._compound_sprite"></a>
 
@@ -1700,7 +2061,7 @@ An animation for a Sprite.
 #### \_\_init\_\_
 
 ```python
-def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None)
+def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None, rotate: float|None = None)
 ```
 
 **Arguments**:
@@ -1726,7 +2087,7 @@ Convenience class to create multiple `Animation` instances with the same number 
 #### \_\_init\_\_
 
 ```python
-def __init__(frames: int, fps: int|None = None)
+def __init__(frames: int, fps: int|None = None, loop: bool = True)
 ```
 
 **Arguments**:
@@ -1739,7 +2100,7 @@ def __init__(frames: int, fps: int|None = None)
 #### at
 
 ```python
-def at(position: coord, loop: bool = True, flip: bool = False) -> Animation
+def at(position: coord, flip: bool = False, loop: bool|None = None, rotate: float|None = None) -> Animation
 ```
 
 Create an `Animation` instance at the given position.
@@ -1749,6 +2110,7 @@ Create an `Animation` instance at the given position.
 - `position` _coord_ - The `coord` of the top-left corner of the animation's graphic on the Pyxel resource sheet.
 - `loop` _bool_ - Whether the animation should loop
 - `flip` _bool_ - Whether the animation image should be horizontally flipped
+- `rotate` _float_ - The number of degrees to rotate the sprite
 
 <a id="pyke_pyxel.sprite._text_sprite"></a>
 
@@ -1936,6 +2298,20 @@ For example:
 
 ```python
 def was_pressed(key: int) -> bool
+```
+
+Return True if the provided key was pressed down this frame.
+
+**Arguments**:
+
+- `key(int)` - The `pyxel.KEY_*` value of the key to check
+
+<a id="pyke_pyxel._keyboard.Keyboard.was_released"></a>
+
+#### was\_released
+
+```python
+def was_released(key: int) -> bool
 ```
 
 Return True if the provided key was pressed down this frame.
@@ -2287,6 +2663,25 @@ Return True if the pixel (x, y) is within this tile's bounding box.
 
 The bounding box is inclusive on both edges (min <= value <= max).
 
+<a id="pyke_pyxel._base_types.coord.diff"></a>
+
+#### diff
+
+```python
+def diff(other: "coord") -> tuple[int, int]
+```
+
+Calculate the difference between this `coord` and the provided `coord`
+
+**Arguments**:
+
+- `other` _coord_ - the `coord` for which to calculate the difference
+  
+
+**Returns**:
+
+- `(tuple)` - the x- and y- difference values
+
 <a id="pyke_pyxel._base_types.coord.move_by"></a>
 
 #### move\_by
@@ -2315,7 +2710,7 @@ Return a shallow copy of this coord (same grid location and size).
 #### clone\_by
 
 ```python
-def clone_by(x: int, y: int, direction: Optional[str] = None)
+def clone_by(x: int, y: int, direction: DIRECTION|None = None)
 ```
 
 Return a new coord offset by (x, y) pixels from this one.

@@ -5,7 +5,7 @@ from pyke_pyxel.sprite import Sprite, MovableSprite
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.map import Map
 
-from .projectile import Projectile
+from ._projectile import Projectile
 
 class Actor:
 
@@ -63,12 +63,12 @@ class MovableActor(Actor):
 
         self._px_per_frame: float = sprite.speed_px_per_second / GameSettings.get().fps.game
         self._px_counter = 0
-        self._is_moving = False
         self._move_to: coord
 
         # log_debug(f"MovableActor({sprite.name}) frames_per_pixel:{self._frames_per_pixel}")
 
-        self.current_direction: DIRECTION = DIRECTION.DOWN
+        self.active_dir: DIRECTION|None = None
+        self.facing_dir: DIRECTION = DIRECTION.DOWN
 
     def set_position(self, col: int, row: int):
         """Set the position of the actor"""
@@ -76,27 +76,41 @@ class MovableActor(Actor):
 
     def start_moving(self, direction: DIRECTION):
         """Start moving in the provided direction"""
-        self._is_moving = True
+        # self._is_moving = True
 
-        if self.current_direction == direction:
+        if (self.active_dir == direction) and self._sprite.is_animating:
             return
 
         self._sprite.activate_animation(direction.value)
-        self.current_direction = direction
+        self.active_dir = direction
+        self.facing_dir = direction
+
         self._px_counter = 0
 
     def stop_moving(self):
         """Stop moving"""
         self._sprite.deactivate_animations()
+        self.active_dir = None
         self._px_counter = 0
-        self._is_moving = False
+        # self._is_moving = False
+
+    @property
+    def is_moving(self) -> bool:
+        """Return True if the actor is moving"""
+        return self.active_dir is not None
 
     def _update(self, map: Map):
-        if self._is_moving:
-            self._move(map)
+        # if self._is_moving:
+        if self.active_dir:
+            if self._move(map):
+                pass
+                # TODO - if, in future we want to send this signal
+                # Then Player._move and Enemy._move should return False
+                # and generate its own signals
+                # Signals.send(Signals.ACTOR.MOVED, self)
         super()._update(map)
 
-    def _move(self, map: Map):
+    def _move(self, map: Map) -> bool:
         # IMPORTANT: _move() is called once per frame
         self._px_counter += self._px_per_frame
         if self._px_counter < 1:
@@ -105,7 +119,7 @@ class MovableActor(Actor):
 
         distance = round(self._px_per_frame) if self._px_per_frame > 1 else 1
 
-        direction = self.current_direction
+        direction = self.active_dir
         sprite = self._sprite
         by_x = 0
         by_y = 0

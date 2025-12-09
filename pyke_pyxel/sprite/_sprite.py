@@ -1,5 +1,6 @@
 from typing import Optional, Callable
 import pyxel
+import math
 
 from pyke_pyxel import coord, GameSettings
 
@@ -12,32 +13,36 @@ class Sprite:
     to draw, and a position. Animations may be started, paused, resumed and
     looped. Sprites are lightweight containers for animation state and drawing
     metadata.
-
-    Args:
-        name (str): Logical name for the sprite.
-        default_frame (coord): The frame to use when no animation is active (idle frame).
-        cols (int): Width in tiles for framed sprites (used when advancing frames).
-        rows (int): Height in tiles for framed sprites (used when advancing frames).
-        resource_image_index (int): Index of the image resource (if multiple images are used).
     """
     def __init__(self, name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
+        """
+        Args:
+            name (str): Logical name for the sprite.
+            default_frame (coord): The frame to use when no animation is active (idle frame).
+            cols (int): Width in tiles for framed sprites (used when advancing frames).
+            rows (int): Height in tiles for framed sprites (used when advancing frames).
+            resource_image_index (int): Index of the image resource (if multiple images are used).
+        """
         self._id: int = 0
         self.name = name
-        self.idle_frame = default_frame
+        self.default_frame = default_frame
+        self.cols = cols
+        self.rows = rows
+        self._resource_image_index = resource_image_index
+
+        self._position: coord
+        self._rotation: float|None = None
 
         self.animations: dict[str, Animation] = { }
-        self._position: coord
-        self.active_frame = self.idle_frame
+        self.active_frame = self.default_frame
+
         self._animation: Animation|None = None
-
-        self.col_tile_count = cols
-        self.row_tile_count = rows
-
-        self._resource_image_index = resource_image_index
 
         tile_size = GameSettings.get().size.tile
         self._width = cols * tile_size
         self._height = rows * tile_size
+
+        self._linked_sprite: Sprite|None = None
 
     def add_animation(self, name: str, animation: Animation):
         """Add an animation to the sprite.
@@ -53,7 +58,7 @@ class Sprite:
 
         # The animation needs to know how 'wide' the sprite is
         # to be able to update frames correctly
-        animation._col_tile_count = self.col_tile_count
+        animation._cols = self.cols
 
     def activate_animation(self, name: str, on_animation_end: Optional[Callable[[int], None]] = None):
         """Start the named animation.
@@ -73,6 +78,29 @@ class Sprite:
         """Stop any active animation and reset flip state."""
         self._animation = None
 
+    @property
+    def is_animating(self) -> bool:
+        return self._animation is not None
+
+    def link_sprite(self, sprite: "Sprite"):
+        """
+        Link another sprite to this sprite. 
+        The linked sprite's position will be updated whenever this sprite's position is updated.
+
+        Args:
+            sprite (Sprite): The sprite to link.
+        """
+        self._linked_sprite = sprite
+
+    def unlink_sprite(self, sprite: "Sprite"):
+        """
+        Unlink a previously linked sprite.
+
+        Args:
+            sprite (Sprite): The sprite to unlink.
+        """
+        self._linked_sprite = None
+
     def set_position(self, position: coord):
         """
         Sets the position of the sprite.
@@ -80,7 +108,18 @@ class Sprite:
         Args:
             position (coord): The new coordinate for the sprite's top-left corner.
         """
+        if self._linked_sprite:
+            diff = position.diff(self._position)
+            self._linked_sprite._position.move_by(diff[0], diff[1])
+
         self._position = position # .clone()
+
+    def set_rotation(self, rotation: float):
+        """Sets the rotation (in degrees) of the sprite."""
+
+        # TODO, what about self._linked_sprite ?
+
+        self._rotation = rotation
 
     @property
     def position(self) -> coord:
@@ -106,28 +145,71 @@ class Sprite:
         """
         return self._height
     
+    @property
+    def rotation(self) -> float|None:
+        """
+        Returns the rotation of the sprite in degrees.
+        """
+        if anim := self._animation:
+            return anim.rotate
+        else:
+            return self._rotation
+        
+    def rotated_position(self) -> coord:
+        pos = self._position
+        rotation = self.rotation
+        if not rotation:
+            return pos
+        else:
+            # 1. Convert degrees to radians, as math functions use radians
+            angle_rad = math.radians(rotation)
+            
+            # 2. Define the Pivot Point (Center of the Cell)
+            # The center is the top-left (x, y) plus half the size.
+            pivot_x = pos.mid_x
+            pivot_y = pos.mid_y
+            
+            # The point we are rotating is the original top-left corner (self.x, self.y)
+            point_x = pos.x
+            point_y = pos.y
+
+            # 3. Apply the 2D Rotation Formula (around the pivot)
+            # Formulas for rotating a point (px, py) around a pivot (cx, cy) by angle (a):
+            # x_new = cx + (px - cx) * cos(a) - (py - cy) * sin(a)
+            # y_new = cy + (px - cx) * sin(a) + (py - cy) * cos(a)
+
+            # Pre-calculate the difference vectors (px - cx) and (py - cy)
+            dx = point_x - pivot_x
+            dy = point_y - pivot_y
+            
+            # Apply the rotation
+            x_rotated = round(pivot_x + (dx * math.cos(angle_rad) - dy * math.sin(angle_rad)))
+            y_rotated = round(pivot_y + (dx * math.sin(angle_rad) + dy * math.cos(angle_rad)))
+
+            return coord.with_xy(x_rotated, y_rotated)
+    
     def __eq__(self, other):
         return isinstance(other, Sprite) and self._id == other._id
 
     def _update_frame(self):
-        
         if anim := self._animation:
             if frame := anim._update_frame():
                 self.active_frame = frame
             else:
                 self._animation = None
-                self.active_frame = self.idle_frame
+                self.active_frame = self.default_frame
                 
         else:
-            self.active_frame = self.idle_frame
+            self.active_frame = self.default_frame
 
     def _draw(self, settings: GameSettings):
         frame = self.active_frame
         position = self._position
 
         width = self._width
-        if self._animation and self._animation.flip:
-            width *= -1
+        if anim := self._animation:
+            if anim.flip:
+                width *= -1
 
         pyxel.blt(x=position.x,
                 y=position.y,
@@ -136,4 +218,8 @@ class Sprite:
                 v=frame.y,
                 w=width,
                 h=self._height,
+                rotate=self.rotation,
                 colkey=settings.colours.sprite_transparency)
+        
+        # rp = self.rotated_position()
+        # pyxel.circ(rp.x, rp.y, 1, 8)

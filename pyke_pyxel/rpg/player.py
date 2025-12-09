@@ -9,14 +9,15 @@ class Player(MovableActor):
         self._can_open_sprite: OpenableSprite|None = None
 
     def _move(self, map: Map):
-        
-        if not super()._move(map):
+        if super()._move(map):
+            # Signals.send(Signals.PLAYER.MOVED, self)
+            return True
+        else:
             if map.is_openable(self._move_to):
                 self._can_open_sprite = map.openable_sprite_at(self._move_to)
 
-            sprite = map.sprite_at(self._move_to)
-            if sprite:
-                Signals.send(Signals.PLAYER.BLOCKED, sprite)
+            Signals.send_with(Signals.PLAYER.BLOCKED, self, value=map.sprite_at(self._move_to))
+            return False
 
     def adjacent_openable(self, map: Map) -> OpenableSprite|None:
         """

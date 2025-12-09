@@ -185,6 +185,20 @@ class coord:
 
         return True
 
+    def diff(self, other: "coord") -> tuple[int, int]:
+        """
+        Calculate the difference between this `coord` and the provided `coord`
+
+        Args:
+            other (coord): the `coord` for which to calculate the difference
+
+        Returns:
+            (tuple): the x- and y- difference values
+        """
+        x_diff = self._x - other._x
+        y_diff = self._y - other._y
+        return (x_diff, y_diff)
+
     def move_by(self, x: int = 0, y: int = 0):
         """Move this coord by (x, y) pixels and update the grid location.
 

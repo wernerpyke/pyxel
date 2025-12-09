@@ -34,12 +34,24 @@ class RPGGame(Game):
         Signals.connect("enemy_added", self._enemy_added)
         Signals.connect("enemy_removed", self._enemy_removed)
 
-    def set_player(self, sprite: Callable[[], MovableSprite]) -> Player:
-        _sprite = sprite()
+    def set_player(self, sprite: MovableSprite|Callable[[], MovableSprite]) -> Player:
+        """
+        Assigns a player sprite to the game, creating a `Player` instance.
 
-        self._player = Player(_sprite)
+        Args:
+            sprite (MovableSprite | Callable[[], MovableSprite]): The sprite
+                (or a callable that returns a sprite) representing the player.
 
-        self._sprites.append(_sprite)
+        Returns:
+            Player: The initialized `Player` instance.
+
+        """
+        if isinstance(sprite, Callable):
+            sprite = sprite()
+
+        self._player = Player(sprite)
+
+        self._sprites.append(sprite)
 
         self._player._id = self._actors.__len__()
         self._actors.append(self._player)
@@ -62,6 +74,7 @@ class RPGGame(Game):
         self._update_animations()
 
     def clear_all(self):
+        """Clear all sprites, TileMap, HUD and FX"""
         super().clear_all()
         self._actors.clear()
         self.player = None # type: ignore
@@ -77,8 +90,10 @@ class RPGGame(Game):
 
     @property
     def player(self) -> Player:
+        """Returns the `Player` instance for this game"""
         return self._player
 
     @property
     def room(self) -> Room:
+        """Returns the `Room` instance for this game"""
         return self._room
