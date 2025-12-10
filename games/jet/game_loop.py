@@ -36,7 +36,9 @@ def player_moved(player: Player):
 def player_blocked(player: Player, value: Sprite|None):
     if sprite := value:
         print(f"BLOCKED {sprite.name}")
-
+        match sprite.name:
+            case "house":
+                PLAYER.game.fx.scale_in_out(sprite, to_scale=1.2, duration=0.1)
     
     PLAYER.stop_movement()
 

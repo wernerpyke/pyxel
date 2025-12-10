@@ -111,7 +111,7 @@ class Game:
         if self._hud:
             self._hud._clear_all()
 
-        if self._fx and self._fx.is_active:
+        if self._fx:
             self._fx._clear_all()
 
     def add_sprite(self, sprite: Sprite|CompoundSprite):
@@ -267,7 +267,14 @@ class Game:
             return
         
         Signals.send(Signals.GAME.UPDATE, self)
+
+        self._update_fx()
+
         self._update_animations()
+
+    def _update_fx(self):
+        if self._fx and self._fx.requires_update:
+            self._fx._update()
 
     def _update_animations(self):
         if self._animation_tick < self._frames_per_animation_tick:
@@ -307,6 +314,6 @@ class Game:
             hud._draw(self._settings)
 
     def _draw_fx(self):
-        if self._fx and self._fx.is_active:
+        if self._fx and self._fx.requires_draw:
             self._fx._draw()
         

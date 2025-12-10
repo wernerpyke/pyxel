@@ -19,7 +19,7 @@ class _ScaleEffect(_Effect):
         self._scale: float = 0.0
         self._scale_step: float = 1.0 / (duration * settings.fps.game)
 
-    def _draw(self):
+    def _do(self):
         if self._scale_in:
             self._scale += self._scale_step
             if self._scale >= 1:

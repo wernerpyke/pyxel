@@ -42,6 +42,8 @@ class Sprite:
         self._width = cols * tile_size
         self._height = rows * tile_size
 
+        self._scale: float|None = None
+
         self._linked_sprite: Sprite|None = None
 
     def add_animation(self, name: str, animation: Animation):
@@ -116,10 +118,19 @@ class Sprite:
 
     def set_rotation(self, rotation: float):
         """Sets the rotation (in degrees) of the sprite."""
-
         # TODO, what about self._linked_sprite ?
+        if rotation == 0.0:
+            self._rotation = None
+        else:
+            self._rotation = rotation % 360
 
-        self._rotation = rotation
+    def set_scale(self, scale: float):
+        """Sets the scale of the sprite."""
+        # TODO, what about self._linked_sprite ?
+        if scale == 1.0:
+            self._scale = None
+        else:
+            self._scale = scale
 
     @property
     def position(self) -> coord:
@@ -154,6 +165,13 @@ class Sprite:
             return anim.rotate
         else:
             return self._rotation
+        
+    @property
+    def scale(self) -> float|None:
+        """
+        Returns the scale of the sprite.
+        """
+        return self._scale
         
     def rotated_position(self) -> coord:
         pos = self._position
@@ -219,6 +237,7 @@ class Sprite:
                 w=width,
                 h=self._height,
                 rotate=self.rotation,
+                scale=self.scale,
                 colkey=settings.colours.sprite_transparency)
         
         # rp = self.rotated_position()

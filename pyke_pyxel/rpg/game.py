@@ -72,6 +72,8 @@ class RPGGame(Game):
         for actor in self._actors:
             actor._update(self._map)
 
+        self._update_fx()
+
         self._update_animations()
 
     def clear_all(self):

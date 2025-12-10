@@ -12,7 +12,7 @@ class _SplatterEffect(_Effect):
         self._origin_x = position.mid_x
         self._origin_y = position.max_y - 2
 
-    def _draw(self):
+    def _do(self):
         # Assume 60 FPS
         if self._iteration < 5:
             pyxel.pset(self._origin_x-1, self._origin_y, self._colour)

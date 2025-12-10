@@ -11,5 +11,5 @@ class _Effect:
             Signals.send(signal, self)
             self._completion_signal = None
 
-    def _draw(self):
+    def _do(self):
         raise NotImplementedError("Effect._draw() not implemented")

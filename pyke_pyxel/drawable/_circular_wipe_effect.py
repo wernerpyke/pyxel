@@ -25,7 +25,7 @@ class _CircularWipeEffect(_Effect):
         else:
             self._current_radius = 0
 
-    def _draw(self):
+    def _do(self):
         for y in range(0, self._height):
             for x in range(0, self._width):
                 distance = math.sqrt((x - self._center_x)**2 + (y - self._center_y)**2)
