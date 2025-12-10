@@ -32,7 +32,7 @@ game = RPGGame(
 
 game_load.build_room(game.room)
 
-player = game.set_player(config.PLAYER.SPRITE)
+player = game.set_player(config.PLAYER.SPRITE, 30)
 game_load.set_player_position(player)
 
 game.start()

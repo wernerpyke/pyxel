@@ -1,7 +1,7 @@
 import random
 import pyxel
 
-from pyke_pyxel import log_info, DIRECTION
+from pyke_pyxel import log_info, DIRECTION, coord
 from pyke_pyxel.map import Map
 from pyke_pyxel.sprite import Sprite, OpenableSprite
 from pyke_pyxel.rpg import RPGGame, Enemy, Player
@@ -17,7 +17,8 @@ def choose_random_direction():
 def game_started(game: RPGGame):
      log_info("GAME STARTED")
 
-     enemy = game.room.add_enemy(ENEMY.DEMON, 10, 12)
+     enemy = game.room.add_enemy(ENEMY.DEMON, 20)
+     enemy.set_position(coord(10, 12))
      enemy.start_moving(choose_random_direction())
 
 def game_update(game: RPGGame):

@@ -1,4 +1,5 @@
-from pyke_pyxel import DIRECTION, coord
+from pyke_pyxel import DIRECTION
+from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
 from pyke_pyxel.rpg import RPGGame, Player
 
@@ -17,7 +18,6 @@ class _Player:
     def start(self, game: RPGGame):
         self.game = game
         self.player = game.player
-        self.player.set_position(10, 10)
 
     def check_input(self, key: int, direction: DIRECTION):
         keyboard = self.game.keyboard
@@ -50,7 +50,7 @@ class _Player:
 
         if trail := self.trail:
             self.player._sprite.unlink_sprite(trail)
-            self.game.remove_sprite(trail)
+            Signals.send_remove_sprite(trail)
             self.trail = None
 
         self.active_dir = None
@@ -77,10 +77,10 @@ class _Player:
         player = self.player
         player.start_moving(self.active_dir) # type: ignore warning
         if trail:= self.trail:
-            self.game.remove_sprite(trail)
+            Signals.send_remove_sprite(trail)
         
         trail = sprites.trail(player)
-        self.game.add_sprite(trail)
+        Signals.send_add_sprite(trail)
         player._sprite.link_sprite(trail)
 
         self.trail = trail

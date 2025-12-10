@@ -1,5 +1,6 @@
-from pyke_pyxel.rpg.room import Room
-from pyke_pyxel.rpg.player import Player
+from pyke_pyxel import coord
+from pyke_pyxel.rpg import Room, Player
+
 from config import WALLS, DOOR
 
 
@@ -34,4 +35,4 @@ def build_room(room: Room):
         room.add_wall(WALLS.GREY, 15, 14)
 
 def set_player_position(player: Player):
-    player.set_position(1, 10)
+    player.set_position(coord(1, 10))

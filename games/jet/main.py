@@ -4,14 +4,13 @@ from pyke_pyxel.signals import Signals
 from pyke_pyxel.rpg.game import RPGGame
 
 import game_loop
-import sprites
 
 settings = GameSettings()
 
 settings.fps.game = 60
 settings.fps.animation = 16
 
-settings.size.window = 160
+settings.size.window = 320
 
 settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
@@ -25,7 +24,7 @@ game = RPGGame(
 Signals.connect(Signals.GAME.WILL_START, game_loop.game_started)
 Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
 
+Signals.connect(Signals.PLAYER.MOVED, game_loop.player_moved)
 Signals.connect(Signals.PLAYER.BLOCKED, game_loop.player_blocked)
 
-game.set_player(sprites.player())
 game.start()

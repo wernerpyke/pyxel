@@ -46,7 +46,7 @@ class PROJECTILE:
 class PLAYER:
     @staticmethod
     def SPRITE():
-        sprite = MovableSprite("player", coord(1, 1), speed_px_per_second=30)
+        sprite = MovableSprite("player", coord(1, 1))
 
         anim = AnimationFactory(2)
         sprite.set_up_animation(anim.at(coord(4, 1)))
@@ -59,7 +59,7 @@ class PLAYER:
 class ENEMY:
     @staticmethod
     def DEMON():
-        sprite = MovableSprite("demon", coord(1, 3), speed_px_per_second=20)
+        sprite = MovableSprite("demon", coord(1, 3))
 
         anim = AnimationFactory(2)
         sprite.set_up_animation(anim.at(coord(3, 3)))
