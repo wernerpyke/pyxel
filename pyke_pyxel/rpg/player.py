@@ -4,19 +4,25 @@ from pyke_pyxel.sprite import OpenableSprite, MovableSprite
 from pyke_pyxel.map import Map
 
 class Player(MovableActor):
-    def __init__(self, sprite: MovableSprite):
-        super().__init__(sprite)
+    def __init__(self, sprite: MovableSprite, speed_px_per_second: int):
+        """
+        Args:
+            sprite (MovableSprite): the sprite that represents the player
+            speed_px_per_second (int): The speed of the player's movements expressed as pixels per second
+        """
+        super().__init__(sprite, speed_px_per_second)
         self._can_open_sprite: OpenableSprite|None = None
 
-    def _move(self, map: Map):
+    def _move(self, map: Map) -> bool:
         if super()._move(map):
-            # Signals.send(Signals.PLAYER.MOVED, self)
+            Signals.send(Signals.PLAYER.MOVED, self)
             return True
         else:
-            if map.is_openable(self._move_to):
-                self._can_open_sprite = map.openable_sprite_at(self._move_to)
+            if to := self._blocked_by:
+                if map.is_openable(to):
+                    self._can_open_sprite = map.openable_sprite_at(to)
 
-            Signals.send_with(Signals.PLAYER.BLOCKED, self, value=map.sprite_at(self._move_to))
+                Signals.send_with(Signals.PLAYER.BLOCKED, self, value=map.sprite_at(to))
             return False
 
     def adjacent_openable(self, map: Map) -> OpenableSprite|None:

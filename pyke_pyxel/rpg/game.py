@@ -30,17 +30,19 @@ class RPGGame(Game):
         self._player: Player
         self._room = Room(self._map)
 
+        self._actor_id = 0
         self._actors: list[Actor] = []
-        Signals.connect("enemy_added", self._enemy_added)
-        Signals.connect("enemy_removed", self._enemy_removed)
+        Signals.connect("enemy_added", self.add_actor)
+        Signals.connect("enemy_removed", self.remove_actor)
 
-    def set_player(self, sprite: MovableSprite|Callable[[], MovableSprite]) -> Player:
+    def set_player(self, sprite: MovableSprite|Callable[[], MovableSprite], speed_px_per_second: int) -> Player:
         """
         Assigns a player sprite to the game, creating a `Player` instance.
 
         Args:
             sprite (MovableSprite | Callable[[], MovableSprite]): The sprite
                 (or a callable that returns a sprite) representing the player.
+            speed_px_per_second (int): The speed of the player's movements expressed as pixels per second
 
         Returns:
             Player: The initialized `Player` instance.
@@ -49,12 +51,11 @@ class RPGGame(Game):
         if isinstance(sprite, Callable):
             sprite = sprite()
 
-        self._player = Player(sprite)
+        self._player = Player(sprite, speed_px_per_second)
 
         self._sprites.append(sprite)
 
-        self._player._id = self._actors.__len__()
-        self._actors.append(self._player)
+        self.add_actor(self.player)
 
         return self._player
     
@@ -79,14 +80,26 @@ class RPGGame(Game):
         self._actors.clear()
         self.player = None # type: ignore
 
-    def _enemy_added(self, enemy: Enemy):
-        enemy._id = self._actors.__len__()
-        self._actors.append(enemy)
+    def add_actor(self, actor: Actor):
+        """
+        Add an actor to the game's actor collection.
 
-    def _enemy_removed(self, enemy: Enemy):
-        if enemy in self._actors:
-            self._actors.remove(enemy)
-            log_debug(f"GAME._enemy_removed() {enemy._id}")
+        Args:
+            actor (Actor): The actor object to add to the game.
+        """
+        self._actor_id += 1
+        actor._id = self._actor_id
+        self._actors.append(actor)
+
+    def remove_actor(self, actor: Actor):
+        """
+        Remove an actor from the game's active actor collection.
+
+        Args:
+            actor (Actor): The actor object to remove from the game.
+        """
+        if actor in self._actors:
+            self._actors.remove(actor)
 
     @property
     def player(self) -> Player:

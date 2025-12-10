@@ -62,18 +62,16 @@ class MovableSprite(Sprite):
     MovableSprite stores a movement speed and provides helper methods to
     create simple directional animations (up/down/left/right).
     """
-    def __init__(self, name: str, default_frame: coord, speed_px_per_second: int, cols: int = 1, rows: int = 1, resource_image_index: int=0):
+    def __init__(self, name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int=0):
         """
         Args:
             name (str): Logical name for the sprite.
             default_frame (coord): The frame to use when no animation is active (idle frame).
-            speed_px_per_second (int): The speed of the sprite's movements expressed as pixels per second
             cols (int): Width in tiles for framed sprites (used when advancing frames).
             rows (int): Height in tiles for framed sprites (used when advancing frames).
             resource_image_index (int): Index of the image resource (if multiple images are used).
         """
         super().__init__(name, default_frame, cols=cols, rows=rows, resource_image_index=resource_image_index)
-        self.speed_px_per_second = speed_px_per_second
 
     def set_up_animation(self, animation: Animation):
         """Set the animation to be used when the sprite moves UP"""

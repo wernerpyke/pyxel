@@ -45,5 +45,5 @@ class Projectile:
             sprite.set_position(move_to)
             return True
         else:
-            Signals._sprite_removed(sprite)
+            Signals.send_remove_sprite(sprite)
             return False

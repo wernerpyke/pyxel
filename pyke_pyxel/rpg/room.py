@@ -27,8 +27,12 @@ class Room:
         position = coord(col, row)
         sprite.set_position(position)
         
-        Signals._sprite_added(sprite)
-        self._map.mark_blocked(position, sprite)
+        Signals.send_add_sprite(sprite)
+
+        for c in range(0, sprite.cols):
+            for r in range(0, sprite.rows):
+                p = coord(col + c, row + r)
+                self._map.mark_blocked(p, sprite)
 
     def add_door(self, sprite: OpenableSprite|Callable[[], OpenableSprite], col: int, row: int, closed: bool = True):
         """
@@ -50,27 +54,29 @@ class Room:
         else:
             sprite.open()
 
-        Signals._sprite_added(sprite)
+        Signals.send_add_sprite(sprite)
         self._map.mark_openable(position, sprite, closed)
 
-    def add_enemy(self, sprite: MovableSprite|Callable[[], MovableSprite], col: int, row: int) -> Enemy:
+    def add_enemy(self, sprite: Enemy|MovableSprite|Callable[[], MovableSprite], speed_px_per_second: int = 0) -> Enemy:
         """
         Add an enemy to the map.
 
         Args:
-            sprite (MovableSprite | Callable[[], MovableSprite]): The sprite (or a callable that returns a sprite) representing the enemy.
-            col (int): The column position of the enemy
-            row (int): The row position of the enemy
+            sprite (Enemy | MovableSprite | Callable[[], MovableSprite]): The sprite (or a callable that returns a sprite) representing the enemy.
+            speed_px_per_second (int): The speed of the enemy's movements expressed as pixels per second
 
         Returns:
             Enemy: The initialized `Enemy` instance.
         """
-        if isinstance(sprite, Callable):
-            sprite = sprite()
-        enemy = Enemy(sprite)
-        enemy.set_position(col, row)
+        if isinstance(sprite, Enemy):
+            enemy = sprite
+            Signals.send_add_sprite(enemy._sprite)
+        else:
+            if isinstance(sprite, Callable):
+                sprite = sprite()
+            enemy = Enemy(sprite, speed_px_per_second)
+            Signals.send_add_sprite(sprite)
 
-        Signals._sprite_added(sprite)
         _signals._enemy_added(enemy)
 
         return enemy

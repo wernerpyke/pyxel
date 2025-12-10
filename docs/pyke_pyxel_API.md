@@ -8,6 +8,8 @@
     * [disconnect](#pyke_pyxel.signals.Signals.disconnect)
     * [send](#pyke_pyxel.signals.Signals.send)
     * [send\_with](#pyke_pyxel.signals.Signals.send_with)
+    * [send\_add\_sprite](#pyke_pyxel.signals.Signals.send_add_sprite)
+    * [send\_remove\_sprite](#pyke_pyxel.signals.Signals.send_remove_sprite)
 * [\_button](#pyke_pyxel.drawable._button)
   * [Button](#pyke_pyxel.drawable._button.Button)
     * [\_\_init\_\_](#pyke_pyxel.drawable._button.Button.__init__)
@@ -47,13 +49,17 @@
     * [\_\_init\_\_](#pyke_pyxel.rpg.game.RPGGame.__init__)
     * [set\_player](#pyke_pyxel.rpg.game.RPGGame.set_player)
     * [clear\_all](#pyke_pyxel.rpg.game.RPGGame.clear_all)
+    * [add\_actor](#pyke_pyxel.rpg.game.RPGGame.add_actor)
+    * [remove\_actor](#pyke_pyxel.rpg.game.RPGGame.remove_actor)
     * [player](#pyke_pyxel.rpg.game.RPGGame.player)
     * [room](#pyke_pyxel.rpg.game.RPGGame.room)
 * [player](#pyke_pyxel.rpg.player)
   * [Player](#pyke_pyxel.rpg.player.Player)
+    * [\_\_init\_\_](#pyke_pyxel.rpg.player.Player.__init__)
     * [adjacent\_openable](#pyke_pyxel.rpg.player.Player.adjacent_openable)
 * [actor](#pyke_pyxel.rpg.actor)
   * [MovableActor](#pyke_pyxel.rpg.actor.MovableActor)
+    * [\_\_init\_\_](#pyke_pyxel.rpg.actor.MovableActor.__init__)
     * [set\_position](#pyke_pyxel.rpg.actor.MovableActor.set_position)
     * [start\_moving](#pyke_pyxel.rpg.actor.MovableActor.start_moving)
     * [stop\_moving](#pyke_pyxel.rpg.actor.MovableActor.stop_moving)
@@ -63,6 +69,9 @@
     * [add\_wall](#pyke_pyxel.rpg.room.Room.add_wall)
     * [add\_door](#pyke_pyxel.rpg.room.Room.add_door)
     * [add\_enemy](#pyke_pyxel.rpg.room.Room.add_enemy)
+* [enemy](#pyke_pyxel.rpg.enemy)
+  * [Enemy](#pyke_pyxel.rpg.enemy.Enemy)
+    * [\_\_init\_\_](#pyke_pyxel.rpg.enemy.Enemy.__init__)
 * [map](#pyke_pyxel.map)
   * [Map](#pyke_pyxel.map.Map)
     * [sprite\_can\_move\_to](#pyke_pyxel.map.Map.sprite_can_move_to)
@@ -309,6 +318,38 @@ Send a signal with additional data/parameter value
 
 - `sender` _Any_ - The object sending the signal.
 - `value` _Any_ - The additional data/parameter value
+
+<a id="pyke_pyxel.signals.Signals.send_add_sprite"></a>
+
+#### send\_add\_sprite
+
+```python
+@staticmethod
+def send_add_sprite(sprite)
+```
+
+Globally-available signal to notify the game that a Sprite should been added to the game.
+This can be used as a loosely-coupled alternative to `Game.add_sprite`
+
+**Arguments**:
+
+- `sprite` _Sprite | CompoundSprite _ - The sprite to be added to the game.
+
+<a id="pyke_pyxel.signals.Signals.send_remove_sprite"></a>
+
+#### send\_remove\_sprite
+
+```python
+@staticmethod
+def send_remove_sprite(sprite)
+```
+
+Globally-available signal to notify the game that a Sprite should been removed from the game.
+This can be used as a loosely-coupled alternative to `Game.remove_sprite`
+
+**Arguments**:
+
+- `sprite` _Sprite | CompoundSprite _ - The sprite to be removed from the game.
 
 <a id="pyke_pyxel.drawable._button"></a>
 
@@ -803,7 +844,7 @@ Specialised sub-class of `pyke_pyxel.Game` which adds basic room- and actor-base
 #### set\_player
 
 ```python
-def set_player(sprite: MovableSprite|Callable[[], MovableSprite]) -> Player
+def set_player(sprite: MovableSprite|Callable[[], MovableSprite], speed_px_per_second: int) -> Player
 ```
 
 Assigns a player sprite to the game, creating a `Player` instance.
@@ -812,6 +853,7 @@ Assigns a player sprite to the game, creating a `Player` instance.
 
 - `sprite` _MovableSprite | Callable[[], MovableSprite]_ - The sprite
   (or a callable that returns a sprite) representing the player.
+- `speed_px_per_second` _int_ - The speed of the player's movements expressed as pixels per second
   
 
 **Returns**:
@@ -827,6 +869,34 @@ def clear_all()
 ```
 
 Clear all sprites, TileMap, HUD and FX
+
+<a id="pyke_pyxel.rpg.game.RPGGame.add_actor"></a>
+
+#### add\_actor
+
+```python
+def add_actor(actor: Actor)
+```
+
+Add an actor to the game's actor collection.
+
+**Arguments**:
+
+- `actor` _Actor_ - The actor object to add to the game.
+
+<a id="pyke_pyxel.rpg.game.RPGGame.remove_actor"></a>
+
+#### remove\_actor
+
+```python
+def remove_actor(actor: Actor)
+```
+
+Remove an actor from the game's active actor collection.
+
+**Arguments**:
+
+- `actor` _Actor_ - The actor object to remove from the game.
 
 <a id="pyke_pyxel.rpg.game.RPGGame.player"></a>
 
@@ -862,6 +932,19 @@ Returns the `Room` instance for this game
 class Player(MovableActor)
 ```
 
+<a id="pyke_pyxel.rpg.player.Player.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(sprite: MovableSprite, speed_px_per_second: int)
+```
+
+**Arguments**:
+
+- `sprite` _MovableSprite_ - the sprite that represents the player
+- `speed_px_per_second` _int_ - The speed of the player's movements expressed as pixels per second
+
 <a id="pyke_pyxel.rpg.player.Player.adjacent_openable"></a>
 
 #### adjacent\_openable
@@ -884,12 +967,25 @@ Find an `OpenableSprite` adjacent to the player's current position
 class MovableActor(Actor)
 ```
 
+<a id="pyke_pyxel.rpg.actor.MovableActor.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(sprite: MovableSprite, speed_px_per_second: int)
+```
+
+**Arguments**:
+
+- `sprite` _MovableSprite_ - the sprite that represents this actor
+- `speed_px_per_second` _int_ - The speed of the actor's movements expressed as pixels per second
+
 <a id="pyke_pyxel.rpg.actor.MovableActor.set_position"></a>
 
 #### set\_position
 
 ```python
-def set_position(col: int, row: int)
+def set_position(position: coord)
 ```
 
 Set the position of the actor
@@ -976,21 +1072,45 @@ Add an openable door to the map. The related map position will be marked as eith
 #### add\_enemy
 
 ```python
-def add_enemy(sprite: MovableSprite|Callable[[], MovableSprite], col: int, row: int) -> Enemy
+def add_enemy(sprite: Enemy|MovableSprite|Callable[[], MovableSprite], speed_px_per_second: int = 0) -> Enemy
 ```
 
 Add an enemy to the map.
 
 **Arguments**:
 
-- `sprite` _MovableSprite | Callable[[], MovableSprite]_ - The sprite (or a callable that returns a sprite) representing the enemy.
-- `col` _int_ - The column position of the enemy
-- `row` _int_ - The row position of the enemy
+- `sprite` _Enemy | MovableSprite | Callable[[], MovableSprite]_ - The sprite (or a callable that returns a sprite) representing the enemy.
+- `speed_px_per_second` _int_ - The speed of the enemy's movements expressed as pixels per second
   
 
 **Returns**:
 
 - `Enemy` - The initialized `Enemy` instance.
+
+<a id="pyke_pyxel.rpg.enemy"></a>
+
+# enemy
+
+<a id="pyke_pyxel.rpg.enemy.Enemy"></a>
+
+## Enemy Objects
+
+```python
+class Enemy(MovableActor)
+```
+
+<a id="pyke_pyxel.rpg.enemy.Enemy.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(sprite: MovableSprite, speed_px_per_second: int)
+```
+
+**Arguments**:
+
+- `sprite` _MovableSprite_ - the sprite that represents this enemy
+- `speed_px_per_second` _int_ - The speed of the enemy's movements expressed as pixels per second
 
 <a id="pyke_pyxel.map"></a>
 
@@ -1695,14 +1815,13 @@ create simple directional animations (up/down/left/right).
 #### \_\_init\_\_
 
 ```python
-def __init__(name: str, default_frame: coord, speed_px_per_second: int, cols: int = 1, rows: int = 1, resource_image_index: int = 0)
+def __init__(name: str, default_frame: coord, cols: int = 1, rows: int = 1, resource_image_index: int = 0)
 ```
 
 **Arguments**:
 
 - `name` _str_ - Logical name for the sprite.
 - `default_frame` _coord_ - The frame to use when no animation is active (idle frame).
-- `speed_px_per_second` _int_ - The speed of the sprite's movements expressed as pixels per second
 - `cols` _int_ - Width in tiles for framed sprites (used when advancing frames).
 - `rows` _int_ - Height in tiles for framed sprites (used when advancing frames).
 - `resource_image_index` _int_ - Index of the image resource (if multiple images are used).
@@ -2728,7 +2847,7 @@ grid location is computed from the cloned midpoint.
 def collides_with(coord: "coord")
 ```
 
-Return True if this tile collides with another tile using AABB.
+Return True if this `coord` collides with another `coord` using AABB.
 
 This uses an axis-aligned bounding box (AABB) test with a small
 tolerance to reduce false positives on exact-edge overlaps.

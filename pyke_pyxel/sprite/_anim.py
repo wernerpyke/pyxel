@@ -24,19 +24,20 @@ class Animation:
         self.flip = flip
         self.rotate = rotate
 
-        if fps:
-            settings = GameSettings.get()
-            if fps < settings.fps.animation:
-                self.fps = fps
-            else:
-                raise ValueError(f"Animation() fps cannot be >= {settings.fps.animation}")
-
         self._current_frame_index:int = 0
         self._current_col = 0
 
         self._on_animation_end: Optional[Callable[[int], None]] = None
         self._skip_animation_frame_update: int|None = None
         self._skip_animation_frame_update_counter = 0
+
+        if fps:
+            settings = GameSettings.get()
+            if fps < settings.fps.animation:
+                # self.fps = fps
+                self._skip_animation_frame_update = settings.fps.animation // fps
+            else:
+                raise ValueError(f"Animation() fps cannot be >= {settings.fps.animation}")
 
         # see Sprite.add_animation()
         self._sprite_id:int|None = None

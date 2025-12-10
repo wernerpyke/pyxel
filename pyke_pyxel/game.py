@@ -64,8 +64,8 @@ class Game:
 
         self._keyboard = Keyboard()
 
-        Signals.connect("sprite_added", self._sprite_added)
-        Signals.connect("sprite_removed", self._sprite_removed)
+        Signals.connect("sprite_added", self.add_sprite)
+        Signals.connect("sprite_removed", self.remove_sprite)
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(resources)
@@ -81,7 +81,10 @@ class Game:
             pyxel.mouse(True)
             self._send_mouse_events = True
 
-        self._sprite_id = 0 # TODO is it ok for this to just increment?
+        # lol, according to Germini
+        # "In summary, the maximum value for a Python integer is essentially infinite from a programming standpoint,
+        #  or limited only by available system memory in practice."
+        self._sprite_id = 0
 
         self._paused = False
     
@@ -120,7 +123,7 @@ class Game:
                 Can be either a single Sprite or a CompoundSprite containing multiple sprites.
         """
         self._sprite_id += 1
-        sprite._id = self._sprite_id # self._sprites.__len__()
+        sprite._id = self._sprite_id
         self._sprites.append(sprite)
 
     def remove_sprite(self, sprite: Sprite|CompoundSprite):
@@ -140,7 +143,7 @@ class Game:
         #
         if sprite in self._sprites:
             self._sprites.remove(sprite)
-            # log_debug(f"GAME.remove_sprite() {sprite._id}")
+            # log_debug(f"GAME.remove_sprite() {sprite.name} {sprite._id}")
 
     def remove_sprite_by_id(self, sprite_id: int):
         """Remove the first sprite with the specified identifier from the game's sprite list.
@@ -231,20 +234,6 @@ class Game:
         """Returns the `Keyboard` instance for this game"""
         return self._keyboard
 
-    #
-    # Signals
-    #
-
-    def _sprite_added(self, sprite: Sprite|CompoundSprite):
-        sprite._id = self._sprites.__len__()
-        log_debug(f"GAME.sprite_added() {sprite._id}")
-        self._sprites.append(sprite)
-
-    def _sprite_removed(self, sprite: Sprite|CompoundSprite):
-        if sprite in self._sprites:
-            self._sprites.remove(sprite)
-            log_debug(f"GAME.sprite_removed() {sprite._id}")
-
     # ===== PYXEL =====
 
     def _update(self):
@@ -302,8 +291,6 @@ class Game:
         self._draw_hud()
 
         self._draw_fx()
-
-        # pyxel.text(10, 6, "Hello, PYKE!", pyxel.frame_count % 16)
 
     def _draw_background(self):
         pyxel.cls(self._settings.colours.background)

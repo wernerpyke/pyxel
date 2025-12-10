@@ -246,31 +246,46 @@ class coord:
 
         return cloned
 
+    def clone_towards(self, coord: "coord", distance: int) -> "coord":
+        x = self._x
+        y = self._y
+        if self._x < coord._x:
+            x += distance
+        elif self._x > coord._x:
+            x -= distance
+
+        if self._y < coord._y:
+            y += distance
+        elif self._y > coord._y:
+            y -= distance
+
+        return coord.with_xy(x, y, self.size)
+
     def collides_with(self, coord: "coord"):
 
-        """Return True if this tile collides with another tile using AABB.
+        """Return True if this `coord` collides with another `coord` using AABB.
 
         This uses an axis-aligned bounding box (AABB) test with a small
         tolerance to reduce false positives on exact-edge overlaps.
         """
 
-        # AABB detection
-        #    if self.pos_x < obj.pos_x+obj.width and self.pos_x+self.width > obj.pos_x:
-        #        if self.pos_y < obj.pos_y+obj.height and self.pos_y+self.height > obj.pos_y:
-
-        collide_x = coord._x
-        collide_y = coord._y
-        sprite_x = self._x
-        sprite_y = self._y
-
         w = h = self.size
-        tolerance = 1
 
+        min_x = coord._x
+        max_x = min_x + w
+
+        min_y = coord._y
+        max_y = min_y + h
+
+        self_x = self._x
+        self_y = self._y
+        
+        tolerance = 1
         return (
-            collide_x < (sprite_x + w - tolerance) and
-            collide_x + w > (sprite_x + tolerance) and
-            collide_y < (sprite_y + h - tolerance) and
-            collide_y + h > (sprite_y + tolerance)
+            min_x   <   (self_x + w - tolerance) and
+            max_x   >   (self_x + tolerance) and
+            min_y   <   (self_y + h - tolerance) and
+            max_y   >   (self_y + tolerance)
         )
 
     def distance_to(self, coord: "coord") -> float:

@@ -71,17 +71,32 @@ class Signals:
 
 
     @staticmethod
-    def _sprite_added(sprite):
+    def send_add_sprite(sprite):
+        """
+        Globally-available signal to notify the game that a Sprite should been added to the game.
+        This can be used as a loosely-coupled alternative to `Game.add_sprite`
+
+        Args:
+            sprite (Sprite | CompoundSprite ): The sprite to be added to the game.
+        """
         signal("sprite_added").send(sprite)
 
     @staticmethod
-    def _sprite_removed(sprite):
+    def send_remove_sprite(sprite):
+        """
+        Globally-available signal to notify the game that a Sprite should been removed from the game.
+        This can be used as a loosely-coupled alternative to `Game.remove_sprite`
+
+        Args:
+            sprite (Sprite | CompoundSprite ): The sprite to be removed from the game.
+        """
         signal("sprite_removed").send(sprite)
 
 
     # TODO - the below are RPG-specific signals, move them
     @dataclass
     class PLAYER:
+        MOVED = "player_moved"
         BLOCKED = "player_blocked"
 
     @dataclass

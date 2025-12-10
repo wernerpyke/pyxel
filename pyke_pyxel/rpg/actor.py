@@ -40,7 +40,7 @@ class Actor:
         projectile = Projectile(sprite, speed_px_per_second, direction)
         self._projectiles.append(projectile)
         
-        Signals._sprite_added(sprite)
+        Signals.send_add_sprite(sprite)
 
     def _update(self, map: Map):
         for projectile in self._projectiles:
@@ -58,21 +58,25 @@ class Actor:
 
 class MovableActor(Actor):
 
-    def __init__(self, sprite: MovableSprite):
+    def __init__(self, sprite: MovableSprite, speed_px_per_second: int):
+        """
+        Args:
+            sprite (MovableSprite): the sprite that represents this actor
+            speed_px_per_second (int): The speed of the actor's movements expressed as pixels per second
+        """
         super().__init__(sprite)
 
-        self._px_per_frame: float = sprite.speed_px_per_second / GameSettings.get().fps.game
+        self._px_per_frame: float = speed_px_per_second / GameSettings.get().fps.game
         self._px_counter = 0
-        self._move_to: coord
-
-        # log_debug(f"MovableActor({sprite.name}) frames_per_pixel:{self._frames_per_pixel}")
+        self._move_to: coord|None = None
+        self._blocked_by: coord|None = None
 
         self.active_dir: DIRECTION|None = None
         self.facing_dir: DIRECTION = DIRECTION.DOWN
 
-    def set_position(self, col: int, row: int):
+    def set_position(self, position: coord):
         """Set the position of the actor"""
-        self._sprite.set_position(coord(col, row))
+        self._sprite.set_position(position)
 
     def start_moving(self, direction: DIRECTION):
         """Start moving in the provided direction"""
@@ -94,6 +98,11 @@ class MovableActor(Actor):
         self._px_counter = 0
         # self._is_moving = False
 
+    def move_to(self, position: coord):
+        self._move_to = position
+        self.active_dir = None
+        self._px_counter = 0
+
     @property
     def is_moving(self) -> bool:
         """Return True if the actor is moving"""
@@ -101,7 +110,7 @@ class MovableActor(Actor):
 
     def _update(self, map: Map):
         # if self._is_moving:
-        if self.active_dir:
+        if self.active_dir or self._move_to:
             if self._move(map):
                 pass
                 # TODO - if, in future we want to send this signal
@@ -119,23 +128,33 @@ class MovableActor(Actor):
 
         distance = round(self._px_per_frame) if self._px_per_frame > 1 else 1
 
-        direction = self.active_dir
         sprite = self._sprite
-        by_x = 0
-        by_y = 0
-        match direction:
-            case DIRECTION.UP:
-                by_y = distance * -1
-            case DIRECTION.DOWN:
-                by_y = distance
-            case DIRECTION.LEFT:
-                by_x = distance * -1
-            case DIRECTION.RIGHT:
-                by_x = distance
+
+        next_pos: coord
+        if direction := self.active_dir:
+            by_x = 0
+            by_y = 0
+            match direction:
+                case DIRECTION.UP:
+                    by_y = distance * -1
+                case DIRECTION.DOWN:
+                    by_y = distance
+                case DIRECTION.LEFT:
+                    by_x = distance * -1
+                case DIRECTION.RIGHT:
+                    by_x = distance
+            
+            next_pos = sprite.position.clone_by(by_x, by_y, direction)
+        elif self._move_to:
+            next_pos = sprite.position.clone_towards(self._move_to, distance)
+            if next_pos.is_same_grid_location(self._move_to):
+                self._move_to = None
+        else:
+            return False
         
-        self._move_to = sprite.position.clone_by(by_x, by_y, direction)
-        if map.sprite_can_move_to(self._move_to):
-            sprite.set_position(self._move_to)
+        if map.sprite_can_move_to(next_pos):
+            sprite.set_position(next_pos)
             return True
         else:
+            self._blocked_by = next_pos
             return False
