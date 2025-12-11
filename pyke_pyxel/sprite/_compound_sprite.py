@@ -18,6 +18,10 @@ class CompoundSprite:
 
         self.cols: list[list[coord|None]] = [[None for r in range(rows)] for c in range(cols)]
 
+        settings = GameSettings.get()
+        self._width = settings.size.tile * cols
+        self._height = settings.size.tile * rows
+
         self._graphics: list[tuple] = []
 
         self._img: pyxel.Image|None = None
@@ -169,3 +173,17 @@ class CompoundSprite:
             coord: The coordinate of the sprite's top-left corner.
         """
         return self._position
+    
+    @property
+    def width(self) -> int:
+        """
+        Returns the width of the sprite in pixels.
+        """
+        return self._width
+    
+    @property
+    def height(self) -> int:
+        """
+        Returns the height of the sprite in pixels.
+        """
+        return self._height

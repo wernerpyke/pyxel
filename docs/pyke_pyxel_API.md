@@ -21,6 +21,8 @@
 * [\_drawable](#pyke_pyxel.drawable._drawable)
   * [Drawable](#pyke_pyxel.drawable._drawable.Drawable)
     * [contains](#pyke_pyxel.drawable._drawable.Drawable.contains)
+    * [width](#pyke_pyxel.drawable._drawable.Drawable.width)
+    * [height](#pyke_pyxel.drawable._drawable.Drawable.height)
     * [position](#pyke_pyxel.drawable._drawable.Drawable.position)
     * [set\_position](#pyke_pyxel.drawable._drawable.Drawable.set_position)
 * [\_image](#pyke_pyxel.drawable._image)
@@ -148,10 +150,12 @@
     * [unlink\_sprite](#pyke_pyxel.sprite._sprite.Sprite.unlink_sprite)
     * [set\_position](#pyke_pyxel.sprite._sprite.Sprite.set_position)
     * [set\_rotation](#pyke_pyxel.sprite._sprite.Sprite.set_rotation)
+    * [set\_scale](#pyke_pyxel.sprite._sprite.Sprite.set_scale)
     * [position](#pyke_pyxel.sprite._sprite.Sprite.position)
     * [width](#pyke_pyxel.sprite._sprite.Sprite.width)
     * [height](#pyke_pyxel.sprite._sprite.Sprite.height)
     * [rotation](#pyke_pyxel.sprite._sprite.Sprite.rotation)
+    * [scale](#pyke_pyxel.sprite._sprite.Sprite.scale)
 * [\_compound\_sprite](#pyke_pyxel.sprite._compound_sprite)
   * [CompoundSprite](#pyke_pyxel.sprite._compound_sprite.CompoundSprite)
     * [fill](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.fill)
@@ -163,6 +167,8 @@
     * [graph\_triangle](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.graph_triangle)
     * [set\_position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.set_position)
     * [position](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.position)
+    * [width](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.width)
+    * [height](#pyke_pyxel.sprite._compound_sprite.CompoundSprite.height)
 * [\_anim](#pyke_pyxel.sprite._anim)
   * [Animation](#pyke_pyxel.sprite._anim.Animation)
     * [\_\_init\_\_](#pyke_pyxel.sprite._anim.Animation.__init__)
@@ -200,6 +206,9 @@
   * [FX](#pyke_pyxel.fx.FX)
     * [circular\_wipe](#pyke_pyxel.fx.FX.circular_wipe)
     * [splatter](#pyke_pyxel.fx.FX.splatter)
+    * [scale\_in](#pyke_pyxel.fx.FX.scale_in)
+    * [scale\_in\_out](#pyke_pyxel.fx.FX.scale_in_out)
+    * [camera\_shake](#pyke_pyxel.fx.FX.camera_shake)
 * [\_base\_types](#pyke_pyxel._base_types)
   * [ColourSettings](#pyke_pyxel._base_types.ColourSettings)
     * [sprite\_transparency](#pyke_pyxel._base_types.ColourSettings.sprite_transparency)
@@ -380,8 +389,8 @@ def __init__(name: str, up: CompoundSprite|Image, down: CompoundSprite|Image)
 
 **Arguments**:
 
-- `up` _CompoundSprite|Image_ - The icon to display when the button is in its 'up' state.
-- `down` _CompoundSprite|Image_ - The icon to display when the button is in its 'down' or highlighted state.
+- `up` _CompoundSprite|Image_ - The image to display when the button is in its 'up' state.
+- `down` _CompoundSprite|Image_ - The image to display when the button is in its 'down' or highlighted state.
 
 <a id="pyke_pyxel.drawable._button.Button.set_icon"></a>
 
@@ -470,7 +479,7 @@ class Drawable()
 def contains(x: int, y: int) -> bool
 ```
 
-Checks if the given coordinates are within the bounds of the button.
+Checks if the given coordinates are within the bounds of the drawable.
 
 **Arguments**:
 
@@ -480,7 +489,29 @@ Checks if the given coordinates are within the bounds of the button.
 
 **Returns**:
 
-- `bool` - True if the coordinates are within the button's bounds, False otherwise.
+- `bool` - True if the coordinates are within the drawable's bounds, False otherwise.
+
+<a id="pyke_pyxel.drawable._drawable.Drawable.width"></a>
+
+#### width
+
+```python
+@property
+def width() -> int
+```
+
+Returns the width of the drawable in pixels.
+
+<a id="pyke_pyxel.drawable._drawable.Drawable.height"></a>
+
+#### height
+
+```python
+@property
+def height() -> int
+```
+
+Returns the height of the drawable in pixels.
 
 <a id="pyke_pyxel.drawable._drawable.Drawable.position"></a>
 
@@ -1994,6 +2025,16 @@ def set_rotation(rotation: float)
 
 Sets the rotation (in degrees) of the sprite.
 
+<a id="pyke_pyxel.sprite._sprite.Sprite.set_scale"></a>
+
+#### set\_scale
+
+```python
+def set_scale(scale: float)
+```
+
+Sets the scale of the sprite.
+
 <a id="pyke_pyxel.sprite._sprite.Sprite.position"></a>
 
 #### position
@@ -2041,6 +2082,17 @@ def rotation() -> float|None
 ```
 
 Returns the rotation of the sprite in degrees.
+
+<a id="pyke_pyxel.sprite._sprite.Sprite.scale"></a>
+
+#### scale
+
+```python
+@property
+def scale() -> float|None
+```
+
+Returns the scale of the sprite.
 
 <a id="pyke_pyxel.sprite._compound_sprite"></a>
 
@@ -2160,6 +2212,28 @@ Returns the current position of the sprite.
 **Returns**:
 
 - `coord` - The coordinate of the sprite's top-left corner.
+
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.width"></a>
+
+#### width
+
+```python
+@property
+def width() -> int
+```
+
+Returns the width of the sprite in pixels.
+
+<a id="pyke_pyxel.sprite._compound_sprite.CompoundSprite.height"></a>
+
+#### height
+
+```python
+@property
+def height() -> int
+```
+
+Returns the height of the sprite in pixels.
 
 <a id="pyke_pyxel.sprite._anim"></a>
 
@@ -2601,15 +2675,64 @@ completion_signal : str
 def splatter(colour: int, position: coord)
 ```
 
-Create a splatter effect at the specified position. 
+Create a splatter effect at the specified position.
 The splatter effect animates within a single tile for 30 frames.
 
-Parameters
-----------
-colour : int
-    Colour index/value to use for the splatter.
-position : coord
-    The coordinate where the splatter effect should appear.
+**Arguments**:
+
+- `colour` _int_ - Colour index/value to use for the splatter.
+- `position` _coord_ - The coordinate where the splatter effect should appear.
+
+<a id="pyke_pyxel.fx.FX.scale_in"></a>
+
+#### scale\_in
+
+```python
+def scale_in(image: Image, duration: float = 0.5, completion_signal: str|None = None)
+```
+
+Scale (zoom) an image in over a specified duration.
+The image will be drawn as part of the FX.
+
+**Arguments**:
+
+- `image` _Image_ - the image to scale/zoom in
+- `duration` _float_ - the duration in seconds over which to scale the image in
+- `completion_signal` _str|None_ - an optional signal to send once the scale animation is complete
+
+<a id="pyke_pyxel.fx.FX.scale_in_out"></a>
+
+#### scale\_in\_out
+
+```python
+def scale_in_out(sprite: Sprite, to_scale: float, duration: float = 0.5, completion_signal: str|None = None)
+```
+
+Scale (zoom) a sprite in and back out over the specified duration.
+The sprite will be scaled from its current scale to `to_scale` and back to its current scale.
+The sprite has to already be added to the game, it will not be added as part of the FX, only its scale updated.
+
+**Arguments**:
+
+- `sprite` _Sprite_ - the sprite to scale/zoom in and out
+- `duration` _float_ - the duration in seconds over which to scale the sprite in
+- `completion_signal` _str|None_ - an optional signal to send once the scale animation is complete
+
+<a id="pyke_pyxel.fx.FX.camera_shake"></a>
+
+#### camera\_shake
+
+```python
+def camera_shake(duration: float, direction: DIRECTION, completion_signal: str|None = None)
+```
+
+Apply camera shake in the specified direction for the specified duration.
+
+**Arguments**:
+
+- `duration` _float_ - the duration in seconds over which to shake the camera
+- `direction` _DIRECTION_ - the direction to shake the camera in
+- `completion_signal` _str|None_ - an optional signal to send once the effect is complete
 
 <a id="pyke_pyxel._base_types"></a>
 

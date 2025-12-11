@@ -1,4 +1,5 @@
-from ._base_types import coord, GameSettings
+from pyke_pyxel.drawable._camera_shake_effect import _CameraShakeEffect
+from ._base_types import coord, GameSettings, DIRECTION
 from .drawable._image import Image
 from .drawable._effect import _Effect
 from .drawable._circular_wipe_effect import _CircularWipeEffect
@@ -58,7 +59,7 @@ class FX:
         Args:
             image (Image): the image to scale/zoom in
             duration (float): the duration in seconds over which to scale the image in
-            completion_signal (str): an optional signal to send once the scale animation is complete
+            completion_signal (str|None): an optional signal to send once the scale animation is complete
         """
         scale = _ScaleEffect(image, duration, True, completion_signal)
         self._drawables.append(scale)
@@ -72,9 +73,21 @@ class FX:
         Args:
             sprite (Sprite): the sprite to scale/zoom in and out
             duration (float): the duration in seconds over which to scale the sprite in
-            completion_signal (str): an optional signal to send once the scale animation is complete
+            completion_signal (str|None): an optional signal to send once the scale animation is complete
         """
         effect = _ScaleInOutEffect(sprite, to_scale, duration, completion_signal)
+        self._updates.append(effect)
+
+    def camera_shake(self, duration: float, direction: DIRECTION, completion_signal: str|None = None):
+        """
+        Apply camera shake in the specified direction for the specified duration.
+
+        Args:
+            duration (float): the duration in seconds over which to shake the camera
+            direction (DIRECTION): the direction to shake the camera in
+            completion_signal (str|None): an optional signal to send once the effect is complete
+        """
+        effect = _CameraShakeEffect(duration, direction, completion_signal)
         self._updates.append(effect)
 
     def _clear_all(self):

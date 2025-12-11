@@ -1,5 +1,4 @@
 import pyxel
-from pyke_pyxel import coord
 from pyke_pyxel._base_types import GameSettings
 from ._image import Image
 from ._effect import _Effect
@@ -12,8 +11,6 @@ class _ScaleEffect(_Effect):
         self._scale_in = scale_in
 
         settings = GameSettings.get()
-        self._width = settings.size.tile * image.cols
-        self._height = settings.size.tile * image.rows
         self._transparency = settings.colours.sprite_transparency
 
         self._scale: float = 0.0
@@ -41,8 +38,8 @@ class _ScaleEffect(_Effect):
                 img=image.image_index,
                 u=image.frame.x,
                 v=image.frame.y,
-                w=self._width,
-                h=self._height,
+                w=image.width,
+                h=image.height,
                 colkey=self._transparency,
                 scale=self._scale)
 

@@ -25,9 +25,13 @@ class Image(Drawable):
         self.rows = rows
         self.image_index = image_index
 
+        settings = GameSettings.get()
+        self._width = settings.size.tile * self.cols
+        self._height = settings.size.tile * self.rows
+
     def _render_image(self, settings: GameSettings) -> pyxel.Image :
-        width = settings.size.tile * self.cols
-        height = settings.size.tile * self.rows
+        width = self.width
+        height = self.height
 
         img = pyxel.Image(width, height)
         # Set to transparent
@@ -43,10 +47,9 @@ class Image(Drawable):
                 colkey=settings.colours.sprite_transparency)
         return img
 
-
     def _draw(self, settings: GameSettings):
-        width = settings.size.tile * self.cols
-        height = settings.size.tile * self.rows
+        width = self.width
+        height = self.height
 
         position = self.position
 

@@ -15,14 +15,17 @@ class Button(Drawable):
     def __init__(self, name: str, up: CompoundSprite|Image, down: CompoundSprite|Image):
         """
         Args:
-            up (CompoundSprite|Image): The icon to display when the button is in its 'up' state.
-            down (CompoundSprite|Image): The icon to display when the button is in its 'down' or highlighted state.
+            up (CompoundSprite|Image): The image to display when the button is in its 'up' state.
+            down (CompoundSprite|Image): The image to display when the button is in its 'down' or highlighted state.
         """
         super().__init__()
         self.name = name
 
         self._up = up
         self._down = down
+
+        self._width = up.width
+        self._height = up.height
 
         self._icon_up: CompoundSprite|Image|None = None
         self._icon_down: CompoundSprite|Image|None = None
@@ -100,8 +103,6 @@ class Button(Drawable):
         if not self._up_image:
             self._up_image = self._up._render_image(settings)
             self._down_image = self._down._render_image(settings)
-            self.width = self._up_image.width
-            self.height = self._up_image.height
 
         if self._icon_up and not self._icon_up_image:
             self._icon_up_image = self._icon_up._render_image(settings)

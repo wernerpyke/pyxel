@@ -4,29 +4,29 @@ from pyke_pyxel import coord, GameSettings
 class Drawable:
     def __init__(self) -> None:
         self._id = 0
-        self.width = 0
-        self.height = 0
+        self._width = 0
+        self._height = 0
 
         self._position: coord|None = None
 
     def contains(self, x: int, y: int) -> bool:
         """
-        Checks if the given coordinates are within the bounds of the button.
+        Checks if the given coordinates are within the bounds of the drawable.
 
         Args:
             x (int): The x-coordinate to check.
             y (int): The y-coordinate to check.
 
         Returns:
-            bool: True if the coordinates are within the button's bounds, False otherwise.
+            bool: True if the coordinates are within the drawable's bounds, False otherwise.
         """
         min_x = self.position._x
-        max_x = self.position._x + self.width
+        max_x = self.position._x + self._width
         if x < min_x or x > max_x:
             return False
         
         min_y = self.position._y
-        max_y = self.position._y + self.height
+        max_y = self.position._y + self._height
         if y < min_y or y > max_y:
             return False
         return True
@@ -36,6 +36,20 @@ class Drawable:
 
     def _draw(self, settings: GameSettings):
         raise NotImplementedError("_Drawable._draw() not implemented")
+
+    @property
+    def width(self) -> int:
+        """
+        Returns the width of the drawable in pixels.
+        """
+        return self._width
+    
+    @property
+    def height(self) -> int:
+        """
+        Returns the height of the drawable in pixels.
+        """
+        return self._height
 
     @property
     def position(self) -> coord:
