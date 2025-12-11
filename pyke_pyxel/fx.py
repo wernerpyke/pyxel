@@ -1,13 +1,13 @@
-from pyke_pyxel.drawable._camera_shake_effect import _CameraShakeEffect
 from ._base_types import coord, GameSettings, DIRECTION
-from .drawable._image import Image
-from .drawable._effect import _Effect
-from .drawable._circular_wipe_effect import _CircularWipeEffect
-from .drawable._scale_effect import _ScaleEffect
-from .drawable._splatter_effect import _SplatterEffect
-from .drawable._scale_in_out_effect import _ScaleInOutEffect
+from .drawable import Image
 from .sprite import Sprite
 
+from .effects._effect import _Effect
+from .effects._circular_wipe import _CircularWipeEffect
+from .effects._scale import _ScaleEffect
+from .effects._splatter import _SplatterEffect
+from .effects._scale_in_out import _ScaleInOutEffect
+from .effects._camera_shake import _CameraShakeEffect
 
 class FX:
     """

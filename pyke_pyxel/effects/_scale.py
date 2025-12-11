@@ -1,6 +1,6 @@
 import pyxel
-from pyke_pyxel._base_types import GameSettings
-from ._image import Image
+from pyke_pyxel import GameSettings
+from pyke_pyxel.drawable import Image
 from ._effect import _Effect
 
 class _ScaleEffect(_Effect):
