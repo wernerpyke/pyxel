@@ -292,6 +292,9 @@ class Game:
         Draws the background, sprites, HUD, and active visual effects.
         """
         self._draw_background()
+
+        if self._settings.debug:
+            self._draw_map_debug()
         
         self._draw_sprites()
 
@@ -304,6 +307,9 @@ class Game:
 
         if self._tile_map:
             self._tile_map._draw(self._settings)
+
+    def _draw_map_debug(self):
+        self._map._draw_debug(self._settings)
 
     def _draw_sprites(self):
         for sprite in self._sprites:

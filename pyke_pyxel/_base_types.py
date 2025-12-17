@@ -336,6 +336,16 @@ class coord:
     def max_y(self) -> int:
         """Maximum y (bottom-right) of the tile bounding box."""
         return self._y + self.size
+    
+    @property
+    def col(self) -> int:
+        """Column of this tile (1-indexed)."""
+        return self._col
+    
+    @property
+    def row(self) -> int:
+        """Row of this tile (1-indexed)."""
+        return self._row
 
     def __str__(self):
         return f"{self._col}/{self._row}"

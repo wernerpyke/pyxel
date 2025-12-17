@@ -24,10 +24,12 @@ class Room:
         """
         if isinstance(sprite, Callable):
             sprite = sprite()
-        position = coord(col, row)
-        sprite.set_position(position)
+        sprite.set_position(coord(col, row))
         
         Signals.send_add_sprite(sprite)
+
+        # TODO - should we check if there's an existing sprite at this col/row 
+        # and then warn/replace the existing sprite?
 
         for c in range(0, sprite.cols):
             for r in range(0, sprite.rows):

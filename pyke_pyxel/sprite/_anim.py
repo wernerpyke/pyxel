@@ -42,7 +42,18 @@ class Animation:
         # see Sprite.add_animation()
         self._sprite_id:int|None = None
         self._cols = 1
+    
+    def set_current_frame(self, frame_index: int):
+        """
+        Set the current frame of the animation.
+
+        Args:
+            frame_index (int): The index of the frame
+        """
+        if frame_index > (self._frames-1):
+            raise ValueError(f"Animation.set_current_frame frame_index cannot be > {self._frames-1}")
         
+        self._current_frame_index = frame_index
 
     def _activate(self, sprite_id: int, on_animation_end: Optional[Callable[[int], None]] = None):
         self._sprite_id = sprite_id

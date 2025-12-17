@@ -3,6 +3,22 @@ from typing import Any
 
 class RandomChoice:
     """
+    Convenience class to select a random item from a list of choices.
+    """
+    def __init__(self, choices: list[Any]) -> None:
+        self._choices = choices
+
+    def select_one(self) -> Any:
+        """
+        Select one choice from the list of choices.
+
+        Returns:
+                Any: The selected choice.
+        """
+        return random.choice(self._choices)
+
+class WeightedChoice:
+    """
     Convenience class to select a random choice based on a set of probabilities.
     For example:
     - choices = ["A", "B", "C"]

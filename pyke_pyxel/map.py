@@ -4,9 +4,10 @@ from dataclasses import dataclass
 
 import math
 import random
+import pyxel
 
 from ._log import log_debug
-from ._base_types import GameSettings, coord
+from ._base_types import COLOURS, GameSettings, coord
 from .sprite import Sprite, OpenableSprite
     
 @dataclass
@@ -94,6 +95,7 @@ class Map:
 
     def mark_open(self, coord: coord):
         """Mark a location as open."""
+        print(f"mark_open({coord})")
         self.location_at(coord).status = LOCATION_STATUS.OPEN
 
     def is_blocked(self, coord: coord) -> bool:
@@ -266,6 +268,25 @@ class Map:
     def bottom_y(self) -> int:
         """Bottom-most `y` point of the map"""
         return self._height
+    
+    def _draw_debug(self, settings: GameSettings):
+        size = settings.size.tile
+
+        for c in range(0, self._cols):
+            x = c * size
+            pyxel.text(x, 0, str(c+1), COLOURS.RED)
+
+            for r in range(0, self._rows):
+                location = self._grid[c][r]
+                if location.status == LOCATION_STATUS.BLOCKED:
+                    
+                    y = r * size
+                    pyxel.rectb(x, y, size, size, COLOURS.RED)
+
+        for r in range(0, self._rows):
+            y = r * size
+            pyxel.text(0, y, str(r+1), COLOURS.RED)
+
 
     # @staticmethod
     # def find_nearby(sprites: list["Sprite"], for_sprite: "Sprite") -> list["Sprite"]:

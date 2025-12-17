@@ -14,8 +14,11 @@ class Player(MovableActor):
         self._can_open_sprite: OpenableSprite|None = None
 
     def _move(self, map: Map) -> bool:
+        pos = self.position
         if super()._move(map):
-            Signals.send(Signals.PLAYER.MOVED, self)
+            # Only send the signal if the position has changed i.t.o. grid location
+            if self.position.is_different_grid_location(pos):
+                Signals.send(Signals.PLAYER.MOVED, self)
             return True
         else:
             if to := self._blocked_by:

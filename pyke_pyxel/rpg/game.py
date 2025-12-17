@@ -3,7 +3,7 @@ from typing import Callable
 from pyke_pyxel.rpg.actor import Actor
 from pyke_pyxel.rpg.enemy import Enemy
 
-from pyke_pyxel import log_debug, GameSettings
+from pyke_pyxel import log_debug, GameSettings, coord
 from pyke_pyxel.game import Game
 from .player import Player
 from pyke_pyxel.signals import Signals
@@ -58,23 +58,6 @@ class RPGGame(Game):
         self.add_actor(self.player)
 
         return self._player
-    
-    def _update(self):
-
-        # Keyboard
-        self._keyboard._update(self)
-
-        if self._paused:
-            return
-
-        Signals.send(Signals.GAME.UPDATE, self)
-
-        for actor in self._actors:
-            actor._update(self._map)
-
-        self._update_fx()
-
-        self._update_animations()
 
     def clear_all(self):
         """Clear all sprites, TileMap, HUD and FX"""
@@ -103,6 +86,24 @@ class RPGGame(Game):
         if actor in self._actors:
             self._actors.remove(actor)
 
+    def enemies_at(self, position: coord, tolerance: float = 0.0) -> list[Enemy]:
+        """
+        Return a list of enemies which are at the grid location of the provided position.
+
+        Args:
+            position (coord): the grid location to check
+
+        Returns:
+            list[Enemy]: the enemies that are at the provided position
+        """
+        enemies: list[Enemy] = []
+        
+        for actor in self._actors:
+            if isinstance(actor, Enemy) and actor.position.is_same_grid_location(position):
+                enemies.append(actor)
+
+        return enemies
+
     @property
     def player(self) -> Player:
         """Returns the `Player` instance for this game"""
@@ -112,3 +113,20 @@ class RPGGame(Game):
     def room(self) -> Room:
         """Returns the `Room` instance for this game"""
         return self._room
+
+    def _update(self):
+
+        # Keyboard
+        self._keyboard._update(self)
+
+        if self._paused:
+            return
+
+        Signals.send(Signals.GAME.UPDATE, self)
+
+        for actor in self._actors:
+            actor._update(self._map)
+
+        self._update_fx()
+
+        self._update_animations()
