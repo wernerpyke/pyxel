@@ -1,6 +1,10 @@
+import random
 from pyke_pyxel import coord, DIRECTION
 from pyke_pyxel.sprite import Sprite, MovableSprite, AnimationFactory, Animation
 from pyke_pyxel.rpg import Player
+from pyke_pyxel.math import RandomChoice
+
+tree_frames = RandomChoice([coord(1, 7), coord(3, 7), coord(5, 7), coord(7, 7), coord(9, 7), coord(9,7), coord(11,7), coord(13,7), coord(15,7)])
 
 def player() -> MovableSprite:
     sprite = MovableSprite("player", coord(1,1), cols=1, rows=1)
@@ -50,3 +54,6 @@ def spinner() -> MovableSprite:
     sprite.set_right_animation(anim)
 
     return sprite
+
+def tree() -> Sprite:
+    return Sprite("tree", tree_frames.select_one(), rows=2, cols=2)

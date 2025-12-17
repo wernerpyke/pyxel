@@ -15,6 +15,8 @@ settings.size.window = 320
 settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
 
+settings.debug = False
+
 game = RPGGame(
         settings=settings,
         title="Jet", 

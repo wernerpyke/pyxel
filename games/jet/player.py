@@ -19,6 +19,14 @@ class _Player:
         self.game = game
         self.player = game.player
 
+    # Enemies
+    def check_enemies_to_attack(self):
+        enemies = self.game.enemies_at(self.player.position)
+        for e in enemies:
+            print(f"ATTACK {e.name}")
+
+    # Movement
+
     def check_input(self, key: int, direction: DIRECTION):
         keyboard = self.game.keyboard
 
@@ -55,23 +63,6 @@ class _Player:
 
         self.active_dir = None
         self.second_dir = None
-    
-    """
-    def did_move(self):
-        if trail := self.trail:
-            player = self.player
-            pos: coord
-            match player.active_dir:
-                case DIRECTION.RIGHT:
-                    pos = player.position.clone_by(-8, 0, DIRECTION.LEFT)
-                case DIRECTION.DOWN:
-                    pos = player.position.clone_by(0, -8, DIRECTION.UP)
-                case DIRECTION.LEFT:
-                    pos = player.position.clone_by(8, 0, DIRECTION.RIGHT)
-                case _:
-                    pos = player.position.clone_by(0, 8, DIRECTION.DOWN)
-            trail.set_position(pos)
-    """
 
     def _start_movement(self):
         player = self.player

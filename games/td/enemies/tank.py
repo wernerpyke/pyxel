@@ -3,7 +3,7 @@ import random
 from pyke_pyxel import coord
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.sprite import Animation
-from pyke_pyxel.math import RandomChoice
+from pyke_pyxel.math import WeightedChoice
 from .enemy import Enemy
 
 class Tank(Enemy):
@@ -11,7 +11,7 @@ class Tank(Enemy):
     def __init__(self) -> None:
         super().__init__("tank", coord(25,9), cols=2, rows=2)
 
-        self.choice = RandomChoice()
+        self.choice = WeightedChoice()
 
         # TODO - move the below into a new base class: BigEnemy?
         self._sprite.add_animation("kill", Animation(coord(17,9), 2, fps=4))

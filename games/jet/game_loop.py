@@ -10,28 +10,29 @@ from games.jet.enemies.spinner import Spinner
 
 def game_started(game: RPGGame):
     map.add_house(game)
+    map.add_trees(game)
 
     player = game.set_player(sprites.player(), speed_px_per_second=220)
-    player.set_position(coord(10, 10))
+    player.set_position(coord(18, 23))
     PLAYER.start(game)
 
     spinner = Spinner()
-    spinner.set_position(coord(5, 5))
+    spinner.set_position(coord(20, 5))
     game.room.add_enemy(spinner)
-    spinner.move_to(coord(10, 10))
+    spinner.move_to(coord(20, 10))
 
 def game_update(game: RPGGame):
     PLAYER.check_input(pyxel.KEY_UP, DIRECTION.UP)
     PLAYER.check_input(pyxel.KEY_DOWN, DIRECTION.DOWN)
     PLAYER.check_input(pyxel.KEY_LEFT, DIRECTION.LEFT)
     PLAYER.check_input(pyxel.KEY_RIGHT, DIRECTION.RIGHT)
-    # STATE.check_input_none(pyxel.KEY_UP, pyxel.KEY_DOWN, pyxel.KEY_LEFT, pyxel.KEY_RIGHT)
 
     PLAYER.update_movement()
 
 def player_moved(player: Player):
-    # print(f"MOVED {player.position}")
-    pass
+    #print(f"MOVED {player.position}")
+    PLAYER.check_enemies_to_attack()
+    
 
 def player_blocked(player: Player, value: Sprite|None):
     if sprite := value:
@@ -39,6 +40,9 @@ def player_blocked(player: Player, value: Sprite|None):
         match sprite.name:
             case "house":
                 PLAYER.game.fx.scale_in_out(sprite, to_scale=1.2, duration=0.1)
+    else:
+        direction = player.active_dir if player.active_dir else player.facing_dir
+        PLAYER.game.fx.camera_shake(0.1, direction)
     
     PLAYER.stop_movement()
 

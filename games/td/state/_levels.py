@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from pyke_pyxel.math import RandomChoice
+from pyke_pyxel.math import WeightedChoice
 
 @dataclass
 class _let:
@@ -16,7 +16,7 @@ class _le:
 class EnemyLevel:
     def __init__(self) -> None:
         self._enemies: list[_le] = []
-        self._choice = RandomChoice()
+        self._choice = WeightedChoice()
 
         self._enemies.append(_le( # 0
             frequency=2, 
