@@ -17,9 +17,10 @@ def game_started(game: RPGGame):
     PLAYER.start(game)
 
     spinner = Spinner()
-    spinner.set_position(coord(20, 5))
+    spinner.set_position(coord(25, 1))
     game.room.add_enemy(spinner)
-    spinner.move_to(coord(20, 10))
+
+    spinner.move_to(coord(32, 30), game.map)
 
 def game_update(game: RPGGame):
     PLAYER.check_input(pyxel.KEY_UP, DIRECTION.UP)

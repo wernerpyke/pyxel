@@ -53,6 +53,7 @@
     * [clear\_all](#pyke_pyxel.rpg.game.RPGGame.clear_all)
     * [add\_actor](#pyke_pyxel.rpg.game.RPGGame.add_actor)
     * [remove\_actor](#pyke_pyxel.rpg.game.RPGGame.remove_actor)
+    * [enemies\_at](#pyke_pyxel.rpg.game.RPGGame.enemies_at)
     * [player](#pyke_pyxel.rpg.game.RPGGame.player)
     * [room](#pyke_pyxel.rpg.game.RPGGame.room)
 * [player](#pyke_pyxel.rpg.player)
@@ -65,6 +66,8 @@
     * [set\_position](#pyke_pyxel.rpg.actor.MovableActor.set_position)
     * [start\_moving](#pyke_pyxel.rpg.actor.MovableActor.start_moving)
     * [stop\_moving](#pyke_pyxel.rpg.actor.MovableActor.stop_moving)
+    * [move\_to](#pyke_pyxel.rpg.actor.MovableActor.move_to)
+    * [move\_along\_path](#pyke_pyxel.rpg.actor.MovableActor.move_along_path)
     * [is\_moving](#pyke_pyxel.rpg.actor.MovableActor.is_moving)
 * [room](#pyke_pyxel.rpg.room)
   * [Room](#pyke_pyxel.rpg.room.Room)
@@ -99,6 +102,7 @@
     * [random\_distance\_to\_right](#pyke_pyxel.map.Map.random_distance_to_right)
     * [random\_distance\_to\_left](#pyke_pyxel.map.Map.random_distance_to_left)
     * [random\_distance\_down](#pyke_pyxel.map.Map.random_distance_down)
+    * [find\_path](#pyke_pyxel.map.Map.find_path)
     * [height](#pyke_pyxel.map.Map.height)
     * [width](#pyke_pyxel.map.Map.width)
     * [center\_x](#pyke_pyxel.map.Map.center_x)
@@ -172,6 +176,7 @@
 * [\_anim](#pyke_pyxel.sprite._anim)
   * [Animation](#pyke_pyxel.sprite._anim.Animation)
     * [\_\_init\_\_](#pyke_pyxel.sprite._anim.Animation.__init__)
+    * [set\_current\_frame](#pyke_pyxel.sprite._anim.Animation.set_current_frame)
   * [AnimationFactory](#pyke_pyxel.sprite._anim.AnimationFactory)
     * [\_\_init\_\_](#pyke_pyxel.sprite._anim.AnimationFactory.__init__)
     * [at](#pyke_pyxel.sprite._anim.AnimationFactory.at)
@@ -198,10 +203,12 @@
     * [remove\_signal\_for\_key](#pyke_pyxel._keyboard.Keyboard.remove_signal_for_key)
 * [math](#pyke_pyxel.math)
   * [RandomChoice](#pyke_pyxel.math.RandomChoice)
-    * [set](#pyke_pyxel.math.RandomChoice.set)
-    * [add](#pyke_pyxel.math.RandomChoice.add)
-    * [reset](#pyke_pyxel.math.RandomChoice.reset)
     * [select\_one](#pyke_pyxel.math.RandomChoice.select_one)
+  * [WeightedChoice](#pyke_pyxel.math.WeightedChoice)
+    * [set](#pyke_pyxel.math.WeightedChoice.set)
+    * [add](#pyke_pyxel.math.WeightedChoice.add)
+    * [reset](#pyke_pyxel.math.WeightedChoice.reset)
+    * [select\_one](#pyke_pyxel.math.WeightedChoice.select_one)
 * [fx](#pyke_pyxel.fx)
   * [FX](#pyke_pyxel.fx.FX)
     * [circular\_wipe](#pyke_pyxel.fx.FX.circular_wipe)
@@ -239,6 +246,8 @@
     * [min\_y](#pyke_pyxel._base_types.coord.min_y)
     * [max\_x](#pyke_pyxel._base_types.coord.max_x)
     * [max\_y](#pyke_pyxel._base_types.coord.max_y)
+    * [col](#pyke_pyxel._base_types.coord.col)
+    * [row](#pyke_pyxel._base_types.coord.row)
 
 <a id="pyke_pyxel.signals"></a>
 
@@ -929,6 +938,25 @@ Remove an actor from the game's active actor collection.
 
 - `actor` _Actor_ - The actor object to remove from the game.
 
+<a id="pyke_pyxel.rpg.game.RPGGame.enemies_at"></a>
+
+#### enemies\_at
+
+```python
+def enemies_at(position: coord, tolerance: float = 0.0) -> list[Enemy]
+```
+
+Return a list of enemies which are at the grid location of the provided position.
+
+**Arguments**:
+
+- `position` _coord_ - the grid location to check
+  
+
+**Returns**:
+
+- `list[Enemy]` - the enemies that are at the provided position
+
 <a id="pyke_pyxel.rpg.game.RPGGame.player"></a>
 
 #### player
@@ -1040,6 +1068,36 @@ def stop_moving()
 ```
 
 Stop moving
+
+<a id="pyke_pyxel.rpg.actor.MovableActor.move_to"></a>
+
+#### move\_to
+
+```python
+def move_to(position: coord, pathfinder: Map|None, allow_diagonal: bool = True)
+```
+
+Move to the provided coordinate.
+
+**Arguments**:
+
+- `position` _coord_ - The coordinate to move to
+- `pathfinder` _Map|None_ - the Map to use for pathfinding
+- `allow_diagonal` _bool_ - Whether to allow diagonal movement. Defaults to True.
+
+<a id="pyke_pyxel.rpg.actor.MovableActor.move_along_path"></a>
+
+#### move\_along\_path
+
+```python
+def move_along_path(path: list[coord])
+```
+
+Move along the provided path.
+
+**Arguments**:
+
+- `path` _list[coord]_ - The path to follow
 
 <a id="pyke_pyxel.rpg.actor.MovableActor.is_moving"></a>
 
@@ -1277,7 +1335,7 @@ Return the `OpenableSprite` at a coordinate
 #### sprite\_at
 
 ```python
-def sprite_at(coord: coord) -> Optional[Sprite]
+def sprite_at(coord: coord) -> Sprite|None
 ```
 
 Return the `Sprite` at a coordinate
@@ -1297,7 +1355,7 @@ Return the `MapLocation` at a coordinate
 #### location\_left\_of
 
 ```python
-def location_left_of(coord: coord) -> Optional[MapLocation]
+def location_left_of(coord: coord) -> MapLocation|None
 ```
 
 Return the location LEFT of the coordinate
@@ -1307,7 +1365,7 @@ Return the location LEFT of the coordinate
 #### location\_right\_of
 
 ```python
-def location_right_of(coord: coord) -> Optional[MapLocation]
+def location_right_of(coord: coord) -> MapLocation|None
 ```
 
 Return the location RIGHT of the coordinate
@@ -1317,7 +1375,7 @@ Return the location RIGHT of the coordinate
 #### location\_above
 
 ```python
-def location_above(coord: coord) -> Optional[MapLocation]
+def location_above(coord: coord) -> MapLocation|None
 ```
 
 Return the location UP from of the coordinate
@@ -1327,7 +1385,7 @@ Return the location UP from of the coordinate
 #### location\_below
 
 ```python
-def location_below(coord: coord) -> Optional[MapLocation]
+def location_below(coord: coord) -> MapLocation|None
 ```
 
 Return the location DOWN from of the coordinate
@@ -1411,6 +1469,27 @@ def random_distance_down(from_y: int, min: int, max: int) -> int
 ```
 
 Generate a random distance down of `from_y` where the random distance falls between `min` and `max` without exceeding the bounds of the map.
+
+<a id="pyke_pyxel.map.Map.find_path"></a>
+
+#### find\_path
+
+```python
+def find_path(frm: coord, to: coord, allow_diagonal: bool = True) -> list[coord]|None
+```
+
+Find a path between two locations
+
+**Arguments**:
+
+- `frm` _coord_ - The starting location
+- `to` _coord_ - The ending location
+- `allow_diagonal` _bool, optional_ - Whether to allow diagonal movement. Defaults to True.
+  
+
+**Returns**:
+
+- `list[coord]` - A list of coordinates representing the path or `None` if no path exists.
 
 <a id="pyke_pyxel.map.Map.height"></a>
 
@@ -2265,6 +2344,20 @@ def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = Fa
 - `flip` _bool_ - Whether the animation image should be horizontally flipped
 - `fps` _int_ - The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
 
+<a id="pyke_pyxel.sprite._anim.Animation.set_current_frame"></a>
+
+#### set\_current\_frame
+
+```python
+def set_current_frame(frame_index: int)
+```
+
+Set the current frame of the animation.
+
+**Arguments**:
+
+- `frame_index` _int_ - The index of the frame
+
 <a id="pyke_pyxel.sprite._anim.AnimationFactory"></a>
 
 ## AnimationFactory Objects
@@ -2569,6 +2662,30 @@ Disconnect a signal from a key press.
 class RandomChoice()
 ```
 
+Convenience class to select a random item from a list of choices.
+
+<a id="pyke_pyxel.math.RandomChoice.select_one"></a>
+
+#### select\_one
+
+```python
+def select_one() -> Any
+```
+
+Select one choice from the list of choices.
+
+**Returns**:
+
+- `Any` - The selected choice.
+
+<a id="pyke_pyxel.math.WeightedChoice"></a>
+
+## WeightedChoice Objects
+
+```python
+class WeightedChoice()
+```
+
 Convenience class to select a random choice based on a set of probabilities.
 For example:
 - choices = ["A", "B", "C"]
@@ -2576,7 +2693,7 @@ For example:
 
 The sum of the probabilities should be 1.0.
 
-<a id="pyke_pyxel.math.RandomChoice.set"></a>
+<a id="pyke_pyxel.math.WeightedChoice.set"></a>
 
 #### set
 
@@ -2591,7 +2708,7 @@ Set the list of choices and their matching probabilities.
 - `choices` _list[Any]_ - A list of choices.
 - `probabilities` _list[float]_ - A list of probabilities for each choice.
 
-<a id="pyke_pyxel.math.RandomChoice.add"></a>
+<a id="pyke_pyxel.math.WeightedChoice.add"></a>
 
 #### add
 
@@ -2606,7 +2723,7 @@ Add a choice and its matching probability to the list of choices and probabiliti
 - `choice` _Any_ - The choice to add.
 - `probability` _float_ - The probability for the choice.
 
-<a id="pyke_pyxel.math.RandomChoice.reset"></a>
+<a id="pyke_pyxel.math.WeightedChoice.reset"></a>
 
 #### reset
 
@@ -2616,7 +2733,7 @@ def reset()
 
 Reset the list of choices and probabilities.
 
-<a id="pyke_pyxel.math.RandomChoice.select_one"></a>
+<a id="pyke_pyxel.math.WeightedChoice.select_one"></a>
 
 #### select\_one
 
@@ -3072,4 +3189,26 @@ def max_y() -> int
 ```
 
 Maximum y (bottom-right) of the tile bounding box.
+
+<a id="pyke_pyxel._base_types.coord.col"></a>
+
+#### col
+
+```python
+@property
+def col() -> int
+```
+
+Column of this tile (1-indexed).
+
+<a id="pyke_pyxel._base_types.coord.row"></a>
+
+#### row
+
+```python
+@property
+def row() -> int
+```
+
+Row of this tile (1-indexed).
 
