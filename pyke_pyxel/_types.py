@@ -2,7 +2,6 @@ import math
 import enum
 
 from dataclasses import dataclass
-from typing import Optional
 
 @dataclass
 class FpsSettings:
@@ -18,6 +17,7 @@ class SizeSettings:
 class ColourSettings:
     sprite_transparency: int = 0 # COLOURS.BLACK
     background:int = 0 # COLOURS.BLACK
+    debug:int = 15 # COLOURS.BEIGE
 
 class GameSettings:
     _instance = None
@@ -46,6 +46,7 @@ class DIRECTION(enum.Enum):
 
 @dataclass
 class COLOURS:
+    """The pre-defined values for pyxel's colour values"""
     BLACK = 0
     BLUE_DARK = 1
     PURPLE = 2
@@ -73,12 +74,12 @@ class coord:
     in pixel space, and deriving mid/min/max bounding values.
     """
 
-    def __init__(self, col: int, row: int, size: Optional[int] = None):
+    def __init__(self, col: int, row: int, size: int|None = None):
         """Create a coord where col and row are 1-indexed
         Parameters:
         - col (int): column
         - row (int): row
-        - size (int): optionally, the size in pixels of the tile
+        - size (int): optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
         """
 
         if col < 1:
@@ -98,7 +99,7 @@ class coord:
         self._y: int = (self._row - 1) * self.size
 
     @staticmethod
-    def with_center(x: int, y: int, size: Optional[int] = None) -> "coord":
+    def with_center(x: int, y: int, size: int|None = None) -> "coord":
         """Create a coord where (x, y) are treated as the visual center.
 
         The returned coord will have its internal pixel `x, y` set so that
@@ -117,7 +118,7 @@ class coord:
         return c
 
     @staticmethod
-    def with_xy(x: int, y: int, size: Optional[int] = None) -> "coord":
+    def with_xy(x: int, y: int, size: int|None = None) -> "coord":
         """Create a coord with the provided top-left pixel coordinates.
 
         The provided x and y are used directly as the tile's top-left
@@ -349,3 +350,133 @@ class coord:
 
     def __str__(self):
         return f"{self._col}/{self._row}"
+    
+
+class area:
+    """
+    A grid-aware area representing a from/to column/row combination
+    """
+    def __init__(self, from_col: int, from_row: int, to_col: int, to_row: int, tile_size: int|None = None):
+        """
+        Args:
+            from_col (int): from column
+            from_row (int): from row
+            to_col (int): to column
+            to_row (int): to row
+            tile_size (int): optionally, the size in pixels of a tile within the area. Defaults to GameSettings.size.tile.
+        """
+        if (from_col < 1) or (to_col < 1):
+            raise ValueError("area() col values must be >= 1")
+        if (from_row < 1) or (to_row < 1):
+            raise ValueError("area() row values must be >= 1")
+        
+        if to_col < from_col:
+            raise ValueError("area() to_col must be >= from_col")
+        if to_row < from_row:
+            raise ValueError("area() to_row must be >= from_row")
+
+        self._from_col = from_col
+        self._from_row = from_row
+        self._to_col = to_col
+        self._to_row = to_row
+
+        if tile_size:
+            self.tile_size = tile_size
+        else:
+            self.tile_size = GameSettings.get().size.tile
+
+        self._x = (self._from_col - 1) * self.tile_size
+        self._y = (self._from_row - 1) * self.tile_size
+
+        self._width = (self._to_col - self._from_col + 1) * self.tile_size
+        self._height = (self._to_row - self._from_row + 1) * self.tile_size
+    
+    def tiles(self) -> list[coord]:
+        """
+        Returns:
+            list[coord]: A list of all the tiles that make up the area
+        """
+        tiles = []
+        for c in range(self._from_col, self._to_col + 1):
+            for r in range(self._from_row, self._to_row + 1):
+                tiles.append(coord(c, r, self.tile_size))
+        return tiles
+    
+    def boundary_tiles(self) -> list[coord]:
+        """
+        Returns:
+            list[coord]: A list of all the (outer) boundary tiles that make up the area
+        """
+        tiles = []
+        c = self._from_col
+        for r in range(self._from_row, self._to_row + 1):
+            tiles.append(coord(c, r, self.tile_size))
+
+        columns = self.columns
+
+        if columns > 1:
+            c = self._to_col
+            for r in range(self._from_row, self._to_row + 1):
+                tiles.append(coord(c, r, self.tile_size))
+
+        if columns > 2:
+            r = self._from_row
+            for c in range(self._from_col+1, self._to_col):
+                tiles.append(coord(c, self._from_row, self.tile_size))
+                tiles.append(coord(c, self._to_row, self.tile_size))
+
+        return tiles
+
+    def __str__(self):
+        return f"{self._from_col}/{self._from_row}->{self._to_col}/{self._to_row}"
+
+    @property
+    def columns(self) -> int:
+        """Number of columns in the area."""
+        return self._to_col - self._from_col + 1
+
+    @property
+    def rows(self) -> int:
+        """Number of rows in the area."""
+        return self._to_row - self._from_row + 1
+
+    @property
+    def x(self) -> int:
+        """Top-left pixel x coordinate for this area."""
+        return self._x
+
+    @property
+    def y(self) -> int:
+        """Top-left pixel y coordinate for this area."""
+        return self._y
+
+    @property
+    def mid_x(self) -> int:
+        """Integer x coordinate of the visual center (midpoint) of the area."""
+        return math.floor(self._x + (self._width / 2))
+
+    @property
+    def mid_y(self) -> int:
+        """Integer y coordinate of the visual center (midpoint) of the area."""
+        return math.floor(self._y + (self._height / 2))
+
+    @property
+    def min_x(self) -> int:
+        """Minimum x (top-left) of the area bounding box."""
+        return self._x
+
+    @property
+    def min_y(self) -> int:
+        """Minimum y (top-left) of the area bounding box."""
+        return self._y
+
+    @property
+    def max_x(self) -> int:
+        """Maximum x (bottom-right) of the area bounding box."""
+        return self._x + self._width
+
+    @property
+    def max_y(self) -> int:
+        """Maximum y (bottom-right) of the area bounding box."""
+        return self._y + self._height
+

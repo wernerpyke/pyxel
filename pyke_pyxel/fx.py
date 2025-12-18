@@ -1,4 +1,4 @@
-from ._base_types import coord, GameSettings, DIRECTION
+from ._types import coord, GameSettings, DIRECTION
 from .drawable import Image
 from .sprite import Sprite
 

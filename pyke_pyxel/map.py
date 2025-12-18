@@ -1,6 +1,6 @@
 
-from typing import Optional
 from dataclasses import dataclass
+import enum
 
 import math
 import random
@@ -11,11 +11,11 @@ from pathfinding.core.grid import Grid
 from pathfinding.finder.a_star import AStarFinder
 
 from ._log import log_debug, log_error
-from ._base_types import COLOURS, GameSettings, coord
+from ._types import COLOURS, GameSettings, coord, area
 from .sprite import Sprite, OpenableSprite
     
-@dataclass
-class LOCATION_STATUS:
+class LOCATION_STATUS(enum.Enum):
+    """Enumerated location statuses"""
     FREE = 0
     BLOCKED = 1
     CLOSED = 2
@@ -23,12 +23,21 @@ class LOCATION_STATUS:
 
 @dataclass
 class PATH_STATUS:
-    WALKABLE = 1
-    UNWALKABLE = 0
+    FREE = 1
+    BLOCKED = 0
 
 @dataclass
 class MapLocation:
-    status: int
+    """
+    A location on the `Map`
+    Attributes:
+        is_edge (bool): `True` if this location is on the edge of the map
+        position (coord|None): the coordinate position of this location, or `None` if `is_edge` is `True`
+        status (int): one of `LOCATIONSTATUS.FREE`, `LOCATIONSTATUS.BLOCKED`, `LOCATIONSTATUS.CLOSED`, or `LOCATIONSTATUS.OPEN
+        sprite: (Sprite|None): the sprite at this map location, or `None` if there is no sprite
+    """
+    position: coord|None = None
+    status: LOCATION_STATUS = LOCATION_STATUS.FREE
     sprite: Sprite|None = None
     is_edge: bool = False
 
@@ -40,7 +49,7 @@ class Map:
         self._grid: list[ list[MapLocation] ] = []
         self._path_grid: list [list [int] ] = []
 
-        self._edgeLocation = MapLocation(LOCATION_STATUS.BLOCKED, is_edge=True)
+        self._edgeLocation = MapLocation(None, LOCATION_STATUS.BLOCKED, is_edge=True)
         self._width = size.window
         self._height = size.window
         self._cols = math.floor(size.window / size.tile)
@@ -50,8 +59,8 @@ class Map:
             row: list[MapLocation] = []
             path_row: list[int] = []
             for r in range(0, self._rows):
-                row.append(MapLocation(LOCATION_STATUS.FREE))
-                path_row.append(PATH_STATUS.WALKABLE)
+                row.append(MapLocation(coord(c+1, r+1), LOCATION_STATUS.FREE))
+                path_row.append(PATH_STATUS.FREE)
             
             self._path_grid.append(path_row)
             self._grid.append(row)
@@ -90,7 +99,7 @@ class Map:
             return
 
         location.status = LOCATION_STATUS.BLOCKED
-        self._path_status(coord, PATH_STATUS.UNWALKABLE)
+        self._path_status(coord, PATH_STATUS.BLOCKED)
         location.sprite = sprite
 
     def mark_openable(self, coord: coord, sprite: OpenableSprite, closed: bool):
@@ -122,7 +131,7 @@ class Map:
             return
         
         location.status = LOCATION_STATUS.CLOSED
-        self._path_status(coord, PATH_STATUS.UNWALKABLE)
+        self._path_status(coord, PATH_STATUS.BLOCKED)
 
     def mark_open(self, coord: coord):
         """Mark a location as open."""
@@ -132,7 +141,7 @@ class Map:
             return
         
         location.status = LOCATION_STATUS.OPEN
-        self._path_status(coord, PATH_STATUS.WALKABLE)
+        self._path_status(coord, PATH_STATUS.FREE)
 
     def is_blocked(self, coord: coord) -> bool:
         """Check if a location is blocked"""
@@ -143,7 +152,7 @@ class Map:
         location = self.location_at(coord)
         return location.status == LOCATION_STATUS.CLOSED or location.status == LOCATION_STATUS.OPEN
 
-    def adjacent_openable(self, coord: coord) -> Optional[OpenableSprite]:
+    def adjacent_openable(self, coord: coord) -> OpenableSprite|None:
         """Check if a location adjacent(UP, DOWN, LEFT, RIGHT) to the provided coordinate is openable"""
         left = self.location_left_of(coord)
         if left:
@@ -166,7 +175,7 @@ class Map:
                 return below.sprite # type: ignore
 
 
-    def openable_sprite_at(self, coord: coord) -> Optional[OpenableSprite]:
+    def openable_sprite_at(self, coord: coord) -> OpenableSprite|None:
         """Return the `OpenableSprite` at a coordinate"""
         location = self.location_at(coord)
         if location.status == LOCATION_STATUS.CLOSED or location.status == LOCATION_STATUS.OPEN:
@@ -209,6 +218,11 @@ class Map:
             return None
         return self._grid[coord._col - 1][coord._row - 1 + 1]
     
+    def random_location(self, area: area) -> MapLocation:
+        """Return a random location within the provided area"""
+        coord = random.choice(area.tiles())
+        return self.location_at(coord)
+
     def x_is_left_of_center(self, x: int) -> bool:
         """Return true if `x` is to the left of the center of the map"""
         return x < self._width / 2
@@ -304,11 +318,11 @@ class Map:
         finder = AStarFinder(diagonal_movement=diagonal)
         path, _ = finder.find_path(start, end, grid)
 
-        # print(grid.grid_str(path=path, start=start, end=end))
-
         if path and len(path) > 0:
             return [coord(p.x + 1, p.y + 1) for p in path]
         else:
+            log_debug(f"Map.find_path() cannot find path from {frm} to {to}")
+            log_debug(grid.grid_str(path=path, start=start, end=end))
             return None
 
     @property
@@ -357,25 +371,8 @@ class Map:
                 if location.status == LOCATION_STATUS.BLOCKED:
                     
                     y = r * size
-                    pyxel.rectb(x, y, size, size, COLOURS.RED)
+                    pyxel.rectb(x, y, size, size, settings.colours.debug)
 
         for r in range(0, self._rows):
             y = r * size
-            pyxel.text(0, y, str(r+1), COLOURS.RED)
-
-
-    # @staticmethod
-    # def find_nearby(sprites: list["Sprite"], for_sprite: "Sprite") -> list["Sprite"]:
-    #     sprite_col = for_sprite.position._col
-    #     sprite_row = for_sprite.position._row
-        
-    #     result: list["Sprite"] = []
-
-    #     for s in sprites:
-    #         col = s.position._col
-    #         row = s.position._row
-
-    #         if col in range(sprite_col - 2, sprite_col + 2) and row in range(sprite_row - 2, sprite_row + 2):
-    #             result.append(s)
-
-    #     return result
+            pyxel.text(0, y, str(r+1), settings.colours.debug)

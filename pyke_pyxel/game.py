@@ -2,7 +2,7 @@ from typing import Optional
 import pyxel
 
 
-from ._base_types import GameSettings, coord, GameSettings
+from ._types import GameSettings, coord, GameSettings
 from ._log import log_debug
 from ._keyboard import Keyboard
 from .drawable._tilemap import TileMap

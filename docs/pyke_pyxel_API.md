@@ -10,6 +10,54 @@
     * [send\_with](#pyke_pyxel.signals.Signals.send_with)
     * [send\_add\_sprite](#pyke_pyxel.signals.Signals.send_add_sprite)
     * [send\_remove\_sprite](#pyke_pyxel.signals.Signals.send_remove_sprite)
+* [\_types](#pyke_pyxel._types)
+  * [ColourSettings](#pyke_pyxel._types.ColourSettings)
+    * [sprite\_transparency](#pyke_pyxel._types.ColourSettings.sprite_transparency)
+    * [background](#pyke_pyxel._types.ColourSettings.background)
+    * [debug](#pyke_pyxel._types.ColourSettings.debug)
+  * [COLOURS](#pyke_pyxel._types.COLOURS)
+  * [coord](#pyke_pyxel._types.coord)
+    * [\_\_init\_\_](#pyke_pyxel._types.coord.__init__)
+    * [with\_center](#pyke_pyxel._types.coord.with_center)
+    * [with\_xy](#pyke_pyxel._types.coord.with_xy)
+    * [is\_different\_grid\_location](#pyke_pyxel._types.coord.is_different_grid_location)
+    * [is\_same\_grid\_location](#pyke_pyxel._types.coord.is_same_grid_location)
+    * [is\_at](#pyke_pyxel._types.coord.is_at)
+    * [is\_above](#pyke_pyxel._types.coord.is_above)
+    * [is\_below](#pyke_pyxel._types.coord.is_below)
+    * [is\_left\_of](#pyke_pyxel._types.coord.is_left_of)
+    * [is\_right\_of](#pyke_pyxel._types.coord.is_right_of)
+    * [contains](#pyke_pyxel._types.coord.contains)
+    * [diff](#pyke_pyxel._types.coord.diff)
+    * [move\_by](#pyke_pyxel._types.coord.move_by)
+    * [clone](#pyke_pyxel._types.coord.clone)
+    * [clone\_by](#pyke_pyxel._types.coord.clone_by)
+    * [collides\_with](#pyke_pyxel._types.coord.collides_with)
+    * [distance\_to](#pyke_pyxel._types.coord.distance_to)
+    * [x](#pyke_pyxel._types.coord.x)
+    * [y](#pyke_pyxel._types.coord.y)
+    * [mid\_x](#pyke_pyxel._types.coord.mid_x)
+    * [mid\_y](#pyke_pyxel._types.coord.mid_y)
+    * [min\_x](#pyke_pyxel._types.coord.min_x)
+    * [min\_y](#pyke_pyxel._types.coord.min_y)
+    * [max\_x](#pyke_pyxel._types.coord.max_x)
+    * [max\_y](#pyke_pyxel._types.coord.max_y)
+    * [col](#pyke_pyxel._types.coord.col)
+    * [row](#pyke_pyxel._types.coord.row)
+  * [area](#pyke_pyxel._types.area)
+    * [\_\_init\_\_](#pyke_pyxel._types.area.__init__)
+    * [tiles](#pyke_pyxel._types.area.tiles)
+    * [boundary\_tiles](#pyke_pyxel._types.area.boundary_tiles)
+    * [columns](#pyke_pyxel._types.area.columns)
+    * [rows](#pyke_pyxel._types.area.rows)
+    * [x](#pyke_pyxel._types.area.x)
+    * [y](#pyke_pyxel._types.area.y)
+    * [mid\_x](#pyke_pyxel._types.area.mid_x)
+    * [mid\_y](#pyke_pyxel._types.area.mid_y)
+    * [min\_x](#pyke_pyxel._types.area.min_x)
+    * [min\_y](#pyke_pyxel._types.area.min_y)
+    * [max\_x](#pyke_pyxel._types.area.max_x)
+    * [max\_y](#pyke_pyxel._types.area.max_y)
 * [\_button](#pyke_pyxel.drawable._button)
   * [Button](#pyke_pyxel.drawable._button.Button)
     * [\_\_init\_\_](#pyke_pyxel.drawable._button.Button.__init__)
@@ -78,6 +126,8 @@
   * [Enemy](#pyke_pyxel.rpg.enemy.Enemy)
     * [\_\_init\_\_](#pyke_pyxel.rpg.enemy.Enemy.__init__)
 * [map](#pyke_pyxel.map)
+  * [LOCATION\_STATUS](#pyke_pyxel.map.LOCATION_STATUS)
+  * [MapLocation](#pyke_pyxel.map.MapLocation)
   * [Map](#pyke_pyxel.map.Map)
     * [sprite\_can\_move\_to](#pyke_pyxel.map.Map.sprite_can_move_to)
     * [mark\_blocked](#pyke_pyxel.map.Map.mark_blocked)
@@ -94,6 +144,7 @@
     * [location\_right\_of](#pyke_pyxel.map.Map.location_right_of)
     * [location\_above](#pyke_pyxel.map.Map.location_above)
     * [location\_below](#pyke_pyxel.map.Map.location_below)
+    * [random\_location](#pyke_pyxel.map.Map.random_location)
     * [x\_is\_left\_of\_center](#pyke_pyxel.map.Map.x_is_left_of_center)
     * [y\_is\_above\_center](#pyke_pyxel.map.Map.y_is_above_center)
     * [bound\_to\_width](#pyke_pyxel.map.Map.bound_to_width)
@@ -216,38 +267,6 @@
     * [scale\_in](#pyke_pyxel.fx.FX.scale_in)
     * [scale\_in\_out](#pyke_pyxel.fx.FX.scale_in_out)
     * [camera\_shake](#pyke_pyxel.fx.FX.camera_shake)
-* [\_base\_types](#pyke_pyxel._base_types)
-  * [ColourSettings](#pyke_pyxel._base_types.ColourSettings)
-    * [sprite\_transparency](#pyke_pyxel._base_types.ColourSettings.sprite_transparency)
-    * [background](#pyke_pyxel._base_types.ColourSettings.background)
-  * [coord](#pyke_pyxel._base_types.coord)
-    * [\_\_init\_\_](#pyke_pyxel._base_types.coord.__init__)
-    * [with\_center](#pyke_pyxel._base_types.coord.with_center)
-    * [with\_xy](#pyke_pyxel._base_types.coord.with_xy)
-    * [is\_different\_grid\_location](#pyke_pyxel._base_types.coord.is_different_grid_location)
-    * [is\_same\_grid\_location](#pyke_pyxel._base_types.coord.is_same_grid_location)
-    * [is\_at](#pyke_pyxel._base_types.coord.is_at)
-    * [is\_above](#pyke_pyxel._base_types.coord.is_above)
-    * [is\_below](#pyke_pyxel._base_types.coord.is_below)
-    * [is\_left\_of](#pyke_pyxel._base_types.coord.is_left_of)
-    * [is\_right\_of](#pyke_pyxel._base_types.coord.is_right_of)
-    * [contains](#pyke_pyxel._base_types.coord.contains)
-    * [diff](#pyke_pyxel._base_types.coord.diff)
-    * [move\_by](#pyke_pyxel._base_types.coord.move_by)
-    * [clone](#pyke_pyxel._base_types.coord.clone)
-    * [clone\_by](#pyke_pyxel._base_types.coord.clone_by)
-    * [collides\_with](#pyke_pyxel._base_types.coord.collides_with)
-    * [distance\_to](#pyke_pyxel._base_types.coord.distance_to)
-    * [x](#pyke_pyxel._base_types.coord.x)
-    * [y](#pyke_pyxel._base_types.coord.y)
-    * [mid\_x](#pyke_pyxel._base_types.coord.mid_x)
-    * [mid\_y](#pyke_pyxel._base_types.coord.mid_y)
-    * [min\_x](#pyke_pyxel._base_types.coord.min_x)
-    * [min\_y](#pyke_pyxel._base_types.coord.min_y)
-    * [max\_x](#pyke_pyxel._base_types.coord.max_x)
-    * [max\_y](#pyke_pyxel._base_types.coord.max_y)
-    * [col](#pyke_pyxel._base_types.coord.col)
-    * [row](#pyke_pyxel._base_types.coord.row)
 
 <a id="pyke_pyxel.signals"></a>
 
@@ -368,6 +387,544 @@ This can be used as a loosely-coupled alternative to `Game.remove_sprite`
 **Arguments**:
 
 - `sprite` _Sprite | CompoundSprite _ - The sprite to be removed from the game.
+
+<a id="pyke_pyxel._types"></a>
+
+# \_types
+
+<a id="pyke_pyxel._types.ColourSettings"></a>
+
+## ColourSettings Objects
+
+```python
+@dataclass
+class ColourSettings()
+```
+
+<a id="pyke_pyxel._types.ColourSettings.sprite_transparency"></a>
+
+#### sprite\_transparency
+
+COLOURS.BLACK
+
+<a id="pyke_pyxel._types.ColourSettings.background"></a>
+
+#### background
+
+COLOURS.BLACK
+
+<a id="pyke_pyxel._types.ColourSettings.debug"></a>
+
+#### debug
+
+COLOURS.BEIGE
+
+<a id="pyke_pyxel._types.COLOURS"></a>
+
+## COLOURS Objects
+
+```python
+@dataclass
+class COLOURS()
+```
+
+The pre-defined values for pyxel's colour values
+
+<a id="pyke_pyxel._types.coord"></a>
+
+## coord Objects
+
+```python
+class coord()
+```
+
+A grid-aware coordinate representing a tile and its pixel position.
+
+coord stores both a grid location (column and row, 1-indexed) and the
+corresponding top-left pixel coordinates (x, y) for a square tile of
+a given size. It provides helpers for creating coordinates from pixel
+centers or raw x/y, testing containment/collision, cloning and moving
+in pixel space, and deriving mid/min/max bounding values.
+
+<a id="pyke_pyxel._types.coord.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(col: int, row: int, size: int|None = None)
+```
+
+Create a coord where col and row are 1-indexed
+
+**Arguments**:
+
+  - col (int): column
+  - row (int): row
+  - size (int): optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
+
+<a id="pyke_pyxel._types.coord.with_center"></a>
+
+#### with\_center
+
+```python
+@staticmethod
+def with_center(x: int, y: int, size: int|None = None) -> "coord"
+```
+
+Create a coord where (x, y) are treated as the visual center.
+
+The returned coord will have its internal pixel `x, y` set so that
+the tile's center is at the given coordinates. Grid column/row are
+calculated from the center position.
+
+<a id="pyke_pyxel._types.coord.with_xy"></a>
+
+#### with\_xy
+
+```python
+@staticmethod
+def with_xy(x: int, y: int, size: int|None = None) -> "coord"
+```
+
+Create a coord with the provided top-left pixel coordinates.
+
+The provided x and y are used directly as the tile's top-left
+pixel coordinates and the grid column/row are computed from them.
+
+<a id="pyke_pyxel._types.coord.is_different_grid_location"></a>
+
+#### is\_different\_grid\_location
+
+```python
+def is_different_grid_location(coord: "coord")
+```
+
+Return True when this coord is on a different grid tile than `coord`.
+
+Comparison is based on grid column and row (1-indexed), not pixel
+offsets.
+
+<a id="pyke_pyxel._types.coord.is_same_grid_location"></a>
+
+#### is\_same\_grid\_location
+
+```python
+def is_same_grid_location(coord: "coord")
+```
+
+Return True when this coord is on the same grid tile as `coord`.
+
+<a id="pyke_pyxel._types.coord.is_at"></a>
+
+#### is\_at
+
+```python
+def is_at(coord: "coord")
+```
+
+Return true if this coord is at exactly the same (x,y) location as `coord`
+
+<a id="pyke_pyxel._types.coord.is_above"></a>
+
+#### is\_above
+
+```python
+def is_above(coord: "coord")
+```
+
+Return true if this coord is above `coord`
+
+<a id="pyke_pyxel._types.coord.is_below"></a>
+
+#### is\_below
+
+```python
+def is_below(coord: "coord")
+```
+
+Return true if this coord is below `coord`
+
+<a id="pyke_pyxel._types.coord.is_left_of"></a>
+
+#### is\_left\_of
+
+```python
+def is_left_of(coord: "coord")
+```
+
+Return true if this coord is to the left of `coord`
+
+<a id="pyke_pyxel._types.coord.is_right_of"></a>
+
+#### is\_right\_of
+
+```python
+def is_right_of(coord: "coord")
+```
+
+Return true if this coord is to the right of `coord`
+
+<a id="pyke_pyxel._types.coord.contains"></a>
+
+#### contains
+
+```python
+def contains(x: int, y: int)
+```
+
+Return True if the pixel (x, y) is within this tile's bounding box.
+
+The bounding box is inclusive on both edges (min <= value <= max).
+
+<a id="pyke_pyxel._types.coord.diff"></a>
+
+#### diff
+
+```python
+def diff(other: "coord") -> tuple[int, int]
+```
+
+Calculate the difference between this `coord` and the provided `coord`
+
+**Arguments**:
+
+- `other` _coord_ - the `coord` for which to calculate the difference
+  
+
+**Returns**:
+
+- `(tuple)` - the x- and y- difference values
+
+<a id="pyke_pyxel._types.coord.move_by"></a>
+
+#### move\_by
+
+```python
+def move_by(x: int = 0, y: int = 0)
+```
+
+Move this coord by (x, y) pixels and update the grid location.
+
+This mutates the coord in-place. Grid column/row are recalculated
+from the new pixel position.
+
+<a id="pyke_pyxel._types.coord.clone"></a>
+
+#### clone
+
+```python
+def clone()
+```
+
+Return a shallow copy of this coord (same grid location and size).
+
+<a id="pyke_pyxel._types.coord.clone_by"></a>
+
+#### clone\_by
+
+```python
+def clone_by(x: int, y: int, direction: DIRECTION|None = None)
+```
+
+Return a new coord offset by (x, y) pixels from this one.
+
+When a `direction` is provided ("up", "down", "left", "right")
+the resulting grid column/row are adjusted so the cloned tile maps
+appropriately to the direction of movement. Without a direction the
+grid location is computed from the cloned midpoint.
+
+<a id="pyke_pyxel._types.coord.collides_with"></a>
+
+#### collides\_with
+
+```python
+def collides_with(coord: "coord")
+```
+
+Return True if this `coord` collides with another `coord` using AABB.
+
+This uses an axis-aligned bounding box (AABB) test with a small
+tolerance to reduce false positives on exact-edge overlaps.
+
+<a id="pyke_pyxel._types.coord.distance_to"></a>
+
+#### distance\_to
+
+```python
+def distance_to(coord: "coord") -> float
+```
+
+Return the distance between this coord and the provided coord
+
+<a id="pyke_pyxel._types.coord.x"></a>
+
+#### x
+
+```python
+@property
+def x() -> int
+```
+
+Top-left pixel x coordinate for this tile.
+
+<a id="pyke_pyxel._types.coord.y"></a>
+
+#### y
+
+```python
+@property
+def y() -> int
+```
+
+Top-left pixel y coordinate for this tile.
+
+<a id="pyke_pyxel._types.coord.mid_x"></a>
+
+#### mid\_x
+
+```python
+@property
+def mid_x() -> int
+```
+
+Integer x coordinate of the visual center (midpoint) of the tile.
+
+<a id="pyke_pyxel._types.coord.mid_y"></a>
+
+#### mid\_y
+
+```python
+@property
+def mid_y() -> int
+```
+
+Integer y coordinate of the visual center (midpoint) of the tile.
+
+<a id="pyke_pyxel._types.coord.min_x"></a>
+
+#### min\_x
+
+```python
+@property
+def min_x() -> int
+```
+
+Alias for the minimum x (top-left) of the tile bounding box.
+
+<a id="pyke_pyxel._types.coord.min_y"></a>
+
+#### min\_y
+
+```python
+@property
+def min_y() -> int
+```
+
+Alias for the minimum y (top-left) of the tile bounding box.
+
+<a id="pyke_pyxel._types.coord.max_x"></a>
+
+#### max\_x
+
+```python
+@property
+def max_x() -> int
+```
+
+Maximum x (bottom-right) of the tile bounding box.
+
+<a id="pyke_pyxel._types.coord.max_y"></a>
+
+#### max\_y
+
+```python
+@property
+def max_y() -> int
+```
+
+Maximum y (bottom-right) of the tile bounding box.
+
+<a id="pyke_pyxel._types.coord.col"></a>
+
+#### col
+
+```python
+@property
+def col() -> int
+```
+
+Column of this tile (1-indexed).
+
+<a id="pyke_pyxel._types.coord.row"></a>
+
+#### row
+
+```python
+@property
+def row() -> int
+```
+
+Row of this tile (1-indexed).
+
+<a id="pyke_pyxel._types.area"></a>
+
+## area Objects
+
+```python
+class area()
+```
+
+A grid-aware area representing a from/to column/row combination
+
+<a id="pyke_pyxel._types.area.__init__"></a>
+
+#### \_\_init\_\_
+
+```python
+def __init__(from_col: int, from_row: int, to_col: int, to_row: int, tile_size: int|None = None)
+```
+
+**Arguments**:
+
+- `from_col` _int_ - from column
+- `from_row` _int_ - from row
+- `to_col` _int_ - to column
+- `to_row` _int_ - to row
+- `tile_size` _int_ - optionally, the size in pixels of a tile within the area. Defaults to GameSettings.size.tile.
+
+<a id="pyke_pyxel._types.area.tiles"></a>
+
+#### tiles
+
+```python
+def tiles() -> list[coord]
+```
+
+**Returns**:
+
+- `list[coord]` - A list of all the tiles that make up the area
+
+<a id="pyke_pyxel._types.area.boundary_tiles"></a>
+
+#### boundary\_tiles
+
+```python
+def boundary_tiles() -> list[coord]
+```
+
+**Returns**:
+
+- `list[coord]` - A list of all the (outer) boundary tiles that make up the area
+
+<a id="pyke_pyxel._types.area.columns"></a>
+
+#### columns
+
+```python
+@property
+def columns() -> int
+```
+
+Number of columns in the area.
+
+<a id="pyke_pyxel._types.area.rows"></a>
+
+#### rows
+
+```python
+@property
+def rows() -> int
+```
+
+Number of rows in the area.
+
+<a id="pyke_pyxel._types.area.x"></a>
+
+#### x
+
+```python
+@property
+def x() -> int
+```
+
+Top-left pixel x coordinate for this area.
+
+<a id="pyke_pyxel._types.area.y"></a>
+
+#### y
+
+```python
+@property
+def y() -> int
+```
+
+Top-left pixel y coordinate for this area.
+
+<a id="pyke_pyxel._types.area.mid_x"></a>
+
+#### mid\_x
+
+```python
+@property
+def mid_x() -> int
+```
+
+Integer x coordinate of the visual center (midpoint) of the area.
+
+<a id="pyke_pyxel._types.area.mid_y"></a>
+
+#### mid\_y
+
+```python
+@property
+def mid_y() -> int
+```
+
+Integer y coordinate of the visual center (midpoint) of the area.
+
+<a id="pyke_pyxel._types.area.min_x"></a>
+
+#### min\_x
+
+```python
+@property
+def min_x() -> int
+```
+
+Minimum x (top-left) of the area bounding box.
+
+<a id="pyke_pyxel._types.area.min_y"></a>
+
+#### min\_y
+
+```python
+@property
+def min_y() -> int
+```
+
+Minimum y (top-left) of the area bounding box.
+
+<a id="pyke_pyxel._types.area.max_x"></a>
+
+#### max\_x
+
+```python
+@property
+def max_x() -> int
+```
+
+Maximum x (bottom-right) of the area bounding box.
+
+<a id="pyke_pyxel._types.area.max_y"></a>
+
+#### max\_y
+
+```python
+@property
+def max_y() -> int
+```
+
+Maximum y (bottom-right) of the area bounding box.
 
 <a id="pyke_pyxel.drawable._button"></a>
 
@@ -1205,6 +1762,34 @@ def __init__(sprite: MovableSprite, speed_px_per_second: int)
 
 # map
 
+<a id="pyke_pyxel.map.LOCATION_STATUS"></a>
+
+## LOCATION\_STATUS Objects
+
+```python
+class LOCATION_STATUS(enum.Enum)
+```
+
+Enumerated location statuses
+
+<a id="pyke_pyxel.map.MapLocation"></a>
+
+## MapLocation Objects
+
+```python
+@dataclass
+class MapLocation()
+```
+
+A location on the `Map`
+
+**Attributes**:
+
+- `is_edge` _bool_ - `True` if this location is on the edge of the map
+- `position` _coord|None_ - the coordinate position of this location, or `None` if `is_edge` is `True`
+- `status` _int_ - one of `LOCATIONSTATUS.FREE`, `LOCATIONSTATUS.BLOCKED`, `LOCATIONSTATUS.CLOSED`, or `LOCATIONSTATUS.OPEN
+- `sprite` - (Sprite|None): the sprite at this map location, or `None` if there is no sprite
+
 <a id="pyke_pyxel.map.Map"></a>
 
 ## Map Objects
@@ -1315,7 +1900,7 @@ Check if a location is openable
 #### adjacent\_openable
 
 ```python
-def adjacent_openable(coord: coord) -> Optional[OpenableSprite]
+def adjacent_openable(coord: coord) -> OpenableSprite|None
 ```
 
 Check if a location adjacent(UP, DOWN, LEFT, RIGHT) to the provided coordinate is openable
@@ -1325,7 +1910,7 @@ Check if a location adjacent(UP, DOWN, LEFT, RIGHT) to the provided coordinate i
 #### openable\_sprite\_at
 
 ```python
-def openable_sprite_at(coord: coord) -> Optional[OpenableSprite]
+def openable_sprite_at(coord: coord) -> OpenableSprite|None
 ```
 
 Return the `OpenableSprite` at a coordinate
@@ -1389,6 +1974,16 @@ def location_below(coord: coord) -> MapLocation|None
 ```
 
 Return the location DOWN from of the coordinate
+
+<a id="pyke_pyxel.map.Map.random_location"></a>
+
+#### random\_location
+
+```python
+def random_location(area: area) -> MapLocation
+```
+
+Return a random location within the provided area
 
 <a id="pyke_pyxel.map.Map.x_is_left_of_center"></a>
 
@@ -2850,365 +3445,4 @@ Apply camera shake in the specified direction for the specified duration.
 - `duration` _float_ - the duration in seconds over which to shake the camera
 - `direction` _DIRECTION_ - the direction to shake the camera in
 - `completion_signal` _str|None_ - an optional signal to send once the effect is complete
-
-<a id="pyke_pyxel._base_types"></a>
-
-# \_base\_types
-
-<a id="pyke_pyxel._base_types.ColourSettings"></a>
-
-## ColourSettings Objects
-
-```python
-@dataclass
-class ColourSettings()
-```
-
-<a id="pyke_pyxel._base_types.ColourSettings.sprite_transparency"></a>
-
-#### sprite\_transparency
-
-COLOURS.BLACK
-
-<a id="pyke_pyxel._base_types.ColourSettings.background"></a>
-
-#### background
-
-COLOURS.BLACK
-
-<a id="pyke_pyxel._base_types.coord"></a>
-
-## coord Objects
-
-```python
-class coord()
-```
-
-A grid-aware coordinate representing a tile and its pixel position.
-
-coord stores both a grid location (column and row, 1-indexed) and the
-corresponding top-left pixel coordinates (x, y) for a square tile of
-a given size. It provides helpers for creating coordinates from pixel
-centers or raw x/y, testing containment/collision, cloning and moving
-in pixel space, and deriving mid/min/max bounding values.
-
-<a id="pyke_pyxel._base_types.coord.__init__"></a>
-
-#### \_\_init\_\_
-
-```python
-def __init__(col: int, row: int, size: Optional[int] = None)
-```
-
-Create a coord where col and row are 1-indexed
-
-**Arguments**:
-
-  - col (int): column
-  - row (int): row
-  - size (int): optionally, the size in pixels of the tile
-
-<a id="pyke_pyxel._base_types.coord.with_center"></a>
-
-#### with\_center
-
-```python
-@staticmethod
-def with_center(x: int, y: int, size: Optional[int] = None) -> "coord"
-```
-
-Create a coord where (x, y) are treated as the visual center.
-
-The returned coord will have its internal pixel `x, y` set so that
-the tile's center is at the given coordinates. Grid column/row are
-calculated from the center position.
-
-<a id="pyke_pyxel._base_types.coord.with_xy"></a>
-
-#### with\_xy
-
-```python
-@staticmethod
-def with_xy(x: int, y: int, size: Optional[int] = None) -> "coord"
-```
-
-Create a coord with the provided top-left pixel coordinates.
-
-The provided x and y are used directly as the tile's top-left
-pixel coordinates and the grid column/row are computed from them.
-
-<a id="pyke_pyxel._base_types.coord.is_different_grid_location"></a>
-
-#### is\_different\_grid\_location
-
-```python
-def is_different_grid_location(coord: "coord")
-```
-
-Return True when this coord is on a different grid tile than `coord`.
-
-Comparison is based on grid column and row (1-indexed), not pixel
-offsets.
-
-<a id="pyke_pyxel._base_types.coord.is_same_grid_location"></a>
-
-#### is\_same\_grid\_location
-
-```python
-def is_same_grid_location(coord: "coord")
-```
-
-Return True when this coord is on the same grid tile as `coord`.
-
-<a id="pyke_pyxel._base_types.coord.is_at"></a>
-
-#### is\_at
-
-```python
-def is_at(coord: "coord")
-```
-
-Return true if this coord is at exactly the same (x,y) location as `coord`
-
-<a id="pyke_pyxel._base_types.coord.is_above"></a>
-
-#### is\_above
-
-```python
-def is_above(coord: "coord")
-```
-
-Return true if this coord is above `coord`
-
-<a id="pyke_pyxel._base_types.coord.is_below"></a>
-
-#### is\_below
-
-```python
-def is_below(coord: "coord")
-```
-
-Return true if this coord is below `coord`
-
-<a id="pyke_pyxel._base_types.coord.is_left_of"></a>
-
-#### is\_left\_of
-
-```python
-def is_left_of(coord: "coord")
-```
-
-Return true if this coord is to the left of `coord`
-
-<a id="pyke_pyxel._base_types.coord.is_right_of"></a>
-
-#### is\_right\_of
-
-```python
-def is_right_of(coord: "coord")
-```
-
-Return true if this coord is to the right of `coord`
-
-<a id="pyke_pyxel._base_types.coord.contains"></a>
-
-#### contains
-
-```python
-def contains(x: int, y: int)
-```
-
-Return True if the pixel (x, y) is within this tile's bounding box.
-
-The bounding box is inclusive on both edges (min <= value <= max).
-
-<a id="pyke_pyxel._base_types.coord.diff"></a>
-
-#### diff
-
-```python
-def diff(other: "coord") -> tuple[int, int]
-```
-
-Calculate the difference between this `coord` and the provided `coord`
-
-**Arguments**:
-
-- `other` _coord_ - the `coord` for which to calculate the difference
-  
-
-**Returns**:
-
-- `(tuple)` - the x- and y- difference values
-
-<a id="pyke_pyxel._base_types.coord.move_by"></a>
-
-#### move\_by
-
-```python
-def move_by(x: int = 0, y: int = 0)
-```
-
-Move this coord by (x, y) pixels and update the grid location.
-
-This mutates the coord in-place. Grid column/row are recalculated
-from the new pixel position.
-
-<a id="pyke_pyxel._base_types.coord.clone"></a>
-
-#### clone
-
-```python
-def clone()
-```
-
-Return a shallow copy of this coord (same grid location and size).
-
-<a id="pyke_pyxel._base_types.coord.clone_by"></a>
-
-#### clone\_by
-
-```python
-def clone_by(x: int, y: int, direction: DIRECTION|None = None)
-```
-
-Return a new coord offset by (x, y) pixels from this one.
-
-When a `direction` is provided ("up", "down", "left", "right")
-the resulting grid column/row are adjusted so the cloned tile maps
-appropriately to the direction of movement. Without a direction the
-grid location is computed from the cloned midpoint.
-
-<a id="pyke_pyxel._base_types.coord.collides_with"></a>
-
-#### collides\_with
-
-```python
-def collides_with(coord: "coord")
-```
-
-Return True if this `coord` collides with another `coord` using AABB.
-
-This uses an axis-aligned bounding box (AABB) test with a small
-tolerance to reduce false positives on exact-edge overlaps.
-
-<a id="pyke_pyxel._base_types.coord.distance_to"></a>
-
-#### distance\_to
-
-```python
-def distance_to(coord: "coord") -> float
-```
-
-Return the distance between this coord and the provided coord
-
-<a id="pyke_pyxel._base_types.coord.x"></a>
-
-#### x
-
-```python
-@property
-def x() -> int
-```
-
-Top-left pixel x coordinate for this tile.
-
-<a id="pyke_pyxel._base_types.coord.y"></a>
-
-#### y
-
-```python
-@property
-def y() -> int
-```
-
-Top-left pixel y coordinate for this tile.
-
-<a id="pyke_pyxel._base_types.coord.mid_x"></a>
-
-#### mid\_x
-
-```python
-@property
-def mid_x() -> int
-```
-
-Integer x coordinate of the visual center (midpoint) of the tile.
-
-<a id="pyke_pyxel._base_types.coord.mid_y"></a>
-
-#### mid\_y
-
-```python
-@property
-def mid_y() -> int
-```
-
-Integer y coordinate of the visual center (midpoint) of the tile.
-
-<a id="pyke_pyxel._base_types.coord.min_x"></a>
-
-#### min\_x
-
-```python
-@property
-def min_x() -> int
-```
-
-Alias for the minimum x (top-left) of the tile bounding box.
-
-<a id="pyke_pyxel._base_types.coord.min_y"></a>
-
-#### min\_y
-
-```python
-@property
-def min_y() -> int
-```
-
-Alias for the minimum y (top-left) of the tile bounding box.
-
-<a id="pyke_pyxel._base_types.coord.max_x"></a>
-
-#### max\_x
-
-```python
-@property
-def max_x() -> int
-```
-
-Maximum x (bottom-right) of the tile bounding box.
-
-<a id="pyke_pyxel._base_types.coord.max_y"></a>
-
-#### max\_y
-
-```python
-@property
-def max_y() -> int
-```
-
-Maximum y (bottom-right) of the tile bounding box.
-
-<a id="pyke_pyxel._base_types.coord.col"></a>
-
-#### col
-
-```python
-@property
-def col() -> int
-```
-
-Column of this tile (1-indexed).
-
-<a id="pyke_pyxel._base_types.coord.row"></a>
-
-#### row
-
-```python
-@property
-def row() -> int
-```
-
-Row of this tile (1-indexed).
 

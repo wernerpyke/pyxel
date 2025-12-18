@@ -1,6 +1,6 @@
 from typing import Callable
 
-from pyke_pyxel import GameSettings, DIRECTION, coord, log_debug
+from pyke_pyxel import GameSettings, DIRECTION, coord, log_debug, log_error
 from pyke_pyxel.sprite import Sprite, MovableSprite
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.map import Map
@@ -113,6 +113,7 @@ class MovableActor(Actor):
             if self._move_path:
                 self._move_to = self._move_path.pop(0)
             else:
+                log_error(f"MovableActor.move_to() cannot find path from {self.position} to {position}")
                 self._move_to = position
         else:
             self._move_path = None
@@ -182,6 +183,7 @@ class MovableActor(Actor):
                     # print(f"PATH NEXT: {self.position} -> {self._move_to}")
                     if len(self._move_path) == 0:
                         # print(f"PATH DONE")
+                        self._move_to = None
                         self._move_path = None
                 else:
                     self._move_to = None

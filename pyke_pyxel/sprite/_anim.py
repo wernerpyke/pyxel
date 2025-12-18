@@ -1,7 +1,7 @@
 
 
 from typing import Callable, Optional
-from pyke_pyxel._base_types import GameSettings, coord
+from pyke_pyxel._types import GameSettings, coord
 
 
 class Animation:

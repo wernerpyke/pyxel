@@ -15,6 +15,8 @@ class Enemy(MovableActor):
 
     def _move(self, map: Map) -> bool:
         if super()._move(map):
+            if not self.is_moving:
+                Signals.send(Signals.ENEMY.STOPPED, self)
             return True
         else:
             if to := self._blocked_by:

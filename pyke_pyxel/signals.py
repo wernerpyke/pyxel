@@ -101,4 +101,5 @@ class Signals:
 
     @dataclass
     class ENEMY:
+        STOPPED = "enemy_stopped"
         BLOCKED = "enemy_blocked"

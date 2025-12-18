@@ -1,4 +1,4 @@
-from ._base_types import GameSettings
+from ._types import GameSettings
 from .drawable import Drawable, Image, Button, Rect
 from .sprite import CompoundSprite, Sprite, TextSprite
 
