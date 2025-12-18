@@ -2,7 +2,7 @@ import time
 import random
 
 from pyke_pyxel import coord, log_error
-from pyke_pyxel._base_types import COLOURS
+from pyke_pyxel._types import COLOURS
 from pyke_pyxel.cell_auto.game import CellAutoGame
 from pyke_pyxel.signals import Signals
 from games.td.enemies.enemy import Enemy

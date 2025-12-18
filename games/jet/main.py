@@ -29,4 +29,7 @@ Signals.connect(Signals.GAME.UPDATE, game_loop.game_update)
 Signals.connect(Signals.PLAYER.MOVED, game_loop.player_moved)
 Signals.connect(Signals.PLAYER.BLOCKED, game_loop.player_blocked)
 
+Signals.connect(Signals.ENEMY.BLOCKED, game_loop.enemy_blocked)
+Signals.connect(Signals.ENEMY.STOPPED, game_loop.enemy_stopped)
+
 game.start()

@@ -1,12 +1,13 @@
 import pyxel
 from pyke_pyxel import DIRECTION, coord
 from pyke_pyxel.rpg import RPGGame, Player
+from pyke_pyxel.rpg.enemy import Enemy
 from pyke_pyxel.sprite import Sprite
 
 import sprites
 import map
 from games.jet.player import PLAYER
-from games.jet.enemies.spinner import Spinner
+from games.jet.enemies import launch_spinner
 
 def game_started(game: RPGGame):
     map.add_house(game)
@@ -16,11 +17,8 @@ def game_started(game: RPGGame):
     player.set_position(coord(18, 23))
     PLAYER.start(game)
 
-    spinner = Spinner()
-    spinner.set_position(coord(25, 1))
-    game.room.add_enemy(spinner)
-
-    spinner.move_to(coord(32, 30), game.map)
+    for i in range(6):
+        launch_spinner(game)
 
 def game_update(game: RPGGame):
     PLAYER.check_input(pyxel.KEY_UP, DIRECTION.UP)
@@ -47,7 +45,16 @@ def player_blocked(player: Player, value: Sprite|None):
     
     PLAYER.stop_movement()
 
-    
+
+def enemy_stopped(enemy: Enemy):
+    print(f"ENEMY STOPPED {enemy.name}")
+
+def enemy_blocked(enemy: Enemy, value: Sprite|None):
+    if sprite := value:
+        print(f"ENEMY BLOCKED {enemy.name} by {sprite.name}")
+    else:
+        print(f"ENEMY BLOCKED {enemy.name}")
+
 
 
 

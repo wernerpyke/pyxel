@@ -1,5 +1,5 @@
 import random
-from pyke_pyxel import coord
+from pyke_pyxel import coord, area
 from pyke_pyxel.rpg import RPGGame, Player
 
 import sprites
