@@ -14,7 +14,7 @@ class FX:
     FX class for managing visual effects in the game, specifically circular wipe transitions that can open or close,
     transitioning between scenes or states.
 
-    This class should be accessed through the `game` instance via `game.fx`.
+    This class should be accessed through the `Game` instance via `game.fx`.
     """
 
     def __init__(self, settings: GameSettings):

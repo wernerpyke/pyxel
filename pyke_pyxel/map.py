@@ -15,7 +15,7 @@ from ._types import COLOURS, GameSettings, coord, area
 from .sprite import Sprite, OpenableSprite
     
 class LOCATION_STATUS(enum.Enum):
-    """Enumerated location statuses"""
+    """Enumerated location statuses `FREE`, `BLOCKED`, `CLOSED`, and `OPEN`"""
     FREE = 0
     BLOCKED = 1
     CLOSED = 2
@@ -33,8 +33,8 @@ class MapLocation:
     Attributes:
         is_edge (bool): `True` if this location is on the edge of the map
         position (coord|None): the coordinate position of this location, or `None` if `is_edge` is `True`
-        status (int): one of `LOCATIONSTATUS.FREE`, `LOCATIONSTATUS.BLOCKED`, `LOCATIONSTATUS.CLOSED`, or `LOCATIONSTATUS.OPEN
-        sprite: (Sprite|None): the sprite at this map location, or `None` if there is no sprite
+        status (int): one of `LOCATIONSTATUS.FREE`, `LOCATIONSTATUS.BLOCKED`, `LOCATIONSTATUS.CLOSED`, or `LOCATIONSTATUS.OPEN`
+        sprite (Sprite|None): the sprite at this map location, or `None` if there is no sprite
     """
     position: coord|None = None
     status: LOCATION_STATUS = LOCATION_STATUS.FREE
@@ -42,7 +42,11 @@ class MapLocation:
     is_edge: bool = False
 
 class Map:
+    """
+    A grid-aware representation of the game map.
 
+    This class should be accessed through the `Game` instance via `game.map`.
+    """
     def __init__(self, settings: GameSettings):
         size = settings.size
 
@@ -59,7 +63,7 @@ class Map:
             row: list[MapLocation] = []
             path_row: list[int] = []
             for r in range(0, self._rows):
-                row.append(MapLocation(coord(c+1, r+1), LOCATION_STATUS.FREE))
+                row.append(MapLocation(coord(c+1, r+1)))
                 path_row.append(PATH_STATUS.FREE)
             
             self._path_grid.append(path_row)
@@ -364,7 +368,7 @@ class Map:
 
         for c in range(0, self._cols):
             x = c * size
-            pyxel.text(x, 0, str(c+1), COLOURS.RED)
+            pyxel.text(x, 0, str(c+1), settings.colours.debug)
 
             for r in range(0, self._rows):
                 location = self._grid[c][r]

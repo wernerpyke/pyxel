@@ -158,51 +158,59 @@ class MovableActor(Actor):
 
         distance = round(self._px_per_frame) if self._px_per_frame > 1 else 1
 
-        sprite = self._sprite
-
-        next_pos: coord
-        if direction := self.active_dir:
-            by_x = 0
-            by_y = 0
-            match direction:
-                case DIRECTION.UP:
-                    by_y = distance * -1
-                case DIRECTION.DOWN:
-                    by_y = distance
-                case DIRECTION.LEFT:
-                    by_x = distance * -1
-                case DIRECTION.RIGHT:
-                    by_x = distance
-            
-            next_pos = sprite.position.clone_by(by_x, by_y, direction)
-        elif self._move_to:
-            next_pos = sprite.position.clone_towards(self._move_to, distance)
-            if next_pos.is_same_grid_location(self._move_to):
-                if self._move_path:
-                    self._move_to = self._move_path.pop(0)
-                    # print(f"PATH NEXT: {self.position} -> {self._move_to}")
-                    if len(self._move_path) == 0:
-                        # print(f"PATH DONE")
-                        self._move_to = None
-                        self._move_path = None
-                else:
-                    self._move_to = None
-        else:
+        next_pos = self._next_direction_pos(distance)
+        if not next_pos:
+            next_pos = self._next_destination_pos(distance)
+        
+        if not next_pos:
             return False
         
-        if self._move_path:
-            # Special condition - if we are moving along a path
-            # then we don't check for collissions
-            # TODO - is this ok?
-            # The problem with checking collissions on a path is
-            # it breaks sprite.position.clone_towards() above
-            # since the path allows corner-hopping
-            sprite.set_position(next_pos)
-            return True
-        elif map.sprite_can_move_to(next_pos):
-            sprite.set_position(next_pos)
+        # Special condition - if we are moving along a path then we don't check for collissions
+        # The problem with checking collissions on a path is it breaks sprite.position.clone_towards() 
+        # since the path allows corner-hopping
+        # TODO - is this ok?
+        skip_collission_check = self._move_path is not None
+        
+        if skip_collission_check or map.sprite_can_move_to(next_pos):
+            self._sprite.set_position(next_pos)
             return True
         else:
             # print(f"BLOCKED {next_pos}")
             self._blocked_by = next_pos
             return False
+
+    def _next_destination_pos(self, distance: int) -> coord|None:
+        move_to = self._move_to
+
+        if not move_to:
+            return None
+        
+        next_pos = self._sprite.position.clone_towards(move_to, distance)
+        if next_pos.is_same_grid_location(move_to):
+            if self._move_path: # Next position on the path
+                self._move_to = self._move_path.pop(0)
+                if len(self._move_path) == 0:
+                    self._move_path = None
+            else: # Done
+                self._move_to = None
+
+        return next_pos
+
+
+    def _next_direction_pos(self, distance: int) -> coord|None:
+        if not self.active_dir:
+            return None
+        
+        by_x = 0
+        by_y = 0
+        match self.active_dir:
+            case DIRECTION.UP:
+                by_y = distance * -1
+            case DIRECTION.DOWN:
+                by_y = distance
+            case DIRECTION.LEFT:
+                by_x = distance * -1
+            case DIRECTION.RIGHT:
+                by_x = distance
+        
+        return self._sprite.position.clone_by(by_x, by_y, self.active_dir)

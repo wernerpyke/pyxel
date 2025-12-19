@@ -5,6 +5,8 @@ from .signals import Signals
 class Keyboard:
     """
     Access keyboard events and status.
+
+    This class should be accessed through the `Game` instance via `game.keyboard`.
     
     In order to use the correct pyxel key mapping it is necessary to import pyxel.
     For example:

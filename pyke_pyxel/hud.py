@@ -6,7 +6,7 @@ class HUD:
    """
    HUD manages on-screen heads-up display elements for a game.
    
-   This class should be accessed through the `game` instance via `game.hud`.
+   This class should be accessed through the `Game` instance via `game.hud`.
    """
    
    def __init__(self) -> None:
