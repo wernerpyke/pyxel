@@ -99,14 +99,14 @@ class MovableActor(Actor):
         self._blocked_by = None
         self._px_counter = 0
 
-    def move_to(self, position: coord, pathfinder: Map|None, allow_diagonal: bool = True):
+    def move_to(self, position: coord, pathfinder: Map|None, allow_diagonal: bool|None = None):
         """
         Move to the provided coordinate.
 
         Args:
             position (coord): The coordinate to move to
             pathfinder (Map|None): the Map to use for pathfinding
-            allow_diagonal (bool): Whether to allow diagonal movement. Defaults to True.
+            allow_diagonal (bool, optional): Whether to allow diagonal movement.
         """
         if pathfinder:
             self._move_path = pathfinder.find_path(self.position, position, allow_diagonal)

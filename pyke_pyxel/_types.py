@@ -19,7 +19,41 @@ class ColourSettings:
     background:int = 0 # COLOURS.BLACK
     debug:int = 15 # COLOURS.BEIGE
 
+@dataclass 
+class DisplaySettings:
+    smoothing: bool = False
+    full_screen: bool = False
+
+@dataclass
+class PathSettings:
+    allow_diagonal: bool = True
+    reduce_hugging: bool = True
+
 class GameSettings:
+    """
+    Global settings for the game.
+
+    Usage:
+    >>>settings = GameSettings()
+    >>>settings.size.window = 320
+    >>># etc.
+    >>>game = Game(settings=settings)
+
+    Attributes:
+        debug (bool): defaults to False
+        size.window (int): defaults to 160
+        size.tile (int): defaults to 8
+        colours.sprite_transparency (int): defaults to COLOURS.BLACK
+        colours.background (int): defaults to COLOURS.BLACK
+        colours.debug (int): defaults to COLOURS.BEIGE
+        fps.game (int): frames per second, defaults to 30
+        fps.animation (int): frames per second, defaults to 8
+        display.smoothing (bool): defaults to False
+        display.full_screen (bool): defaults to False
+        pathfinding.allow_diagonal (bool): whether to allow diagonal movement; defaults to True
+        pathfinding.reduce_hugging (bool): whether to reduce tight hugging to obstacle boundaries, defaults to True
+        mouse_enabled (bool): defaults to False
+    """
     _instance = None
 
     def __init__(self) -> None:
@@ -27,8 +61,8 @@ class GameSettings:
         self.fps = FpsSettings()
         self.size = SizeSettings()
         self.colours = ColourSettings()
-        self.display_smoothing_enabled = False
-        self.full_screen_enabled = False
+        self.display = DisplaySettings()
+        self.pathfinding = PathSettings()
         self.mouse_enabled = False
 
     @classmethod
@@ -39,6 +73,7 @@ class GameSettings:
 
 
 class DIRECTION(enum.Enum):
+    """Enumerated direction values `UP`, `DOWN`, `LEFT`, and `RIGHT`"""
     UP = "up"
     DOWN = "down"
     LEFT = "left"
@@ -76,10 +111,11 @@ class coord:
 
     def __init__(self, col: int, row: int, size: int|None = None):
         """Create a coord where col and row are 1-indexed
-        Parameters:
-        - col (int): column
-        - row (int): row
-        - size (int): optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
+        
+        Args:
+            col (int): column
+            row (int): row
+            size (int): optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
         """
 
         if col < 1:

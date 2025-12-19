@@ -15,6 +15,9 @@ settings.size.window = 320
 settings.colours.background = COLOURS.BLACK
 settings.colours.sprite_transparency = COLOURS.BEIGE
 
+settings.pathfinding.allow_diagonal = True
+settings.pathfinding.reduce_hugging = True
+
 settings.debug = False
 
 game = RPGGame(

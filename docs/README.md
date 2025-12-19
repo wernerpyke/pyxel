@@ -297,3 +297,41 @@ def start_button_mouse_clicked(game: Game):
                             wipe_closed=True, completion_signal="ui_game_screen_fade_in_complete")
 
 ```
+
+---------------------------------
+
+## Pathfinding
+The `Map` includes pathfinding capabilities. These can be used in the `RPGGame` sub-class or directly in a generic `Game`.
+
+The following settings apply to pathfinding:
+- `settings.pathfinding.allow_diagonal` - whether the allow diagonal movement or not.
+- `settings.pathfinding.reduce_hugging` - adjusts the weights of the map's path data to reduce paths that hugh obstacles tightly.
+
+To use pathfinding, in a generic `Game` instance:
+```
+def game_start(game: Game):
+
+    # Mark some of the map locations as blocked
+    game.map.mark_blocked(coord(2, 2))
+    game.map.mark_blocked(coord(2, 3))
+    # or
+    game.map.mark_closed(coord(7,7)) # For example for cases where you're placing an openable door etc.
+
+    start = coord(1, 1)
+    end = coord(10, 10)
+    path = game.map.find_path(start, end) # returns a list[coord] or None if no path could be found
+```
+
+To use pathfinding in the `RPGGame` sub-class, where you have access to `Player` and `Enemy` actors:
+```
+def game_start(game: Game):
+    # Set up blocked/closed locations on your map as per above example
+
+    # Create an Enemy instance
+    enemy = etc
+
+    game.room.add_enemy(enemy)
+    enemy.set_position(coord(1,1))
+
+    enemy.move_to(coord(10, 10), pathfinder=game.map)
+```

@@ -10,7 +10,7 @@ class Spinner(Enemy):
     def __init__(self):
         sprite = sprites.spinner()
 
-        super().__init__(sprite, 50)
+        super().__init__(sprite, speed_px_per_second=50)
 
         sprite.activate_animation("up")
 

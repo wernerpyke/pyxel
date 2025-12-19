@@ -15,6 +15,8 @@
     * [sprite\_transparency](#pyke_pyxel._types.ColourSettings.sprite_transparency)
     * [background](#pyke_pyxel._types.ColourSettings.background)
     * [debug](#pyke_pyxel._types.ColourSettings.debug)
+  * [GameSettings](#pyke_pyxel._types.GameSettings)
+  * [DIRECTION](#pyke_pyxel._types.DIRECTION)
   * [COLOURS](#pyke_pyxel._types.COLOURS)
   * [coord](#pyke_pyxel._types.coord)
     * [\_\_init\_\_](#pyke_pyxel._types.coord.__init__)
@@ -419,6 +421,48 @@ COLOURS.BLACK
 
 COLOURS.BEIGE
 
+<a id="pyke_pyxel._types.GameSettings"></a>
+
+## GameSettings Objects
+
+```python
+class GameSettings()
+```
+
+Global settings for the game.
+
+Usage:
+>>>settings = GameSettings()
+>>>settings.size.window = 320
+>>># etc.
+>>>game = Game(settings=settings)
+
+**Attributes**:
+
+- `debug` _bool_ - defaults to False
+- `size.window` _int_ - defaults to 160
+- `size.tile` _int_ - defaults to 8
+- `colours.sprite_transparency` _int_ - defaults to COLOURS.BLACK
+- `colours.background` _int_ - defaults to COLOURS.BLACK
+- `colours.debug` _int_ - defaults to COLOURS.BEIGE
+- `fps.game` _int_ - frames per second, defaults to 30
+- `fps.animation` _int_ - frames per second, defaults to 8
+- `display.smoothing` _bool_ - defaults to False
+- `display.full_screen` _bool_ - defaults to False
+- `pathfinding.allow_diagonal` _bool_ - whether to allow diagonal movement; defaults to True
+- `pathfinding.reduce_hugging` _bool_ - whether to reduce tight hugging to obstacle boundaries, defaults to True
+- `mouse_enabled` _bool_ - defaults to False
+
+<a id="pyke_pyxel._types.DIRECTION"></a>
+
+## DIRECTION Objects
+
+```python
+class DIRECTION(enum.Enum)
+```
+
+Enumerated direction values `UP`, `DOWN`, `LEFT`, and `RIGHT`
+
 <a id="pyke_pyxel._types.COLOURS"></a>
 
 ## COLOURS Objects
@@ -458,9 +502,9 @@ Create a coord where col and row are 1-indexed
 
 **Arguments**:
 
-  - col (int): column
-  - row (int): row
-  - size (int): optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
+- `col` _int_ - column
+- `row` _int_ - row
+- `size` _int_ - optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
 
 <a id="pyke_pyxel._types.coord.with_center"></a>
 
@@ -1631,7 +1675,7 @@ Stop moving
 #### move\_to
 
 ```python
-def move_to(position: coord, pathfinder: Map|None, allow_diagonal: bool = True)
+def move_to(position: coord, pathfinder: Map|None, allow_diagonal: bool|None = None)
 ```
 
 Move to the provided coordinate.
@@ -1640,7 +1684,7 @@ Move to the provided coordinate.
 
 - `position` _coord_ - The coordinate to move to
 - `pathfinder` _Map|None_ - the Map to use for pathfinding
-- `allow_diagonal` _bool_ - Whether to allow diagonal movement. Defaults to True.
+- `allow_diagonal` _bool, optional_ - Whether to allow diagonal movement.
 
 <a id="pyke_pyxel.rpg.actor.MovableActor.move_along_path"></a>
 
@@ -1770,7 +1814,7 @@ def __init__(sprite: MovableSprite, speed_px_per_second: int)
 class LOCATION_STATUS(enum.Enum)
 ```
 
-Enumerated location statuses
+Enumerated location statuses `FREE`, `BLOCKED`, `CLOSED`, and `OPEN`
 
 <a id="pyke_pyxel.map.MapLocation"></a>
 
@@ -1787,8 +1831,8 @@ A location on the `Map`
 
 - `is_edge` _bool_ - `True` if this location is on the edge of the map
 - `position` _coord|None_ - the coordinate position of this location, or `None` if `is_edge` is `True`
-- `status` _int_ - one of `LOCATIONSTATUS.FREE`, `LOCATIONSTATUS.BLOCKED`, `LOCATIONSTATUS.CLOSED`, or `LOCATIONSTATUS.OPEN
-- `sprite` - (Sprite|None): the sprite at this map location, or `None` if there is no sprite
+- `status` _int_ - one of `LOCATIONSTATUS.FREE`, `LOCATIONSTATUS.BLOCKED`, `LOCATIONSTATUS.CLOSED`, or `LOCATIONSTATUS.OPEN`
+- `sprite` _Sprite|None_ - the sprite at this map location, or `None` if there is no sprite
 
 <a id="pyke_pyxel.map.Map"></a>
 
@@ -1797,6 +1841,10 @@ A location on the `Map`
 ```python
 class Map()
 ```
+
+A grid-aware representation of the game map.
+
+This class should be accessed through the `Game` instance via `game.map`.
 
 <a id="pyke_pyxel.map.Map.sprite_can_move_to"></a>
 
@@ -2070,7 +2118,7 @@ Generate a random distance down of `from_y` where the random distance falls betw
 #### find\_path
 
 ```python
-def find_path(frm: coord, to: coord, allow_diagonal: bool = True) -> list[coord]|None
+def find_path(frm: coord, to: coord, allow_diagonal: bool|None = None) -> list[coord]|None
 ```
 
 Find a path between two locations
@@ -2079,7 +2127,7 @@ Find a path between two locations
 
 - `frm` _coord_ - The starting location
 - `to` _coord_ - The ending location
-- `allow_diagonal` _bool, optional_ - Whether to allow diagonal movement. Defaults to True.
+- `allow_diagonal` _bool, optional_ - Whether to allow diagonal movement.
   
 
 **Returns**:
@@ -3070,7 +3118,7 @@ class HUD()
 
 HUD manages on-screen heads-up display elements for a game.
 
-This class should be accessed through the `game` instance via `game.hud`.
+This class should be accessed through the `Game` instance via `game.hud`.
 
 <a id="pyke_pyxel.hud.HUD.add_text"></a>
 
@@ -3165,6 +3213,8 @@ class Keyboard()
 ```
 
 Access keyboard events and status.
+
+This class should be accessed through the `Game` instance via `game.keyboard`.
 
 In order to use the correct pyxel key mapping it is necessary to import pyxel.
 For example:
@@ -3357,7 +3407,7 @@ class FX()
 FX class for managing visual effects in the game, specifically circular wipe transitions that can open or close,
 transitioning between scenes or states.
 
-This class should be accessed through the `game` instance via `game.fx`.
+This class should be accessed through the `Game` instance via `game.fx`.
 
 <a id="pyke_pyxel.fx.FX.circular_wipe"></a>
 

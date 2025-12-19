@@ -44,8 +44,10 @@ class Game:
         _settings.fps.animation = settings.fps.animation
         _settings.colours.sprite_transparency = settings.colours.sprite_transparency
         _settings.colours.background = settings.colours.background
-        _settings.display_smoothing_enabled = settings.display_smoothing_enabled
-        _settings.full_screen_enabled = settings.full_screen_enabled
+        _settings.display.smoothing = settings.display.smoothing
+        _settings.display.full_screen = settings.display.full_screen
+        _settings.pathfinding.allow_diagonal = settings.pathfinding.allow_diagonal
+        _settings.pathfinding.reduce_hugging = settings.pathfinding.reduce_hugging
         _settings.mouse_enabled = settings.mouse_enabled
 
 
@@ -69,9 +71,9 @@ class Game:
 
         pyxel.init(settings.size.window, settings.size.window, fps=settings.fps.game, title=title, quit_key=pyxel.KEY_ESCAPE)
         pyxel.load(resources)
-        if settings.display_smoothing_enabled:
+        if settings.display.smoothing:
             pyxel.screen_mode(1)
-        if settings.full_screen_enabled:
+        if settings.display.full_screen:
             pyxel.fullscreen(True)
         
         self._send_mouse_events = False

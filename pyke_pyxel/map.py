@@ -6,12 +6,9 @@ import math
 import random
 import pyxel
 
-from pathfinding.core.diagonal_movement import DiagonalMovement
-from pathfinding.core.grid import Grid
-from pathfinding.finder.a_star import AStarFinder
-
 from ._log import log_debug, log_error
-from ._types import COLOURS, GameSettings, coord, area
+from ._types import GameSettings, coord, area
+from ._path_grid import _PathGrid
 from .sprite import Sprite, OpenableSprite
     
 class LOCATION_STATUS(enum.Enum):
@@ -20,11 +17,6 @@ class LOCATION_STATUS(enum.Enum):
     BLOCKED = 1
     CLOSED = 2
     OPEN = 3
-
-@dataclass
-class PATH_STATUS:
-    FREE = 1
-    BLOCKED = 0
 
 @dataclass
 class MapLocation:
@@ -51,7 +43,6 @@ class Map:
         size = settings.size
 
         self._grid: list[ list[MapLocation] ] = []
-        self._path_grid: list [list [int] ] = []
 
         self._edgeLocation = MapLocation(None, LOCATION_STATUS.BLOCKED, is_edge=True)
         self._width = size.window
@@ -59,14 +50,12 @@ class Map:
         self._cols = math.floor(size.window / size.tile)
         self._rows = math.floor(size.window / size.tile)
 
+        self._path_grid = _PathGrid(self._cols, self._rows)
+
         for c in range(0, self._cols):
             row: list[MapLocation] = []
-            path_row: list[int] = []
             for r in range(0, self._rows):
                 row.append(MapLocation(coord(c+1, r+1)))
-                path_row.append(PATH_STATUS.FREE)
-            
-            self._path_grid.append(path_row)
             self._grid.append(row)
 
     def sprite_can_move_to(self, coord: coord) -> bool:
@@ -103,7 +92,7 @@ class Map:
             return
 
         location.status = LOCATION_STATUS.BLOCKED
-        self._path_status(coord, PATH_STATUS.BLOCKED)
+        self._path_grid.block(coord)
         location.sprite = sprite
 
     def mark_openable(self, coord: coord, sprite: OpenableSprite, closed: bool):
@@ -135,7 +124,7 @@ class Map:
             return
         
         location.status = LOCATION_STATUS.CLOSED
-        self._path_status(coord, PATH_STATUS.BLOCKED)
+        self._path_grid.block(coord)
 
     def mark_open(self, coord: coord):
         """Mark a location as open."""
@@ -145,7 +134,7 @@ class Map:
             return
         
         location.status = LOCATION_STATUS.OPEN
-        self._path_status(coord, PATH_STATUS.FREE)
+        self._path_grid.open(coord)
 
     def is_blocked(self, coord: coord) -> bool:
         """Check if a location is blocked"""
@@ -293,14 +282,14 @@ class Map:
         else:
             return random.randint(min, max)
     
-    def find_path(self, frm: coord, to: coord, allow_diagonal: bool = True) -> list[coord]|None:
+    def find_path(self, frm: coord, to: coord, allow_diagonal: bool|None = None) -> list[coord]|None:
         """ 
             Find a path between two locations
 
             Args:
                 frm (coord): The starting location
                 to (coord): The ending location
-                allow_diagonal (bool, optional): Whether to allow diagonal movement. Defaults to True.
+                allow_diagonal (bool, optional): Whether to allow diagonal movement.
 
             Returns:
                 list[coord]: A list of coordinates representing the path or `None` if no path exists.
@@ -313,21 +302,7 @@ class Map:
             log_error(f"Map.find_path() cannot find path to blocked location {to}")
             return None
 
-        grid = Grid(matrix=self._path_grid)
-        
-        start = grid.node(frm._col - 1, frm._row - 1)
-        end = grid.node(to._col - 1, to._row - 1)
-
-        diagonal = DiagonalMovement.always if allow_diagonal else DiagonalMovement.never
-        finder = AStarFinder(diagonal_movement=diagonal)
-        path, _ = finder.find_path(start, end, grid)
-
-        if path and len(path) > 0:
-            return [coord(p.x + 1, p.y + 1) for p in path]
-        else:
-            log_debug(f"Map.find_path() cannot find path from {frm} to {to}")
-            log_debug(grid.grid_str(path=path, start=start, end=end))
-            return None
+        return self._path_grid.find_path(frm, to, allow_diagonal)
 
     @property
     def height(self) -> int:
@@ -358,10 +333,6 @@ class Map:
     def bottom_y(self) -> int:
         """Bottom-most `y` point of the map"""
         return self._height
-    
-    def _path_status(self, coord: coord, status: int):
-        # import pathfinding is whack? x/y are switched around
-        self._path_grid[coord._row - 1][coord._col - 1] = status
 
     def _draw_debug(self, settings: GameSettings):
         size = settings.size.tile
