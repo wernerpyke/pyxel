@@ -17,7 +17,7 @@ def game_started(game: RPGGame):
     player.set_position(coord(18, 23))
     PLAYER.start(game)
 
-    for i in range(6):
+    for i in range(8):
         launch_spinner(game)
 
 def game_update(game: RPGGame):
@@ -47,7 +47,7 @@ def player_blocked(player: Player, value: Sprite|None):
 
 
 def enemy_stopped(enemy: Enemy):
-    print(f"ENEMY STOPPED {enemy.name}")
+    print(f"ENEMY STOPPED {enemy.name} {enemy.position} {enemy.position.mid_x}/{enemy.position.mid_y}")
 
 def enemy_blocked(enemy: Enemy, value: Sprite|None):
     if sprite := value:
