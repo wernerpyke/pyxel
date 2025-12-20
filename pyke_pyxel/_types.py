@@ -15,9 +15,9 @@ class SizeSettings:
 
 @dataclass
 class ColourSettings:
-    sprite_transparency: int = 0 # COLOURS.BLACK
-    background:int = 0 # COLOURS.BLACK
-    debug:int = 15 # COLOURS.BEIGE
+    sprite_transparency: int = 0
+    background:int = 0
+    debug:int = 15
 
 @dataclass 
 class DisplaySettings:
@@ -36,7 +36,7 @@ class GameSettings:
     Usage:
     >>>settings = GameSettings()
     >>>settings.size.window = 320
-    >>># etc.
+    >>> etc.
     >>>game = Game(settings=settings)
 
     Attributes:

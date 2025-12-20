@@ -53,6 +53,10 @@ def spinner() -> MovableSprite:
     sprite.set_left_animation(anim)
     sprite.set_right_animation(anim)
 
+    # See nasty bug in Animation._update_frame()
+    sprite.add_animation("die", Animation(coord(6,2), 2, loop=False))
+    sprite.add_animation("kill", Animation(coord(8,2), 2, loop=False))
+
     return sprite
 
 def tree() -> Sprite:

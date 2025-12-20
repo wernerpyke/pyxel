@@ -2,6 +2,7 @@ import pyxel
 from pyke_pyxel import DIRECTION, coord
 from pyke_pyxel.rpg import RPGGame, Player
 from pyke_pyxel.rpg.enemy import Enemy
+from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
 
 import sprites
@@ -29,13 +30,10 @@ def game_update(game: RPGGame):
     PLAYER.update_movement()
 
 def player_moved(player: Player):
-    #print(f"MOVED {player.position}")
     PLAYER.check_enemies_to_attack()
-    
 
 def player_blocked(player: Player, value: Sprite|None):
     if sprite := value:
-        print(f"BLOCKED {sprite.name}")
         match sprite.name:
             case "house":
                 PLAYER.game.fx.scale_in_out(sprite, to_scale=1.2, duration=0.1)
@@ -47,11 +45,22 @@ def player_blocked(player: Player, value: Sprite|None):
 
 
 def enemy_stopped(enemy: Enemy):
-    print(f"ENEMY STOPPED {enemy.name} {enemy.position} {enemy.position.mid_x}/{enemy.position.mid_y}")
+    # Hit the house
+    enemy.move_to(coord(22,22))
 
 def enemy_blocked(enemy: Enemy, value: Sprite|None):
+    def _remove_enemy(sprite_id: int):
+        print(f"REMOVE ENEMY {enemy.name}")
+        enemy.remove()
+
+    enemy.stop_moving()
+
     if sprite := value:
-        print(f"ENEMY BLOCKED {enemy.name} by {sprite.name}")
+        if sprite.name == "house":
+            print("ENEMY KILLS")
+            enemy._sprite.activate_animation("kill", on_animation_end=_remove_enemy)
+        else:
+            print(f"ENEMY BLOCKED {enemy.name} by {sprite.name}")
     else:
         print(f"ENEMY BLOCKED {enemy.name}")
 

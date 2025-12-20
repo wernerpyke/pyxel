@@ -15,11 +15,19 @@ class Actor:
 
         self._projectiles: list[Projectile] = []
 
-    def __eq__(self, other):
-        return isinstance(other, Actor) and self._id == other._id
+        self._is_alive = True
 
-    def launch_projectile(self, sprite_type: Callable[[], Sprite], speed_px_per_second: int, direction: DIRECTION):
-        sprite = sprite_type()
+    def launch_projectile(self, sprite: Sprite|Callable[[], Sprite], speed_px_per_second: int, direction: DIRECTION):
+        """
+        Launch a projectile from this actor.
+
+        Args:
+            sprite_type (Sprite | Callable[[], Sprite]): The sprite of the projectile
+            speed_px_per_second (int): The speed of the projectile expressed as pixels per second
+            direction (DIRECTION): The direction the projectile is travelling
+        """
+        if isinstance(sprite, Callable):
+            sprite = sprite()
         
         d_x = 0
         d_y = 0
@@ -42,11 +50,22 @@ class Actor:
         
         Signals.send_add_sprite(sprite)
 
+    def remove(self):
+        """Remove this actor from the game"""
+        self._is_alive = False
+        Signals.send_remove_sprite(self._sprite)
+
     def _update(self, map: Map):
         for projectile in self._projectiles:
             if projectile._update(map) == False:
                 log_debug("Actor.update() removing projectile")
                 self._projectiles.remove(projectile)
+
+    def __hash__(self) -> int:
+        return self._id
+
+    def __eq__(self, other):
+        return isinstance(other, Actor) and self._id == other._id
 
     @property 
     def name(self):
@@ -99,7 +118,7 @@ class MovableActor(Actor):
         self._blocked_by = None
         self._px_counter = 0
 
-    def move_to(self, position: coord, pathfinder: Map|None, allow_diagonal: bool|None = None):
+    def move_to(self, position: coord, pathfinder: Map|None = None, allow_diagonal: bool|None = None):
         """
         Move to the provided coordinate.
 

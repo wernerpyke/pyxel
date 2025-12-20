@@ -13,8 +13,3 @@ class Spinner(Enemy):
         super().__init__(sprite, speed_px_per_second=50)
 
         sprite.activate_animation("up")
-
-    def _update(self, map: Map):
-
-
-        return super()._update(map)

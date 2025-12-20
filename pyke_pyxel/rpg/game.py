@@ -124,8 +124,16 @@ class RPGGame(Game):
 
         Signals.send(Signals.GAME.UPDATE, self)
 
+        to_remove: list[Actor] = []
         for actor in self._actors:
-            actor._update(self._map)
+            if actor._is_alive:
+                actor._update(self._map)
+            else:
+                to_remove.append(actor)
+
+        for a in to_remove:
+            # if a in self._actors: - should not be necessary
+            self._actors.remove(a)
 
         self._update_fx()
 

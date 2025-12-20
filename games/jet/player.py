@@ -1,4 +1,5 @@
 from pyke_pyxel import DIRECTION
+from pyke_pyxel.rpg.enemy import Enemy
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
 from pyke_pyxel.rpg import RPGGame, Player
@@ -21,9 +22,20 @@ class _Player:
 
     # Enemies
     def check_enemies_to_attack(self):
+        to_remove: list[Enemy] = [] 
+
+        def _remove_enemy(sprite_id: int):
+            for e in to_remove:
+                if e._sprite._id == sprite_id:
+                    print(f"REMOVE ENEMY {e.name}")
+                    e.remove()
+
         enemies = self.game.enemies_at(self.player.position)
         for e in enemies:
             print(f"ATTACK {e.name}")
+            to_remove.append(e)
+            e._sprite.activate_animation("die", on_animation_end=_remove_enemy)
+
 
     # Movement
 
