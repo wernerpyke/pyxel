@@ -28,16 +28,16 @@ class Animation:
         self._current_col = 0
 
         self._on_animation_end: Optional[Callable[[int], None]] = None
+        self._trigger_on_animation_end = False
         self._skip_animation_frame_update: int|None = None
         self._skip_animation_frame_update_counter = 0
 
         if fps:
             settings = GameSettings.get()
-            if fps < settings.fps.animation:
-                # self.fps = fps
+            if fps <= settings.fps.animation:
                 self._skip_animation_frame_update = settings.fps.animation // fps
             else:
-                raise ValueError(f"Animation() fps cannot be >= {settings.fps.animation}")
+                raise ValueError(f"Animation() fps cannot be > {settings.fps.animation}")
 
         # see Sprite.add_animation()
         self._sprite_id:int|None = None
@@ -58,6 +58,7 @@ class Animation:
     def _activate(self, sprite_id: int, on_animation_end: Optional[Callable[[int], None]] = None):
         self._sprite_id = sprite_id
         self._on_animation_end = on_animation_end
+        self._trigger_on_animation_end = False
         
         self._current_frame_index = 0
         self._current_col = self._start_frame._col + (self._current_frame_index * self._cols)
@@ -70,6 +71,13 @@ class Animation:
             else:
                 self._skip_animation_frame_update_counter = 0
 
+        if self._trigger_on_animation_end:
+            # Important: only call _on_animation_end now to allow the final frame to be displayed correctly
+            # Especially if animation fps < game fps
+            if self._on_animation_end:
+                self._on_animation_end(self._sprite_id) # type: ignore
+                self._on_animation_end = None
+
         this_frame = self._current_frame_index
 
         if self._current_frame_index < (self._frames - 1):
@@ -78,11 +86,10 @@ class Animation:
             if self._loop:
                 self._current_frame_index = 0
             else:
-                if self._on_animation_end:
-                    self._on_animation_end(self._sprite_id) # type: ignore
-                    self._on_animation_end = None
+                self._trigger_on_animation_end = True
         
         self._current_col = self._start_frame._col + (this_frame * self._cols)
+
         return coord(self._current_col, self._start_frame._row)
 
 class AnimationFactory:
