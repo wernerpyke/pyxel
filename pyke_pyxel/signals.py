@@ -88,7 +88,7 @@ class Signals:
         This can be used as a loosely-coupled alternative to `Game.remove_sprite`
 
         Args:
-            sprite (Sprite | CompoundSprite ): The sprite to be removed from the game.
+            sprite (Sprite | CompoundSprite | int ): The sprite to be removed from the game. The sprite can be identifed by an int `sprite_id`
         """
         signal("sprite_removed").send(sprite)
 
