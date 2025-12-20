@@ -128,7 +128,7 @@ class Game:
         sprite._id = self._sprite_id
         self._sprites.append(sprite)
 
-    def remove_sprite(self, sprite: Sprite|CompoundSprite):
+    def remove_sprite(self, sprite: Sprite|CompoundSprite|int):
         """
         Remove a sprite from the game's active sprite collection.
         
@@ -138,6 +138,10 @@ class Game:
             sprite list.
         """
         
+        if isinstance(sprite, int):
+            self.remove_sprite_by_id(sprite)
+            return
+
         # TODO
         # for both here, in remove_sprite_by_id and _sprite_removed
         # it might be cleaner to mark sprite._to_be_removed = True
@@ -154,11 +158,15 @@ class Game:
         sprite_id : int
             The identifier of the sprite to remove.
         """
-        for s in self._sprites:
-            if s._id == sprite_id:
-                # log_debug(f"GAME.remove_sprite_by_id() {sprite_id}")
-                self._sprites.remove(s)
-                return
+
+        match = next((s for s in self._sprites if s._id == sprite_id), None)
+        if match:
+            self._sprites.remove(match)
+
+        # for s in self._sprites:
+        #    if s._id == sprite_id:
+        #        self._sprites.remove(s)
+        #        return
 
     def set_tilemap(self, resource_position: coord, tiles_wide: int, tiles_high: int, resource_tilemap_index: int = 0):
         """
