@@ -11,10 +11,6 @@
     * [send\_add\_sprite](#pyke_pyxel.signals.Signals.send_add_sprite)
     * [send\_remove\_sprite](#pyke_pyxel.signals.Signals.send_remove_sprite)
 * [\_types](#pyke_pyxel._types)
-  * [ColourSettings](#pyke_pyxel._types.ColourSettings)
-    * [sprite\_transparency](#pyke_pyxel._types.ColourSettings.sprite_transparency)
-    * [background](#pyke_pyxel._types.ColourSettings.background)
-    * [debug](#pyke_pyxel._types.ColourSettings.debug)
   * [GameSettings](#pyke_pyxel._types.GameSettings)
   * [DIRECTION](#pyke_pyxel._types.DIRECTION)
   * [COLOURS](#pyke_pyxel._types.COLOURS)
@@ -111,6 +107,9 @@
     * [\_\_init\_\_](#pyke_pyxel.rpg.player.Player.__init__)
     * [adjacent\_openable](#pyke_pyxel.rpg.player.Player.adjacent_openable)
 * [actor](#pyke_pyxel.rpg.actor)
+  * [Actor](#pyke_pyxel.rpg.actor.Actor)
+    * [launch\_projectile](#pyke_pyxel.rpg.actor.Actor.launch_projectile)
+    * [remove](#pyke_pyxel.rpg.actor.Actor.remove)
   * [MovableActor](#pyke_pyxel.rpg.actor.MovableActor)
     * [\_\_init\_\_](#pyke_pyxel.rpg.actor.MovableActor.__init__)
     * [set\_position](#pyke_pyxel.rpg.actor.MovableActor.set_position)
@@ -388,38 +387,11 @@ This can be used as a loosely-coupled alternative to `Game.remove_sprite`
 
 **Arguments**:
 
-- `sprite` _Sprite | CompoundSprite _ - The sprite to be removed from the game.
+- `sprite` _Sprite | CompoundSprite | int _ - The sprite to be removed from the game. The sprite can be identifed by an int `sprite_id`
 
 <a id="pyke_pyxel._types"></a>
 
 # \_types
-
-<a id="pyke_pyxel._types.ColourSettings"></a>
-
-## ColourSettings Objects
-
-```python
-@dataclass
-class ColourSettings()
-```
-
-<a id="pyke_pyxel._types.ColourSettings.sprite_transparency"></a>
-
-#### sprite\_transparency
-
-COLOURS.BLACK
-
-<a id="pyke_pyxel._types.ColourSettings.background"></a>
-
-#### background
-
-COLOURS.BLACK
-
-<a id="pyke_pyxel._types.ColourSettings.debug"></a>
-
-#### debug
-
-COLOURS.BEIGE
 
 <a id="pyke_pyxel._types.GameSettings"></a>
 
@@ -434,7 +406,7 @@ Global settings for the game.
 Usage:
 >>>settings = GameSettings()
 >>>settings.size.window = 320
->>># etc.
+>>> etc.
 >>>game = Game(settings=settings)
 
 **Attributes**:
@@ -1301,7 +1273,7 @@ Add a sprite to the game's sprite collection.
 #### remove\_sprite
 
 ```python
-def remove_sprite(sprite: Sprite|CompoundSprite)
+def remove_sprite(sprite: Sprite|CompoundSprite|int)
 ```
 
 Remove a sprite from the game's active sprite collection.
@@ -1619,6 +1591,40 @@ Find an `OpenableSprite` adjacent to the player's current position
 
 # actor
 
+<a id="pyke_pyxel.rpg.actor.Actor"></a>
+
+## Actor Objects
+
+```python
+class Actor()
+```
+
+<a id="pyke_pyxel.rpg.actor.Actor.launch_projectile"></a>
+
+#### launch\_projectile
+
+```python
+def launch_projectile(sprite: Sprite|Callable[[], Sprite], speed_px_per_second: int, direction: DIRECTION)
+```
+
+Launch a projectile from this actor.
+
+**Arguments**:
+
+- `sprite_type` _Sprite | Callable[[], Sprite]_ - The sprite of the projectile
+- `speed_px_per_second` _int_ - The speed of the projectile expressed as pixels per second
+- `direction` _DIRECTION_ - The direction the projectile is travelling
+
+<a id="pyke_pyxel.rpg.actor.Actor.remove"></a>
+
+#### remove
+
+```python
+def remove()
+```
+
+Remove this actor from the game
+
 <a id="pyke_pyxel.rpg.actor.MovableActor"></a>
 
 ## MovableActor Objects
@@ -1675,7 +1681,7 @@ Stop moving
 #### move\_to
 
 ```python
-def move_to(position: coord, pathfinder: Map|None, allow_diagonal: bool|None = None)
+def move_to(position: coord, pathfinder: Map|None = None, allow_diagonal: bool|None = None)
 ```
 
 Move to the provided coordinate.
