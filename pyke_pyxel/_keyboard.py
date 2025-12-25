@@ -17,8 +17,8 @@ class Keyboard:
     """
 
     def __init__(self) -> None:
-        self.signals: dict[int, tuple[str, bool]] = {}
-        self.to_remove: list[int] = []
+        self._signals: dict[int, tuple[str, bool]] = {}
+        self._to_remove: list[int] = []
 
     def was_pressed(self, key: int) -> bool:
         """
@@ -56,7 +56,7 @@ class Keyboard:
             key(int): The `pyxel.KEY_*` value of the key to connect the signal to
             signal(str): The name of the signal to emit when the key is pressed down
         """
-        self.signals[key] = (signal, False)
+        self._signals[key] = (signal, False)
 
     def remove_signal_for_key(self, key: int):
         """
@@ -65,27 +65,27 @@ class Keyboard:
         Args:
             key(int): The `pyxel.KEY_*` value of the key to disconnect the signal from
         """
-        if self.signals[key]:
-            self.to_remove.append(key)
+        if self._signals.get(key) is not None:
+            self._to_remove.append(key)
 
     def _update(self, game):
-        for k in self.to_remove:
-            if self.signals[k]:
-                del self.signals[k]
-        self.to_remove.clear()
+        for k in self._to_remove:
+            if self._signals[k]:
+                del self._signals[k]
+        self._to_remove.clear()
 
-        for k in self.signals:
-            if v := self.signals[k]:
+        for k in self._signals:
+            if v := self._signals[k]:
                 signal = v[0]
                 has_been_sent = v[1]
                 
                 if has_been_sent:
                     if pyxel.btnr(k):
-                        self.signals[k] = (signal, False) # reset the signal
+                        self._signals[k] = (signal, False) # reset the signal
                 else:
                     if pyxel.btnp(k):
                         Signals.send(signal, game)
-                        self.signals[k] = (signal, True) # flag the signal as sent
+                        self._signals[k] = (signal, True) # flag the signal as sent
                     
             
 

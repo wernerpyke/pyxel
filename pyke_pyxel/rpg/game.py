@@ -3,7 +3,7 @@ from typing import Callable
 from pyke_pyxel.rpg.actor import Actor
 from pyke_pyxel.rpg.enemy import Enemy
 
-from pyke_pyxel import log_debug, GameSettings, coord
+from pyke_pyxel import log_debug, GameSettings, coord, area
 from pyke_pyxel.game import Game
 from .player import Player
 from pyke_pyxel.signals import Signals
@@ -19,13 +19,14 @@ class RPGGame(Game):
         Attributes:
             player (Player): The player character. Use set_player() to assign the player instance.
             room (Room): The current room/map the player is in. Automatically initialized with the game map.
-
+        """
+        super().__init__(settings, title, resources)
+        """
         Args:
             settings (GameSettings): The game settings configuration.
             title (str): The title of the game window.
             resources (str): The path to the resources directory.
         """
-        super().__init__(settings, title, resources)
 
         self._player: Player
         self._room = Room(self._map)
@@ -86,7 +87,7 @@ class RPGGame(Game):
         if actor in self._actors:
             self._actors.remove(actor)
 
-    def enemies_at(self, position: coord, tolerance: float = 0.0) -> list[Enemy]:
+    def enemies_at(self, position: coord|area, tolerance: float = 0.0) -> list[Enemy]:
         """
         Return a list of enemies which are at the grid location of the provided position.
 
@@ -97,10 +98,15 @@ class RPGGame(Game):
             list[Enemy]: the enemies that are at the provided position
         """
         enemies: list[Enemy] = []
-        
-        for actor in self._actors:
-            if isinstance(actor, Enemy) and actor.position.is_same_grid_location(position):
-                enemies.append(actor)
+
+        if isinstance(position, coord):
+            for actor in self._actors:
+                if isinstance(actor, Enemy) and actor.position.is_same_grid_location(position):
+                    enemies.append(actor)
+        else:
+            for actor in self._actors:
+                if isinstance(actor, Enemy) and position.contains(actor.position):
+                    enemies.append(actor)
 
         return enemies
 
@@ -121,6 +127,8 @@ class RPGGame(Game):
 
         if self._paused:
             return
+
+        self._update_timer()
 
         Signals.send(Signals.GAME.UPDATE, self)
 

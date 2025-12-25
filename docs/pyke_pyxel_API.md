@@ -16,6 +16,7 @@
   * [COLOURS](#pyke_pyxel._types.COLOURS)
   * [coord](#pyke_pyxel._types.coord)
     * [\_\_init\_\_](#pyke_pyxel._types.coord.__init__)
+    * [with\_map\_bounds](#pyke_pyxel._types.coord.with_map_bounds)
     * [with\_center](#pyke_pyxel._types.coord.with_center)
     * [with\_xy](#pyke_pyxel._types.coord.with_xy)
     * [is\_different\_grid\_location](#pyke_pyxel._types.coord.is_different_grid_location)
@@ -46,6 +47,9 @@
     * [\_\_init\_\_](#pyke_pyxel._types.area.__init__)
     * [tiles](#pyke_pyxel._types.area.tiles)
     * [boundary\_tiles](#pyke_pyxel._types.area.boundary_tiles)
+    * [contains](#pyke_pyxel._types.area.contains)
+    * [with\_map\_bounds](#pyke_pyxel._types.area.with_map_bounds)
+    * [with\_center](#pyke_pyxel._types.area.with_center)
     * [columns](#pyke_pyxel._types.area.columns)
     * [rows](#pyke_pyxel._types.area.rows)
     * [x](#pyke_pyxel._types.area.x)
@@ -92,6 +96,13 @@
     * [hud](#pyke_pyxel.game.Game.hud)
     * [fx](#pyke_pyxel.game.Game.fx)
     * [keyboard](#pyke_pyxel.game.Game.keyboard)
+    * [timer](#pyke_pyxel.game.Game.timer)
+* [timer](#pyke_pyxel.timer)
+  * [Timer](#pyke_pyxel.timer.Timer)
+    * [after](#pyke_pyxel.timer.Timer.after)
+    * [every](#pyke_pyxel.timer.Timer.every)
+    * [cancel](#pyke_pyxel.timer.Timer.cancel)
+    * [has\_timer](#pyke_pyxel.timer.Timer.has_timer)
 * [game](#pyke_pyxel.rpg.game)
   * [RPGGame](#pyke_pyxel.rpg.game.RPGGame)
     * [\_\_init\_\_](#pyke_pyxel.rpg.game.RPGGame.__init__)
@@ -478,6 +489,18 @@ Create a coord where col and row are 1-indexed
 - `row` _int_ - row
 - `size` _int_ - optionally, the size in pixels of the tile. Defaults to GameSettings.size.tile.
 
+<a id="pyke_pyxel._types.coord.with_map_bounds"></a>
+
+#### with\_map\_bounds
+
+```python
+@staticmethod
+def with_map_bounds(col: int, row: int, size: int|None = None) -> "coord"
+```
+
+Create a coord that is bounded to the min/max col/row values of 
+the map as determined by based on `GameSettings.size.window` and `GameSettings.size.tile`
+
 <a id="pyke_pyxel._types.coord.with_center"></a>
 
 #### with\_center
@@ -512,7 +535,7 @@ pixel coordinates and the grid column/row are computed from them.
 #### is\_different\_grid\_location
 
 ```python
-def is_different_grid_location(coord: "coord")
+def is_different_grid_location(coord: "coord") -> bool
 ```
 
 Return True when this coord is on a different grid tile than `coord`.
@@ -525,7 +548,7 @@ offsets.
 #### is\_same\_grid\_location
 
 ```python
-def is_same_grid_location(coord: "coord")
+def is_same_grid_location(coord: "coord") -> bool
 ```
 
 Return True when this coord is on the same grid tile as `coord`.
@@ -535,7 +558,7 @@ Return True when this coord is on the same grid tile as `coord`.
 #### is\_at
 
 ```python
-def is_at(coord: "coord")
+def is_at(coord: "coord") -> bool
 ```
 
 Return true if this coord is at exactly the same (x,y) location as `coord`
@@ -545,7 +568,7 @@ Return true if this coord is at exactly the same (x,y) location as `coord`
 #### is\_above
 
 ```python
-def is_above(coord: "coord")
+def is_above(coord: "coord") -> bool
 ```
 
 Return true if this coord is above `coord`
@@ -555,7 +578,7 @@ Return true if this coord is above `coord`
 #### is\_below
 
 ```python
-def is_below(coord: "coord")
+def is_below(coord: "coord") -> bool
 ```
 
 Return true if this coord is below `coord`
@@ -565,7 +588,7 @@ Return true if this coord is below `coord`
 #### is\_left\_of
 
 ```python
-def is_left_of(coord: "coord")
+def is_left_of(coord: "coord") -> bool
 ```
 
 Return true if this coord is to the left of `coord`
@@ -575,7 +598,7 @@ Return true if this coord is to the left of `coord`
 #### is\_right\_of
 
 ```python
-def is_right_of(coord: "coord")
+def is_right_of(coord: "coord") -> bool
 ```
 
 Return true if this coord is to the right of `coord`
@@ -585,10 +608,10 @@ Return true if this coord is to the right of `coord`
 #### contains
 
 ```python
-def contains(x: int, y: int)
+def contains(x: int, y: int) -> bool
 ```
 
-Return True if the pixel (x, y) is within this tile's bounding box.
+Return True if the pixel (x, y) is within this `coord`'s bounding box.
 
 The bounding box is inclusive on both edges (min <= value <= max).
 
@@ -831,6 +854,56 @@ def boundary_tiles() -> list[coord]
 **Returns**:
 
 - `list[coord]` - A list of all the (outer) boundary tiles that make up the area
+
+<a id="pyke_pyxel._types.area.contains"></a>
+
+#### contains
+
+```python
+def contains(position: coord) -> bool
+```
+
+Return `True` if the given `coord` falls within this area, otherwise `False`
+
+<a id="pyke_pyxel._types.area.with_map_bounds"></a>
+
+#### with\_map\_bounds
+
+```python
+@staticmethod
+def with_map_bounds(from_col: int, to_col: int, from_row: int, to_row: int, tile_size: int|None = None) -> "area"
+```
+
+Create an area that is bounded to the min/max col/row values of 
+the map as determined by based on `GameSettings.size.window` and `GameSettings.size.tile`
+
+<a id="pyke_pyxel._types.area.with_center"></a>
+
+#### with\_center
+
+```python
+@staticmethod
+def with_center(x: int, y: int, cols: int, rows: int) -> "area"
+```
+
+Create an area where (x, y) are treated as the visual center.
+Grid column/row positions are calculated from the center position.
+
+The from- and to- column/row values are bounded to remain within the allowable values of the 
+map based on `GameSettings.size.window` and `GameSettings.size.tile`
+
+TODO - ugly bug:
+If I have the following:
+|---|---|---|
+|   |   |   |
+|---|---|---|
+|   | $ |   |
+|---|---|---|
+|   |   |   |
+|---|---|---|
+
+And I want to create area.with_center($x, $y, cols=2)
+Then I get a result from col1 to col3 (half of col1 and half of col3)
 
 <a id="pyke_pyxel._types.area.columns"></a>
 
@@ -1205,12 +1278,22 @@ This class serves as the main controller for a Pyxel-based game, handling initia
 sprite lifecycle management, signal connections, and the update/draw loop. It manages
 game settings, sprites, tile maps, HUD, and visual effects.
 
+Update and Draw Order:
+- 1 User input:
+    - 1.1 Keyboard input
+    - 1.2 Mouse Events
+- 2 Lifecycle (if not paused)
+    - 2.1 Timers
+    - 2.2 `GAME.UPDATE` signal
+    - 2.3 Internal sprite, HUD & FX status updates
+    - 2.4 Internal drawing routines
+
 Signals:
-    - `GAME.WILL_START`: Emitted before the game loop begins.
-    - `GAME.UPDATE`: Emitted on every update frame.
-    - `MOUSE.MOVE`: Sent when mouse position changes, enabled by `GameSettings.mouse_enabled`.
-    - `MOUSE.DOWN`: Sent on left mouse button press, enabled by `GameSettings.mouse_enabled`.
-    - `MOUSE.UP`: Sent on left mouse button release, enabled by `GameSettings.mouse_enabled`.
+- `GAME.WILL_START`: Emitted before the game loop begins.
+- `GAME.UPDATE`: Emitted on every update frame.
+- `MOUSE.MOVE`: Sent when mouse position changes, enabled by `GameSettings.mouse_enabled`.
+- `MOUSE.DOWN`: Sent on left mouse button press, enabled by `GameSettings.mouse_enabled`.
+- `MOUSE.UP`: Sent on left mouse button release, enabled by `GameSettings.mouse_enabled`.
 
 <a id="pyke_pyxel.game.Game.__init__"></a>
 
@@ -1418,6 +1501,92 @@ def keyboard() -> Keyboard
 
 Returns the `Keyboard` instance for this game
 
+<a id="pyke_pyxel.game.Game.timer"></a>
+
+#### timer
+
+```python
+@property
+def timer() -> Timer
+```
+
+Returns the `Timer` instance of this game
+
+<a id="pyke_pyxel.timer"></a>
+
+# timer
+
+<a id="pyke_pyxel.timer.Timer"></a>
+
+## Timer Objects
+
+```python
+class Timer()
+```
+
+A centralised timer single (`after`) and multiple (`every`) support.
+Individual timers are uniquely identifed by the signals that they send
+
+This class should be accessed through the `Game` instance via `game.timer`.
+
+<a id="pyke_pyxel.timer.Timer.after"></a>
+
+#### after
+
+```python
+def after(seconds: float, signal: str, sender: Any|None = None)
+```
+
+Set a timer to fire once after the specified time period has passed.
+If a timer with the same signal already exists the existing timer will be replaced.
+
+**Arguments**:
+
+- `seconds` _float_ - the number of seconds to wait until firing the signal
+- `signal` _str_ - the signal to send
+- `sender` _Any optional_ - an optional sender value to send with the signal
+
+<a id="pyke_pyxel.timer.Timer.every"></a>
+
+#### every
+
+```python
+def every(seconds: float, signal: str, sender: Any|None = None)
+```
+
+Set a timer to fire repeatedly after the specified time period has passed.
+If a timer with the same signal already exists the existing timer will be replaced.
+
+**Arguments**:
+
+- `seconds` _float_ - the number of seconds to wait between firing the signal
+- `signal` _str_ - the signal to send
+- `sender` _Any optional_ - an optional sender value to send with the signal
+
+<a id="pyke_pyxel.timer.Timer.cancel"></a>
+
+#### cancel
+
+```python
+def cancel(signal: str)
+```
+
+Cancel a previously set timer. No-op is the timer does not exist.
+
+**Arguments**:
+
+- `signal` _str_ - the signal that identifies the timer
+
+<a id="pyke_pyxel.timer.Timer.has_timer"></a>
+
+#### has\_timer
+
+```python
+def has_timer(signal: str) -> bool
+```
+
+Return `True` if a timer is registered for the provided signal
+
 <a id="pyke_pyxel.rpg.game"></a>
 
 # game
@@ -1444,13 +1613,6 @@ Specialised sub-class of `pyke_pyxel.Game` which adds basic room- and actor-base
 
 - `player` _Player_ - The player character. Use set_player() to assign the player instance.
 - `room` _Room_ - The current room/map the player is in. Automatically initialized with the game map.
-  
-
-**Arguments**:
-
-- `settings` _GameSettings_ - The game settings configuration.
-- `title` _str_ - The title of the game window.
-- `resources` _str_ - The path to the resources directory.
 
 <a id="pyke_pyxel.rpg.game.RPGGame.set_player"></a>
 
@@ -1516,7 +1678,7 @@ Remove an actor from the game's active actor collection.
 #### enemies\_at
 
 ```python
-def enemies_at(position: coord, tolerance: float = 0.0) -> list[Enemy]
+def enemies_at(position: coord|area, tolerance: float = 0.0) -> list[Enemy]
 ```
 
 Return a list of enemies which are at the grid location of the provided position.
@@ -2748,7 +2910,7 @@ Sets the position of the sprite.
 #### set\_rotation
 
 ```python
-def set_rotation(rotation: float)
+def set_rotation(rotation: float|None)
 ```
 
 Sets the rotation (in degrees) of the sprite.
@@ -2982,7 +3144,7 @@ An animation for a Sprite.
 #### \_\_init\_\_
 
 ```python
-def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None, rotate: float|None = None)
+def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None, rotation: float|None = None)
 ```
 
 **Arguments**:
@@ -2992,6 +3154,7 @@ def __init__(start_frame: coord, frames: int, loop: bool = True, flip: bool = Fa
 - `loop` _bool_ - Whether the animation should loop or not
 - `flip` _bool_ - Whether the animation image should be horizontally flipped
 - `fps` _int_ - The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
+- `rotation` _float, optional_ - The rotation in degrees of this animation
 
 <a id="pyke_pyxel.sprite._anim.Animation.set_current_frame"></a>
 
@@ -3035,7 +3198,7 @@ def __init__(frames: int, fps: int|None = None, loop: bool = True)
 #### at
 
 ```python
-def at(position: coord, flip: bool = False, loop: bool|None = None, rotate: float|None = None) -> Animation
+def at(position: coord, flip: bool = False, loop: bool|None = None, rotation: float|None = None) -> Animation
 ```
 
 Create an `Animation` instance at the given position.
@@ -3045,7 +3208,7 @@ Create an `Animation` instance at the given position.
 - `position` _coord_ - The `coord` of the top-left corner of the animation's graphic on the Pyxel resource sheet.
 - `loop` _bool_ - Whether the animation should loop
 - `flip` _bool_ - Whether the animation image should be horizontally flipped
-- `rotate` _float_ - The number of degrees to rotate the sprite
+- `rotation` _float, optional_ - The rotation in degrees of this animation
 
 <a id="pyke_pyxel.sprite._text_sprite"></a>
 

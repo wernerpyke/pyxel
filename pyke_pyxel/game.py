@@ -11,6 +11,7 @@ from .map import Map
 from .sprite import Sprite, CompoundSprite
 from .hud import HUD
 from .fx import FX
+from .timer import Timer
 
 class Game:
     """
@@ -18,13 +19,23 @@ class Game:
     This class serves as the main controller for a Pyxel-based game, handling initialization,
     sprite lifecycle management, signal connections, and the update/draw loop. It manages
     game settings, sprites, tile maps, HUD, and visual effects.
+
+    Update and Draw Order:
+    - 1 User input:
+        - 1.1 Keyboard input
+        - 1.2 Mouse Events
+    - 2 Lifecycle (if not paused)
+        - 2.1 Timers
+        - 2.2 `GAME.UPDATE` signal
+        - 2.3 Internal sprite, HUD & FX status updates
+        - 2.4 Internal drawing routines
     
     Signals:
-        - `GAME.WILL_START`: Emitted before the game loop begins.
-        - `GAME.UPDATE`: Emitted on every update frame.
-        - `MOUSE.MOVE`: Sent when mouse position changes, enabled by `GameSettings.mouse_enabled`.
-        - `MOUSE.DOWN`: Sent on left mouse button press, enabled by `GameSettings.mouse_enabled`.
-        - `MOUSE.UP`: Sent on left mouse button release, enabled by `GameSettings.mouse_enabled`.
+    - `GAME.WILL_START`: Emitted before the game loop begins.
+    - `GAME.UPDATE`: Emitted on every update frame.
+    - `MOUSE.MOVE`: Sent when mouse position changes, enabled by `GameSettings.mouse_enabled`.
+    - `MOUSE.DOWN`: Sent on left mouse button press, enabled by `GameSettings.mouse_enabled`.
+    - `MOUSE.UP`: Sent on left mouse button release, enabled by `GameSettings.mouse_enabled`.
     """
 
     def __init__(self, settings: GameSettings, title: str, resources: str):
@@ -59,10 +70,11 @@ class Game:
 
         self._map = Map(settings)
 
-        self._tile_map: Optional[TileMap] = None
+        self._tile_map: TileMap|None = None
 
-        self._hud: Optional[HUD] = None
-        self._fx: Optional[FX] = None
+        self._hud: HUD|None = None
+        self._fx: FX|None = None
+        self._timer: Timer|None = None
 
         self._keyboard = Keyboard()
 
@@ -110,11 +122,14 @@ class Game:
 
         self._tile_map = None
 
-        if self._hud:
-            self._hud._clear_all()
+        if hud := self._hud:
+            hud._clear_all()
 
-        if self._fx:
-            self._fx._clear_all()
+        if fx := self._fx:
+            fx._clear_all()
+
+        if timer := self._timer:
+            timer._clear_all()
 
     def add_sprite(self, sprite: Sprite|CompoundSprite):
         """
@@ -228,14 +243,14 @@ class Game:
     @property
     def hud(self) -> HUD:
         """Returns the `HUD` instance for this game"""
-        if self._hud == None:
+        if self._hud is None:
             self._hud = HUD()
         return self._hud
     
     @property
     def fx(self) -> FX:
         """Returns the `FX` instance for this game"""
-        if self._fx == None:
+        if self._fx is None:
             self._fx = FX(self._settings)
         return self._fx
     
@@ -243,6 +258,13 @@ class Game:
     def keyboard(self) -> Keyboard:
         """Returns the `Keyboard` instance for this game"""
         return self._keyboard
+    
+    @property
+    def timer(self) -> Timer:
+        """Returns the `Timer` instance of this game"""
+        if self._timer is None:
+            self._timer = Timer()
+        return self._timer
 
     # ===== PYXEL =====
 
@@ -276,11 +298,17 @@ class Game:
         if self._paused:
             return
         
+        self._update_timer()
+
         Signals.send(Signals.GAME.UPDATE, self)
 
         self._update_fx()
 
         self._update_animations()
+
+    def _update_timer(self):
+        if timer := self._timer:
+            timer._update()
 
     def _update_fx(self):
         if self._fx and self._fx.requires_update:

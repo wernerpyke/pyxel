@@ -244,9 +244,39 @@ def game_start(game: Game):
     game.keyboard.signal_for_key(pyxel.KEY_Z, "z_key_pressed")
 ```
 
+---------------------------------
+
+## Timers
+
+The `Game` instance includes a global timer which can be used to send signals once (after a given delay) or multiple times. A sender value can be passed with each signal.
+
+For example:
+```
+def my_timed_event(value: str):
+    print(f"Hello {value}")
+
+def game_start(game: Game):
+    Signals.connect("my_timer_signal", my_timed_event)
+
+    game.timer.after(seconds=0.5, signal="my_timer_signal", sender="World")
+```
+
+Timers are uniquely identified by the signal that they send.
+```
+def my_timed_event(game: Game):
+    # Do something
+    game.timer.cancel("my_timer_signal")
+
+def game_start(game: Game):
+    Signals.connect("my_timer_signal", my_timed_event)
+
+    game.timer.every(seconds=0.5, signal="my_timer_signal", sender=game)
+```
+
 ----------------------------------------
 
 ## HUD & UI: present game state to the player
+
 The `HUD` utilities make it easy to display player health, inventory, scores and
 other overlays. A HUD is typically updated from the same game state that drives
 your logic and drawn last so it appears above world sprites. 
@@ -284,6 +314,7 @@ def game_started(game: Game):
 ---------------------------------
 
 ## FX: short-lived visual effects
+
 Use `FX` helpers for transient effects and animated overlays. FX objects are lightweight and intended to be created
 on-the-fly by gameplay events (e.g. an sprite collision spawns a splatter FX instance which lives
 for its duration and then disappears).
@@ -301,6 +332,7 @@ def start_button_mouse_clicked(game: Game):
 ---------------------------------
 
 ## Pathfinding
+
 The `Map` includes pathfinding capabilities. These can be used in the `RPGGame` sub-class or directly in a generic `Game`.
 
 The following settings apply to pathfinding:
