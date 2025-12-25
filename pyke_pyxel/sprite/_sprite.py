@@ -2,7 +2,7 @@ from typing import Optional, Callable
 import pyxel
 import math
 
-from pyke_pyxel import coord, GameSettings
+from pyke_pyxel import coord, area, GameSettings
 
 from ._anim import Animation
 
@@ -44,7 +44,7 @@ class Sprite:
 
         self._scale: float|None = None
 
-        self._linked_sprite: Sprite|None = None
+        self._linked_sprites: list[Sprite]|None = None
 
     def add_animation(self, name: str, animation: Animation):
         """Add an animation to the sprite.
@@ -92,7 +92,9 @@ class Sprite:
         Args:
             sprite (Sprite): The sprite to link.
         """
-        self._linked_sprite = sprite
+        if not self._linked_sprites:
+            self._linked_sprites = []
+        self._linked_sprites.append(sprite)
 
     def unlink_sprite(self, sprite: "Sprite"):
         """
@@ -101,7 +103,10 @@ class Sprite:
         Args:
             sprite (Sprite): The sprite to unlink.
         """
-        self._linked_sprite = None
+        if not self._linked_sprites:
+            return
+        if sprite in self._linked_sprites:
+            self._linked_sprites.remove(sprite)
 
     def set_position(self, position: coord):
         """
@@ -110,16 +115,17 @@ class Sprite:
         Args:
             position (coord): The new coordinate for the sprite's top-left corner.
         """
-        if self._linked_sprite:
+        if self._linked_sprites:
             diff = position.diff(self._position)
-            self._linked_sprite._position.move_by(diff[0], diff[1])
+            for s in self._linked_sprites:
+                s._position.move_by(diff[0], diff[1])
 
         self._position = position # .clone()
 
-    def set_rotation(self, rotation: float):
+    def set_rotation(self, rotation: float|None):
         """Sets the rotation (in degrees) of the sprite."""
         # TODO, what about self._linked_sprite ?
-        if rotation == 0.0:
+        if (rotation is None) or (rotation == 0.0):
             self._rotation = None
         else:
             self._rotation = rotation % 360
@@ -162,7 +168,7 @@ class Sprite:
         Returns the rotation of the sprite in degrees.
         """
         if anim := self._animation:
-            return anim.rotate
+            return anim.rotation
         else:
             return self._rotation
         

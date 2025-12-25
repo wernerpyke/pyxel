@@ -8,7 +8,7 @@ class Animation:
     """
     An animation for a Sprite.
     """
-    def __init__(self, start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None, rotate: float|None = None):
+    def __init__(self, start_frame: coord, frames: int, loop: bool = True, flip: bool = False, fps: int|None = None, rotation: float|None = None):
         """
         Args:
             start_frame (coord): The position of the initial frame of the animation
@@ -16,13 +16,14 @@ class Animation:
             loop (bool): Whether the animation should loop or not
             flip (bool): Whether the animation image should be horizontally flipped
             fps (int): The FPS that the animation should run at. This value cannot be larger than the global animation FPS set in `GameSettings.fps.animation`
+            rotation (float, optional): The rotation in degrees of this animation
         """
         self._name = ""
         self._start_frame = start_frame
         self._frames = frames
         self._loop = loop
         self.flip = flip
-        self.rotate = rotate
+        self.rotation = rotation
 
         self._current_frame_index:int = 0
         self._current_col = 0
@@ -104,7 +105,7 @@ class AnimationFactory:
         self._fps = fps
         self._loop = loop
 
-    def at(self, position: coord, flip: bool = False, loop: bool|None = None, rotate: float|None = None) -> Animation:
+    def at(self, position: coord, flip: bool = False, loop: bool|None = None, rotation: float|None = None) -> Animation:
         """
         Create an `Animation` instance at the given position.
 
@@ -112,9 +113,9 @@ class AnimationFactory:
             position (coord): The `coord` of the top-left corner of the animation's graphic on the Pyxel resource sheet.
             loop (bool): Whether the animation should loop
             flip (bool): Whether the animation image should be horizontally flipped
-            rotate (float): The number of degrees to rotate the sprite
+            rotation (float, optional): The rotation in degrees of this animation
         """
 
         l = loop if loop is not None else self._loop
 
-        return Animation(position, frames=self._frames, fps=self._fps, loop=l, flip=flip, rotate=rotate)
+        return Animation(position, frames=self._frames, fps=self._fps, loop=l, flip=flip, rotation=rotation)
