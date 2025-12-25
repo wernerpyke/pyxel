@@ -135,6 +135,22 @@ class coord:
         self._y: int = (self._row - 1) * self.size
 
     @staticmethod
+    def with_map_bounds(col: int, row: int, size: int|None = None) -> "coord":
+        """
+        Create a coord that is bounded to the min/max col/row values of 
+        the map as determined by based on `GameSettings.size.window` and `GameSettings.size.tile`
+        """
+        sz = GameSettings.get().size
+        min = 1
+        max = math.floor(sz.window / sz.tile) + 1
+
+        if col < min: col = min
+        if row < min: row = min
+        if col > max: col = max
+        if row > max: row = max
+        return coord(col, row, size)
+    
+    @staticmethod
     def with_center(x: int, y: int, size: int|None = None) -> "coord":
         """Create a coord where (x, y) are treated as the visual center.
 
@@ -170,42 +186,41 @@ class coord:
 
         return c
 
-    def is_different_grid_location(self, coord: "coord"):
+    def is_different_grid_location(self, coord: "coord") -> bool:
         """Return True when this coord is on a different grid tile than `coord`.
 
         Comparison is based on grid column and row (1-indexed), not pixel
         offsets.
         """
-
         return self._col != coord._col or self._row != coord._row
 
-    def is_same_grid_location(self, coord: "coord"):
+    def is_same_grid_location(self, coord: "coord") -> bool:
         """Return True when this coord is on the same grid tile as `coord`."""
 
         return self._col == coord._col and self._row == coord._row
 
-    def is_at(self, coord: "coord"):
+    def is_at(self, coord: "coord") -> bool:
         """Return true if this coord is at exactly the same (x,y) location as `coord`"""
         return self._x == coord._x and self._y == coord._y
 
-    def is_above(self, coord: "coord"):
+    def is_above(self, coord: "coord") -> bool:
         """Return true if this coord is above `coord`"""
         return self._y < coord._y
     
-    def is_below(self, coord: "coord"):
+    def is_below(self, coord: "coord") -> bool:
         """Return true if this coord is below `coord`"""
         return self._y > coord._y
     
-    def is_left_of(self, coord: "coord"):
+    def is_left_of(self, coord: "coord") -> bool:
         """Return true if this coord is to the left of `coord`"""
         return self._x < coord._x
     
-    def is_right_of(self, coord: "coord"):
+    def is_right_of(self, coord: "coord") -> bool:
         """Return true if this coord is to the right of `coord`"""
         return self._x > coord._x
 
-    def contains(self, x: int, y: int):
-        """Return True if the pixel (x, y) is within this tile's bounding box.
+    def contains(self, x: int, y: int) -> bool:
+        """Return True if the pixel (x, y) is within this `coord`'s bounding box.
 
         The bounding box is inclusive on both edges (min <= value <= max).
         """
@@ -407,9 +422,9 @@ class area:
             raise ValueError("area() row values must be >= 1")
         
         if to_col < from_col:
-            raise ValueError("area() to_col must be >= from_col")
+            raise ValueError(f"area() to_col {to_col} must be >= from_col {from_col}")
         if to_row < from_row:
-            raise ValueError("area() to_row must be >= from_row")
+            raise ValueError(f"area() to_row {to_row} must be >= from_row {from_row}")
 
         self._from_col = from_col
         self._from_row = from_row
@@ -462,6 +477,83 @@ class area:
                 tiles.append(coord(c, self._to_row, self.tile_size))
 
         return tiles
+
+    def contains(self, position: coord) -> bool:
+        """Return `True` if the given `coord` falls within this area, otherwise `False`"""
+        return (
+            self._from_col <= position._col and 
+            self._to_col >= position._col and 
+            self._from_row <= position._row and 
+            self._to_row >= position._row
+        )
+
+    @staticmethod
+    def with_map_bounds(from_col: int, to_col: int, from_row: int, to_row: int, tile_size: int|None = None) -> "area":
+        """
+        Create an area that is bounded to the min/max col/row values of 
+        the map as determined by based on `GameSettings.size.window` and `GameSettings.size.tile`
+        """
+
+        size = GameSettings.get().size
+        min = 1
+        max = math.floor(size.window / size.tile) # + 1
+
+        if from_col < min: from_col = min
+        if to_col < min: to_col = min
+        if from_row < min: from_row = min
+        if to_row < min: to_row = min
+        if from_col > max: from_col = max
+        if to_col > max: to_col = max
+        if from_row > max: from_row = max
+        if to_row > max: to_row = max
+        return area(from_col, from_row, to_col, to_row, tile_size)
+
+    @staticmethod
+    def with_center(x: int, y: int, cols: int, rows: int) -> "area":
+        """Create an area where (x, y) are treated as the visual center.
+        Grid column/row positions are calculated from the center position.
+
+        The from- and to- column/row values are bounded to remain within the allowable values of the 
+        map based on `GameSettings.size.window` and `GameSettings.size.tile`
+
+        TODO - ugly bug:
+        If I have the following:
+        |---|---|---|
+        |   |   |   |
+        |---|---|---|
+        |   | $ |   |
+        |---|---|---|
+        |   |   |   |
+        |---|---|---|
+
+        And I want to create area.with_center($x, $y, cols=2)
+        Then I get a result from col1 to col3 (half of col1 and half of col3)
+
+        """
+
+        size = GameSettings.get().size
+        max_x = max_y = size.window * size.tile
+
+        half_width = math.floor(cols * size.tile / 2)
+        half_height = math.floor(rows * size.tile / 2)
+        from_x = x - half_width
+        from_y = y - half_height
+        to_x = x + half_width
+        to_y = y + half_height
+
+        if from_x < 0: from_x = 0
+        if from_y < 0: from_y = 0
+        if to_x > max_x: to_x = max_x
+        if to_y > max_y: to_y = max_y
+
+        # print(f"from x:{from_x} y:{from_y} to x:{to_x} y:{to_y}")
+
+        from_col = math.floor(from_x / size.tile) + 1
+        from_row = math.floor(from_y / size.tile) + 1
+        to_col = math.floor(to_x / size.tile) + 1
+        to_row = math.floor(to_y / size.tile) + 1
+
+        return area(from_col, from_row, to_col, to_row, size.tile)
 
     def __str__(self):
         return f"{self._from_col}/{self._from_row}->{self._to_col}/{self._to_row}"
