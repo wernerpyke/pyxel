@@ -3,15 +3,21 @@ from dataclasses import dataclass
 
 import time
 
+from pyke_pyxel._log import log_debug
 from pyke_pyxel.signals import Signals
 
 @dataclass
 class _timer:
     seconds: float
     signal: str
-    multiple: bool
-    sender: Any|None = None
-    last_fire_time: float = time.time()
+    sender: Any|None
+    repeat: bool
+    last_fire_time: float
+    has_fired: bool = False
+    # IMPORTANT: we need to keep track of has_fired
+    # This is to guard against a race condition where, within the function called
+    # by the signal, a new timer with the same signal is set.
+    # For example, I set a timer "abc" and then, in do_abc() I update/reset "abc"
 
 class Timer:
     """
@@ -34,7 +40,7 @@ class Timer:
             signal (str): the signal to send
             sender (Any optional): an optional sender value to send with the signal
         """
-        self._timers[signal] = _timer(seconds, signal, False, sender)
+        self._upsert(seconds, signal, sender, False)
 
     def every(self, seconds: float, signal: str, sender:Any|None = None):
         """
@@ -46,7 +52,19 @@ class Timer:
             signal (str): the signal to send
             sender (Any optional): an optional sender value to send with the signal
         """
-        self._timers[signal] = _timer(seconds, signal, True, sender)
+        self._upsert(seconds, signal, sender, True)
+
+    def _upsert(self, seconds: float, signal: str, sender:Any|None, repeat: bool):
+        if self._timers.get(signal) is not None:
+            t = self._timers[signal]
+            t.seconds = seconds
+            t.sender = sender
+            t.last_fire_time = time.time()
+            t.has_fired = False
+            log_debug(f"Timer._upsert() UPDATE {len(self._timers)}")
+        else:
+            self._timers[signal] = _timer(seconds, signal, sender, repeat, time.time())
+            log_debug(f"Timer._upsert() NEW {len(self._timers)}")
 
     def cancel(self, signal: str):
         """
@@ -65,6 +83,7 @@ class Timer:
     def _update(self):
         for k in self._to_remove:
             if self._timers[k]:
+                log_debug(f"Timer.update() REMOVING {k}")
                 del self._timers[k]
         self._to_remove.clear()
 
@@ -72,12 +91,15 @@ class Timer:
         for k in self._timers:
             if timer := self._timers[k]:
                 delta = now - timer.last_fire_time
+                # print(f"Timer {k} {delta}")
                 if delta >= timer.seconds:
+                    timer.has_fired = True
                     Signals.send(timer.signal, timer.sender)
-                    if timer.multiple:
+                    if timer.repeat:
                         timer.last_fire_time = now
                     else:
-                        self._to_remove.append(k)
+                        if timer.has_fired: # See important note above
+                            self._to_remove.append(k)
 
     def _clear_all(self):
         self._timers.clear()
