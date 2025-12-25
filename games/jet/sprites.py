@@ -11,9 +11,9 @@ def player() -> MovableSprite:
 
     anim= AnimationFactory(4, loop=False)
     sprite.set_up_animation(anim.at(coord(2, 1)))
-    sprite.set_right_animation(anim.at(coord(2, 1), rotate=90))
-    sprite.set_down_animation(anim.at(coord(2, 1), rotate=180))
-    sprite.set_left_animation(anim.at(coord(2, 1), rotate=270))
+    sprite.set_right_animation(anim.at(coord(2, 1), rotation=90))
+    sprite.set_down_animation(anim.at(coord(2, 1), rotation=180))
+    sprite.set_left_animation(anim.at(coord(2, 1), rotation=270))
     return sprite
 
 def trail(player: Player) -> Sprite:
@@ -33,10 +33,35 @@ def trail(player: Player) -> Sprite:
             pos = player.position.clone_by(0, 8, DIRECTION.DOWN)
 
     sprite = Sprite("trail", coord(1,2))
-    sprite.add_animation("loop", Animation(coord(1,2), 4, loop=True, rotate=rotate))
+    sprite.set_rotation(rotate)
+    sprite.add_animation("loop", Animation(coord(1,2), 4, loop=True, rotation=rotate))
     sprite.activate_animation("loop")
     sprite.set_position(pos)
     return sprite
+
+def shockwave(player: Player) -> Sprite:
+    rotate: float|None = None
+    pos: coord
+    match player.active_dir:
+        case DIRECTION.RIGHT:
+            rotate = 90
+            pos = player.position.clone_by(0, 0, DIRECTION.RIGHT)
+        case DIRECTION.DOWN:
+            rotate = 180
+            pos = player.position.clone_by(-8, 8, DIRECTION.DOWN)
+        case DIRECTION.LEFT:
+            rotate = 270
+            pos = player.position.clone_by(-16, 0, DIRECTION.LEFT)
+        case _:
+            pos = player.position.clone_by(-8, -8, DIRECTION.UP)
+
+    sprite = Sprite("shockwave", coord(1,9), cols=3, rows=1)
+    sprite.set_rotation(rotate)
+    sprite.add_animation("loop", Animation(coord(1,9), 4, loop=True, rotation=rotate))
+    sprite.activate_animation("loop")
+    sprite.set_position(pos)
+    return sprite
+
 
 def house() -> Sprite:
     sprite = Sprite("house", coord(1,3), rows=4, cols=4)

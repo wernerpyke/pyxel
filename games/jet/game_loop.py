@@ -8,7 +8,7 @@ from pyke_pyxel.sprite import Sprite
 import sprites
 import map
 from games.jet.player import PLAYER
-from games.jet.enemies import launch_spinner
+from games.jet.enemies import ENEMIES
 
 def game_started(game: RPGGame):
     map.add_house(game)
@@ -18,8 +18,7 @@ def game_started(game: RPGGame):
     player.set_position(coord(18, 23))
     PLAYER.start(game)
 
-    for i in range(8):
-        launch_spinner(game)
+    ENEMIES.start(game)
 
 def game_update(game: RPGGame):
     PLAYER.check_input(pyxel.KEY_UP, DIRECTION.UP)
@@ -28,6 +27,8 @@ def game_update(game: RPGGame):
     PLAYER.check_input(pyxel.KEY_RIGHT, DIRECTION.RIGHT)
 
     PLAYER.update_movement()
+
+    ENEMIES.update(game)
 
 def player_moved(player: Player):
     PLAYER.check_enemies_to_attack()
@@ -50,14 +51,14 @@ def enemy_stopped(enemy: Enemy):
 
 def enemy_blocked(enemy: Enemy, value: Sprite|None):
     def _remove_enemy(sprite_id: int):
-        print(f"REMOVE ENEMY {enemy.name}")
+        # print(f"REMOVE ENEMY {enemy.name}")
         enemy.remove()
 
     enemy.stop_moving()
 
     if sprite := value:
         if sprite.name == "house":
-            print("ENEMY KILLS")
+            # print("ENEMY KILLS")
             enemy._sprite.activate_animation("kill", on_animation_end=_remove_enemy)
         else:
             print(f"ENEMY BLOCKED {enemy.name} by {sprite.name}")

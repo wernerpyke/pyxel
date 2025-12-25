@@ -1,4 +1,4 @@
-from pyke_pyxel import DIRECTION
+from pyke_pyxel import DIRECTION, area, coord
 from pyke_pyxel.rpg.enemy import Enemy
 from pyke_pyxel.signals import Signals
 from pyke_pyxel.sprite import Sprite
@@ -12,6 +12,7 @@ class _Player:
         self.player: Player
         self.game: RPGGame
         self.trail: Sprite|None = None
+        self.shockwave: Sprite|None = None
 
         self.active_dir: DIRECTION|None = None
         self.second_dir: DIRECTION|None = None
@@ -22,6 +23,26 @@ class _Player:
 
     # Enemies
     def check_enemies_to_attack(self):
+        pos = self.player.position
+        c = pos.col
+        r = pos.row
+
+        match self.player.active_dir:
+            case DIRECTION.RIGHT:
+                c += 1
+                attack_area = area.with_map_bounds(c, c, r-1, r+1, pos.size)
+            case DIRECTION.LEFT:
+                c -= 1
+                attack_area = area.with_map_bounds(c, c, r-1, r+1, pos.size)
+            case DIRECTION.DOWN:
+                r += 1
+                attack_area = area.with_map_bounds(c-1, c+1, r, r, pos.size)
+            case _: # Up
+                r -= 1
+                attack_area = area.with_map_bounds(c-1, c+1, r, r, pos.size)
+
+        # print(f"PLAYER pos:{self.player.position} dir:{self.player.active_dir} attack:{attack_area}")
+
         to_remove: list[Enemy] = [] 
 
         def _remove_enemy(sprite_id: int):
@@ -30,7 +51,7 @@ class _Player:
                     print(f"REMOVE ENEMY {e.name}")
                     e.remove()
 
-        enemies = self.game.enemies_at(self.player.position)
+        enemies = self.game.enemies_at(attack_area) # self.player.position)
         for e in enemies:
             print(f"ATTACK {e.name}")
             to_remove.append(e)
@@ -73,6 +94,11 @@ class _Player:
             Signals.send_remove_sprite(trail)
             self.trail = None
 
+        if shockwave := self.shockwave:
+            self.player._sprite.unlink_sprite(shockwave)
+            Signals.send_remove_sprite(shockwave)
+            self.shockwave = None
+
         self.active_dir = None
         self.second_dir = None
 
@@ -81,12 +107,19 @@ class _Player:
         player.start_moving(self.active_dir) # type: ignore warning
         if trail:= self.trail:
             Signals.send_remove_sprite(trail)
+        if shockwave:= self.shockwave:
+            Signals.send_remove_sprite(shockwave)
         
         trail = sprites.trail(player)
         Signals.send_add_sprite(trail)
         player._sprite.link_sprite(trail)
 
+        shockwave = sprites.shockwave(player)
+        Signals.send_add_sprite(shockwave)
+        player._sprite.link_sprite(shockwave)
+
         self.trail = trail
+        self.shockwave = shockwave
 
     @property
     def is_moving(self) -> bool:
